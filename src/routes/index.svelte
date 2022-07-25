@@ -3,6 +3,7 @@
   import { supabase } from "$lib/utils/supabaseClient";
   import Auth from "$lib/components/Auth.svelte";
   import Profile from "$lib/components/Profile.svelte";
+  import Twitter from "$lib/components/Twitter.svelte";
   import type { Session } from "@supabase/supabase-js";
 
   user.set(supabase.auth.user());
@@ -13,6 +14,7 @@
 </script>
 
 <div class="container" style="padding: 50px 0 100px 0;">
+  <Twitter />
   {#if $user}
     <Profile />
   {:else}
