@@ -8,6 +8,12 @@
     try {
       loading = true;
       const { error } = await supabase.auth.signIn({ email });
+      // twitch login
+      // const { user, session, error } = await supabase.auth.signIn({
+      //   provider: 'twitch',
+      // })
+      // console.log(user);
+      // console.log(session);
       if (error) throw error;
       alert("Check your email for the login link!");
     } catch (error: any) {
