@@ -9,6 +9,7 @@
       loading = true;
       const { error } = await supabase.auth.signIn({ email });
       // twitch login
+      // discord probably don't need it if we are using  oauth2.0
       // const { user, session, error } = await supabase.auth.signIn({
       //   provider: 'twitch',
       // })
