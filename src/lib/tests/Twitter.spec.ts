@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/svelte';
-import Twitter from '$lib/components/Twitter.svelte';
+import Twitter from "../components/Twitter.svelte";
 
 test("says 'hello world!'", () => {
     render(Twitter);
