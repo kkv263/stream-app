@@ -3,20 +3,20 @@
 
   let loading: boolean = false;
   let email: string;
+  let password: string;
 
   const handleLogin = async () => {
     try {
       loading = true;
-      const { error } = await supabase.auth.signIn({ email });
+      const { user, error } = await supabase.auth.signUp({ email, password });
       // twitch login
-      // discord probably don't need it if we are using  oauth2.0
+      // discord probably don't need it
       // const { user, session, error } = await supabase.auth.signIn({
       //   provider: 'twitch',
       // })
       // console.log(user);
       // console.log(session);
       if (error) throw error;
-      alert("Check your email for the login link!");
     } catch (error: any) {
       alert(error.error_description || error.message);
     } finally {
@@ -28,22 +28,13 @@
 <form class="row flex flex-center" on:submit|preventDefault={handleLogin}>
   <div class="col-6 form-widget">
     <h1 class="header">Supabase + Svelte</h1>
-    <p class="description">Sign in via magic link with your email below</p>
+    <p class="description">Sign in via magic </p>
     <div>
-      <input
-        class="inputField"
-        type="email"
-        placeholder="Your email"
-        bind:value={email}
-      />
+      <input class="inputField" type="email" placeholder="Your email" bind:value={email} />
+      <input class="inputField" type="password" placeholder="Password" bind:value={password} />
     </div>
     <div>
-      <input
-        type="submit"
-        class="button block"
-        value={loading ? "Loading" : "Send magic link"}
-        disabled={loading}
-      />
+      <input type="submit" class="button block" value={loading ? "Loading" : "Sign up"} disabled={loading} />
     </div>
   </div>
 </form>
