@@ -24,3 +24,9 @@ export interface CallBackOptions {
   state: string,
   code: string
 }
+
+export interface LogoutOptions {
+  client_id: string,
+  token: string,
+  token_type_hint: string
+}

@@ -38,8 +38,8 @@
 <!-- should dynamically generate -->
 
 {#if twitterUser}
-<h2>Welcome {twitterUser}</h2>
-<a href='/logout'>logout tweeter</a>
+  <h2>Welcome {twitterUser}</h2>
+  <a href='/logout'>logout tweeter</a>
 {:else}
-<a href='/login'>login tweeter</a>
+  <a href='/login' rel="external">login tweeter</a>
 {/if}
