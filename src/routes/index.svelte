@@ -1,3 +1,15 @@
+<script lang="ts" context="module">
+  import type { Load } from "@sveltejs/kit";
+
+  export const load:Load = async({session}) => {
+    return {
+      props: {
+        twitterUser: session.user
+      }
+    };
+  }
+</script>
+
 <script lang="ts">
   import { user } from "$lib/utils/sessionStore";
   import { supabase } from "$lib/utils/supabaseClient";
@@ -11,6 +23,7 @@
   supabase.auth.onAuthStateChange((_, session: Session | null) => {
     if (session) user.set(session.user);
   });
+  export let twitterUser:string;
 </script>
 
 <div class="container" style="padding: 50px 0 100px 0;">
@@ -23,4 +36,10 @@
 </div>
 
 <!-- should dynamically generate -->
-<a href='/login'>authorize tweeter</a>
+
+{#if twitterUser}
+<h2>Welcome {twitterUser}</h2>
+<a href='/logout'>logout tweeter</a>
+{:else}
+<a href='/login'>login tweeter</a>
+{/if}

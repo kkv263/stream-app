@@ -2,7 +2,7 @@ import cryptoRandomString from 'crypto-random-string';
 import crypto from 'crypto';
 import { oauth_verifiers } from '$lib/utils/sessionStore';
 import type { RedirectOptions, OAuthVerifiers } from '$lib/utils/types';
-import type { RequestEvent } from "@sveltejs/kit";
+import type { RequestHandler } from "@sveltejs/kit";
 
 const base64URLEncode = (str:Buffer) => {
   return str.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
@@ -29,8 +29,11 @@ const params: RedirectOptions = {
 }
 
 // Ask for OAuth token from twitter.
-export const GET = async (event:RequestEvent) => {
-  if (event.url.searchParams.get('state')) {return}
+export const GET:RequestHandler = async (event) => {
+  if (event.url.searchParams.get('state')) {
+      return { status: 302, headers: { location: '/'}
+    }
+  }
   // Subscribe and set value then unsubscribe
   const unsub = oauth_verifiers.subscribe(data => {<OAuthVerifiers>{state: data.state, code_verifier:data.code_verifier}});
   oauth_verifiers.set(<OAuthVerifiers>{state: params.state, code_verifier: params.code_verifier});

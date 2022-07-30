@@ -1,6 +1,6 @@
 import { get } from 'svelte/store';
 import { oauth_verifiers } from '$lib/utils/sessionStore';
-import type { RequestEvent } from "@sveltejs/kit";
+import type { RequestHandler } from "@sveltejs/kit";
 import type { CallBackOptions } from '$lib/utils/types';
 
 const tokenURL = 'https://api.twitter.com/2/oauth2/token';
@@ -10,24 +10,30 @@ const params: CallBackOptions = {
   'redirect_uri' :'http://127.0.0.1:5173/api/v1/callback',
   'grant_type': 'authorization_code',
   'code_verifier': verifyObject.code_verifier,
-  'state': verifyObject.state
+  'state': verifyObject.state,
+  'code': ''
 }
 
-export const GET = async(event:RequestEvent) => {
+export const GET: RequestHandler = async(event) => {
     const state = event.url.searchParams.get('state');
+    params.code = event.url.searchParams.get('code')!;
     // States don't match (vulnerable to attack)
     if (state != params.state) {throw Error("States do not match, aborting");}
     const token = await getToken();
-    // const write = await writeTweet(token);
+    const user = await getUser(token);
+    event.locals.user = user?.data.name
+    // Redirect to homepage for now. 
     return {
-      body: {}
+      status: 302,
+      headers: {
+        location: '/'
+      }
     }
 };
 
-const getToken = () => {
+const getToken = async() => {
   // One liner to transform json into application/x-www-form-urlencoded payload.
   const formBody = Object.keys(params).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key as keyof CallBackOptions])).join('&');
-
   return fetch(tokenURL, {
     method: 'POST',
     headers: {
@@ -35,17 +41,15 @@ const getToken = () => {
     },
     body: formBody
   }).then(res => res.json())
-  .then(res => res.access_token)
+  .then(res => res.access_token);
 };
 
-// const writeTweet = (token:any) => {
-//   return fetch('https://api.twitter.com/2/tweets', {
-//     method: 'POST',
-//     headers: {
-//       "Authorization": `Bearer ${token}`,
-//       'Content-Type': 'application/json',
-//       "Accept" : "application/json"
-//     },
-//     body: JSON.stringify({'text': 'Hello World!'})
-//   })
-// };
+const getUser = async(token:string) => {
+  return fetch('https://api.twitter.com/2/users/me', {
+    method: 'GET',
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      'Accept': 'application/json',
+    }
+  }).then(res => res.json());
+};

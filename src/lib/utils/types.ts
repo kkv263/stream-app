@@ -21,5 +21,6 @@ export interface CallBackOptions {
   redirect_uri: string,
   grant_type: string,
   code_verifier: string, 
-  state: string
+  state: string,
+  code: string
 }
