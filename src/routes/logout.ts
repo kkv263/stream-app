@@ -7,7 +7,7 @@ const revokeURL = 'https://api.twitter.com/2/oauth2/revoke';
 export const GET:RequestHandler = async (event) => {
   const params: LogoutOptions = {
     'client_id': import.meta.env.DEV ? import.meta.env.VITE_TWITTER_OAUTH_CLIENT_ID as string : process.env.TWITTER_OAUTH_CLIENT_ID!,
-    'token':  cookie.parse(event.request.headers.get('cookie') || '').token,
+    'token':  cookie.parse(event.request.headers.get('cookie') || '').twttoken,
     'token_type_hint': 'access_token'
   }
 
@@ -32,7 +32,8 @@ export const GET:RequestHandler = async (event) => {
   return {
     status: 302,
     headers: {
-      location: '/'
+      location: '/',
+      'set-cookie': `${cookie.serialize('twtrefresh', '')}; path=/; HttpOnly`,
     }
   }
 };

@@ -38,6 +38,7 @@ export const GET:RequestHandler = async (event) => {
   const unsub = oauth_verifiers.subscribe(data => {<OAuthVerifiers>{state: data.state, code_verifier:data.code_verifier}});
   oauth_verifiers.set(<OAuthVerifiers>{state: params.state, code_verifier: params.code_verifier});
   unsub();
+
   return {
     status: 302,
     headers: {

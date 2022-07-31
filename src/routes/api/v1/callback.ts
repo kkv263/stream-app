@@ -1,4 +1,5 @@
 import { get } from 'svelte/store';
+import cookie from 'cookie';
 import { oauth_verifiers } from '$lib/utils/sessionStore';
 import type { RequestHandler } from "@sveltejs/kit";
 import type { CallBackOptions } from '$lib/utils/types';
@@ -26,22 +27,25 @@ export const GET: RequestHandler = async(event) => {
       },
       body: formBody
     }).then(res => res.json())
-    .then(res => res.access_token);
+    .then(res => res);
   };
 
   const state = event.url.searchParams.get('state');
   // States don't match (vulnerable to attack)
   if (state != params.state) {throw Error("States do not match, aborting");}
-  // TODO: Refresh Token and rename events.local.user
-  const token = await getToken();
+  // TODO: Rename events.local.user since user is kinda vague
+  const tokenResponse = await getToken();
+  const token = tokenResponse.access_token;
   const user = await getUser(token);
   event.locals.token = token;
   event.locals.user = user?.data.name;
+
   // Redirect to homepage for now. 
   return {
     status: 302,
     headers: {
-      location: '/'
+      location: '/',
+      'set-cookie': `${cookie.serialize('twtrefresh', tokenResponse.refresh_token)}; path=/; HttpOnly`
     }
   }
 };
