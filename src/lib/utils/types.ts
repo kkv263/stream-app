@@ -28,5 +28,11 @@ export interface CallBackOptions {
 export interface LogoutOptions {
   client_id: string,
   token: string,
-  token_type_hint: string
+  token_type_hint: 'access_token'
+}
+
+export interface RefreshTokenOptions {
+  client_id: string,
+  refresh_token: string,
+  grant_type: 'refresh_token'
 }

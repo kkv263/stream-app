@@ -5,11 +5,12 @@ import type { Handle, GetSession } from "@sveltejs/kit";
 
 export const handle:Handle = async({event, resolve}) => {
   const cookies = Object.assign({user: null}, cookie.parse(event.request.headers.get('cookie') || ''));
-  event.locals.user = cookies.user
+  event.locals.user = cookies.twtuser;
+  event.locals.token = cookies.twttoken;
   const response = await resolve(event);
 
   const setCookies = {
-    'user': `user=${event.locals.user || ''}; path=/; HttpOnly`,
+    'user': `twtuser=${event.locals.user || ''}; path=/; HttpOnly`,
     'token': `twttoken=${event.locals.token || ''}; path=/; HttpOnly`
   }
 
