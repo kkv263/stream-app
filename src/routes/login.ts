@@ -19,7 +19,7 @@ const verifier = cryptoRandomString({length:128, type:'alphanumeric'});
 const challenge = base64URLEncode(sha256(verifier));
 
 const params: RedirectOptions = {
-  'client_id': import.meta.env.VITE_TWITTER_OAUTH_CLIENT_ID as string,
+  'client_id': import.meta.env.DEV ? import.meta.env.VITE_TWITTER_OAUTH_CLIENT_ID as string : process.env.TWITTER_OAUTH_CLIENT_ID,
   'redirect_uri' :'http://127.0.0.1:5173/api/v1/callback',
   'scope': "tweet.read%20users.read%20tweet.write%20offline.access",
   'state': cryptoRandomString({length: 15, type: 'distinguishable'}),
