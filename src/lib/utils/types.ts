@@ -6,7 +6,7 @@ export interface OAuthVerifiers {
 
 // Redirect Parameters for OAuth
 export interface RedirectOptions {
-  client_id: string,
+  client_id: string | undefined,
   redirect_uri: string,
   scope: string,
   state: string,
@@ -17,7 +17,7 @@ export interface RedirectOptions {
 
 // Callback Parameters for OAuth
 export interface CallBackOptions {
-  client_id: string,
+  client_id: string | undefined,
   redirect_uri: string,
   grant_type: string,
   code_verifier: string, 
