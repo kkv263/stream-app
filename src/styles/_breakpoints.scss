@@ -1,0 +1,21 @@
+
+$breakpoints: (
+  'tiny': '374px', 
+  'mobile': '479px', 
+  'tablet': '767px', 
+  'large':'919px', 
+  'desktop': '1023px',
+  'desktopxl': '1279px',
+  'desktopxxl': '1439px',
+);
+
+@mixin bp($name) {
+  @if not map-has-key($breakpoints, $name) {
+    @warn "Invalid breakpoint `#{$name}`.";
+  }
+  @else {
+    @media (max-width: map-get($breakpoints, $name)) {
+      @content;
+    }
+  }
+}

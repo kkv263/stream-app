@@ -16,6 +16,7 @@
   import Auth from "$lib/components/Auth.svelte";
   import Profile from "$lib/components/Profile.svelte";
   import Twitter from "$lib/components/Twitter.svelte";
+  import Section from "$lib/components/layout/Section.svelte";
   import type { Session } from "@supabase/supabase-js";
 
   user.set(supabase.auth.user());
@@ -26,20 +27,21 @@
   export let twitterUser:string;
 </script>
 
-<div class="container" style="padding: 50px 0 100px 0;">
+<Section>
   <Twitter />
   {#if $user}
     <Profile />
   {:else}
     <Auth />
   {/if}
-</div>
+</Section>
 
 <!-- should dynamically generate -->
-
-{#if twitterUser}
-  <h2>Welcome {twitterUser}</h2>
-  <a href='twitter/logout'>logout tweeter</a>
-{:else}
-  <a href='twitter/login' rel="external">authorize tweeter</a>
-{/if}
+<Section>
+  {#if twitterUser}
+    <h2>Welcome {twitterUser}</h2>
+    <a href='twitter/logout'>logout tweeter</a>
+  {:else}
+    <a href='twitter/login' rel="external">authorize tweeter</a>
+  {/if}
+</Section>
