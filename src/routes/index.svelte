@@ -39,7 +39,7 @@
 
 {#if twitterUser}
   <h2>Welcome {twitterUser}</h2>
-  <a href='/logout'>logout tweeter</a>
+  <a href='twitter/logout'>logout tweeter</a>
 {:else}
-  <a href='/login' rel="external">login tweeter</a>
+  <a href='twitter/login' rel="external">authorize tweeter</a>
 {/if}
