@@ -10,7 +10,7 @@
 </style>
 
 <section>
-  <div class="container">
+  <div>
     <slot></slot>
   </div>
 </section>
