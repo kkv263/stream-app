@@ -5,12 +5,14 @@
 // and what to do when importing types
 declare namespace App {
 	interface Locals {
-		user: any,
-		token: string | null
+		user?: string | null,
+		token?: string | null,
+		platform: string | null
 	}
 	// interface Platform {}
 	interface Session {
-		user: any
+		user?: any,
+		platform?: any,
 	}
 	// interface Stuff {}
 }
