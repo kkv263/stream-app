@@ -4,7 +4,8 @@
   export const load:Load = async({session}) => {
     return {
       props: {
-        twitterUser: session.user
+        ...(session.platform === 'twitter') && {twitterUser: session.user},
+        ...(session.platform === 'twitch') && {twitchUser: session.user},
       }
     };
   }
@@ -25,6 +26,7 @@
     if (session) user.set(session.user);
   });
   export let twitterUser:string;
+  export let twitchUser:string;
 </script>
 
 <Section>
@@ -40,8 +42,17 @@
 <Section>
   {#if twitterUser}
     <h2>Welcome {twitterUser}</h2>
-    <a href='twitter/logout'>logout tweeter</a>
+    <a href='logout/twitter'>logout tweeter</a>
   {:else}
-    <a href='twitter/login' rel="external">authorize tweeter</a>
+    <a href='login/twitter' rel="external">authorize tweeter</a>
+  {/if}
+</Section>
+
+<Section>
+  {#if twitchUser}
+    <h2>Welcome {twitchUser}</h2>
+    <a href='logout/twitch'>revoke twitch</a>
+  {:else}
+    <a href='login/twitch' rel="external">authorize twitch</a>
   {/if}
 </Section>
