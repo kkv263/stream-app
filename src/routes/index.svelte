@@ -18,6 +18,7 @@
   import Profile from "$lib/components/Profile.svelte";
   import Twitter from "$lib/components/Twitter.svelte";
   import Section from "$lib/components/layout/Section.svelte";
+  import Nav from "$lib/components/layout/Nav.svelte";
   import type { Session } from "@supabase/supabase-js";
 
   user.set(supabase.auth.user());
@@ -29,8 +30,9 @@
   export let twitchUser:string;
 </script>
 
+<Nav />
+
 <Section>
-  <Twitter />
   {#if $user}
     <Profile />
   {:else}
@@ -42,6 +44,9 @@
 <Section>
   {#if twitterUser}
     <h2>Welcome {twitterUser}</h2>
+
+    <Twitter/>
+
     <a href='logout/twitter'>logout tweeter</a>
   {:else}
     <a href='login/twitter' rel="external">authorize tweeter</a>

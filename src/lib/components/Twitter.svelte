@@ -1,1 +1,9 @@
-<h1>Hello world!</h1>
+<script>
+	const  handleClick = () => {
+    
+	}
+</script>
+
+<button on:click|once={handleClick}>
+	Click me
+</button>
