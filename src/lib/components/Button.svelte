@@ -3,7 +3,7 @@
 	export let type:string;
 </script>
 
-<button class={type} type="button"><slot></slot></button>
+<button on:click class={type} type="button"><slot></slot></button>
 
 <style lang="scss">
 @import '../../styles/vars.scss';

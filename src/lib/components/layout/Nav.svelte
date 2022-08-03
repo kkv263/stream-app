@@ -1,6 +1,10 @@
 <script lang="ts">
   import Section from "./Section.svelte";
   import Button from "./../Button.svelte";
+
+  const handleClick = () => {
+    alert('test');
+	}
 </script>
 
 <nav>
@@ -8,8 +12,8 @@
     <div>
       <h1>Logo.</h1>
       <div class="btn-wrapper">
-        <Button type="secondary">sign up</Button>
-        <Button type="primary">log in</Button>
+        <Button on:click={handleClick} type="secondary">sign up</Button>
+        <Button on:click={handleClick} type="primary">log in</Button>
       </div>
     </div>
   </Section>

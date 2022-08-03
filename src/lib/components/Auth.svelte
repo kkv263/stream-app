@@ -28,7 +28,6 @@
 <form class="row flex flex-center" on:submit|preventDefault={handleLogin}>
   <div class="col-6 form-widget">
     <h1 class="header">Supabase + Svelte</h1>
-    <p class="description">Sign in via magic </p>
     <div>
       <input class="inputField" type="email" placeholder="Your email" bind:value={email} />
       <input class="inputField" type="password" placeholder="Password" bind:value={password} />
