@@ -80,7 +80,7 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    color: $off-black;
+    color: $text-color;
     transition: $transition;
 
     &:hover,

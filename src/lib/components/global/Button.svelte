@@ -20,12 +20,12 @@
 @import '../../../styles/vars.scss';
 
   button {
-    background-color: $pink;
+    background-color: $primary;
     font-family: 'Nunito', sans-serif;
     font-weight: 600;
     border-radius: 8px;
     padding: 8px 16px;
-    border: 2px solid $pink;
+    border: 2px solid $primary;
     color: #fff;
     cursor: pointer;
     transition: $transition;
@@ -39,7 +39,7 @@
     &:active,
     &:focus {
       background-color: transparent;
-      color: $pink;
+      color: $primary;
     }
 
     &[disabled] {
@@ -48,15 +48,15 @@
     }
 
     &.secondary {
-      background-color: $off-black;
+      background-color: $secondary;
       color: #fff;
-      border: 2px solid $off-black;
+      border: 2px solid $secondary;
 
       &:hover,
       &:active,
       &:focus {
         background-color: transparent;
-        color: $off-black;
+        color: $secondary;
       }
     }
 
@@ -72,21 +72,21 @@
       border-radius:  0;
 
       &.primary {
-        color: $pink;
+        color: $primary;
 
         &:hover,
         &:active,
         &:focus {
-          box-shadow: 0 2px 1px -1px $pink;
+          box-shadow: 0 2px 1px -1px $primary;
         }
       }
       &.secondary {
-        color: $off-black;
+        color: $secondary;
 
         &:hover,
         &:active,
         &:focus {
-          box-shadow: 0 2px 1px -1px $off-black;
+          box-shadow: 0 2px 1px -1px $secondary;
         }
       }
     }

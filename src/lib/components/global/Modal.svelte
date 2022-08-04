@@ -52,7 +52,7 @@
       background-color: transparent;
       font-size: 24px;
       border: 0;
-      color: $off-black;
+      color: $text-color;
       cursor: pointer;
       transition: $transition;
 
