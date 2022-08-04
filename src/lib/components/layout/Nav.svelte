@@ -1,6 +1,8 @@
 <script lang="ts">
-  import Section from "./Section.svelte";
-  import Button from "./../Button.svelte";
+  import Section from "$lib/components/layout/Section.svelte";
+  import Button from "$lib/components/global/Button.svelte";
+  import { isauthModalOpen } from "$lib/stores/authModalStore";
+
 </script>
 
 <nav>
@@ -8,8 +10,8 @@
     <div>
       <h1>Logo.</h1>
       <div class="btn-wrapper">
-        <Button type="secondary">sign up</Button>
-        <Button type="primary">log in</Button>
+        <Button on:click={() => isauthModalOpen.set('signup')} color="secondary" type="button">sign up</Button>
+        <Button on:click={() => isauthModalOpen.set('login')} color="primary" type="button">log in</Button>
       </div>
     </div>
   </Section>

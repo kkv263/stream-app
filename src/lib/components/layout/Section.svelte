@@ -7,6 +7,7 @@
     max-width: $container-width;
     padding: 0 16px;
     width: 100%;
+    box-sizing: border-box;
   }
 </style>
 
