@@ -28,16 +28,25 @@
   });
   export let twitterUser:string;
   export let twitchUser:string;
+
+  // Modal
+  import { isauthModalOpen } from "$lib/stores/authModalStore";
+  import Modal from "$lib/components/global/Modal.svelte";
 </script>
 
 <Nav />
+{#if $isauthModalOpen}
+  <Modal>
+    <Auth />
+  </Modal>
+{/if}
 
 <Section>
-  {#if $user}
+  <!-- {#if $user}
     <Profile />
   {:else}
     <Auth />
-  {/if}
+  {/if} -->
 </Section>
 
 <!-- should dynamically generate -->
