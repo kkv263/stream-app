@@ -77,7 +77,7 @@
         &:hover,
         &:active,
         &:focus {
-          box-shadow: 0 1px $pink;
+          box-shadow: 0 2px 1px -1px $pink;
         }
       }
       &.secondary {
@@ -86,7 +86,7 @@
         &:hover,
         &:active,
         &:focus {
-          box-shadow: 0 1px $off-black;
+          box-shadow: 0 2px 1px -1px $off-black;
         }
       }
     }

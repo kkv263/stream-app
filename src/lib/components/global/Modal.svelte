@@ -4,9 +4,9 @@
 </script>
 
 <aside class="modal" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-modal="true" transition:fade={{duration: 200}}>
-  <div on:click|stopPropagation={() => isauthModalOpen.set(false)} class="modal__backdrop" data-dismiss="modal"></div>
+  <div on:click|stopPropagation={() => isauthModalOpen.set('')} class="modal__backdrop" data-dismiss="modal"></div>
   <section class="modal__inner">
-    <button on:click={() => isauthModalOpen.set(false)} type="button" class="modal__close-icon" title="Close" data-dismiss="modal">&times;</button>
+    <button on:click={() => isauthModalOpen.set('')} type="button" class="modal__close-icon" title="Close" data-dismiss="modal">&times;</button>
     <div class="modal__content"><slot></slot></div>
   </section>
 </aside>
@@ -43,14 +43,15 @@
       position: absolute;
       top: 16px;
       right: 16px;
+      width: 40px;
+      height: 40px;
       display: flex;
       padding: 0;
       align-items: center;
       justify-content: center;
       background-color: transparent;
-      font-size: 26px;
+      font-size: 24px;
       border: 0;
-      border-radius: 100%;
       color: $off-black;
       cursor: pointer;
       transition: $transition;

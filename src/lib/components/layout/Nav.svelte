@@ -10,8 +10,8 @@
     <div>
       <h1>Logo.</h1>
       <div class="btn-wrapper">
-        <Button on:click={() => isauthModalOpen.set(true)} color="secondary" type="button">sign up</Button>
-        <Button color="primary" type="button">log in</Button>
+        <Button on:click={() => isauthModalOpen.set('signup')} color="secondary" type="button">sign up</Button>
+        <Button on:click={() => isauthModalOpen.set('login')} color="primary" type="button">log in</Button>
       </div>
     </div>
   </Section>
