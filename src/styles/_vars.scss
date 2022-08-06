@@ -12,3 +12,8 @@ $secondary: $off-black;
 $error-red: #cc0000;
 
 $twitch-purple: #9146FF;
+$youtube-red: #FF0000;
+$brands: (
+  "twitch": $twitch-purple, 
+  "youtube": $youtube-red
+);

@@ -22,12 +22,10 @@
 @import '../../../styles/vars.scss';
 
   button {
-    background-color: $primary;
     font-family: 'Nunito', sans-serif;
     font-weight: 600;
     border-radius: 8px;
     padding: 8px 16px;
-    border: 2px solid $primary;
     color: #fff;
     cursor: pointer;
     transition: $transition;
@@ -37,13 +35,6 @@
     justify-content: center;
     min-width: 112px;
 
-    &:hover,
-    &:active,
-    &:focus {
-      background-color: transparent;
-      color: $primary;
-    }
-
     &.full {
       width: 100%;
     }
@@ -52,6 +43,18 @@
       pointer-events: none;
       opacity: 0.5;
       cursor: not-allowed;
+    }
+
+    &.primary {
+      background-color: $primary;
+      border: 2px solid $primary;
+      &:hover,
+      &:active,
+      &:focus {
+        background-color: transparent;
+        color: $primary;
+        border-color: $primary;
+      }
     }
 
     &.secondary {
@@ -64,22 +67,10 @@
       &:focus {
         background-color: transparent;
         color: $secondary;
+        border-color: $secondary;
       }
     }
     
-    &.twitch {
-      background-color: $twitch-purple;
-      color: #fff;
-      border-color: $twitch-purple;
-
-      &:hover,
-      &:active,
-      &:focus {
-        background-color: darken($twitch-purple, 15%);
-        border-color: darken($twitch-purple, 15%);
-      }
-    }
-
     &.square {
       height: 36px;
       min-width: 54px;
@@ -114,6 +105,22 @@
           box-shadow: 0 2px 1px -1px $secondary;
         }
       }
+    }
+
+    @each $brand, $brand-color in $brands {
+      &.#{$brand} {
+        background-color: $brand-color;
+        color: #fff;
+        border-color: $brand-color;
+        &:hover,
+        &:active,
+        &:focus {
+          background-color: darken($brand-color, 15%);
+          border-color: darken($brand-color, 15%);
+        }
+      }
+
+
     }
   }
 </style>
