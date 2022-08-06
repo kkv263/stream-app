@@ -19,7 +19,7 @@
   import Twitter from "$lib/components/Twitter.svelte";
   import Section from "$lib/components/layout/Section.svelte";
   import Nav from "$lib/components/layout/Nav.svelte";
-  import { isauthModalOpen } from "$lib/stores/authModalStore";
+  import { authModalState } from "$lib/stores/authModalStore";
   import Modal from "$lib/components/global/Modal.svelte";
   import type { Session } from "@supabase/supabase-js";
 
@@ -34,7 +34,7 @@
 </script>
 
 <Nav />
-{#if $isauthModalOpen}
+{#if $authModalState}
   <Modal type="auth">
     <AuthModal />
   </Modal>

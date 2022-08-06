@@ -1,9 +1,10 @@
 <script lang="ts">
   import { supabase } from "$lib/utils/supabaseClient";
-  import { isauthModalOpen } from "$lib/stores/authModalStore";
+  import { authModalState } from "$lib/stores/authModalStore";
   import AuthSignup from "$lib/components/Auth/AuthSignup.svelte";
   import AuthLogin from "$lib/components/Auth/AuthLogin.svelte";
   import type { Provider } from "@supabase/supabase-js";
+  import AuthForgot from "$lib/components/Auth/AuthForgot.svelte";
 
   let loading: boolean = false;
   let email: string;
@@ -64,11 +65,13 @@
 
 </script>
 
-<form on:submit|preventDefault={$isauthModalOpen === "signup" ? handleSignup : handleLogin} class="{$isauthModalOpen}">
-  {#if $isauthModalOpen === 'signup'}
+<form on:submit|preventDefault={$authModalState === "signup" ? handleSignup : handleLogin} class="{$authModalState}">
+  {#if $authModalState === 'signup'}
     <AuthSignup on:auth={signInWithPlatform} />
-  {:else if $isauthModalOpen === 'login'}
+  {:else if $authModalState === 'login'}
     <AuthLogin on:auth={signInWithPlatform}/>
+  {:else if $authModalState === 'forgot'}
+    <AuthForgot />
   {/if}
   
 
@@ -135,9 +138,5 @@
   form :global(.icon__span) {
     margin-left: 8px;
     font-size: 14px;
-  }
-
-  form :global(.forgot) {
-    color: #777;
   }
 </style>

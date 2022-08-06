@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isauthModalOpen } from "$lib/stores/authModalStore";
+  import { authModalState } from "$lib/stores/authModalStore";
   import Twitch from "$lib/components/icons/Twitch.svelte";
   import Youtube from "$lib/components/icons/Youtube.svelte";
   import Button from "$lib/components/global/Button.svelte";
@@ -18,17 +18,13 @@
     dispatchLogin('auth', { platform: platform });
   }
 
-  const forgotPassword = () => {
-
-  }
-
   const handleInputError = (e: CustomEvent) => {
     error = e.detail.state;
   }
 
 </script>
 
-<div in:fade={{duration: 200, delay: 100}} out:fade={{duration: 100}}>
+<div in:fade={{duration: 200, delay: 100}}>
   <h2 class="header">Login</h2>
   <p>Login to your account to continue!</p>
   <div class="auth-form__header-icons">
@@ -45,13 +41,30 @@
     <Input on:error={handleInputError} name="authEmail" type="email" placeholder="name@example.com" bind:value={email}>Email Address</Input>
     <Input on:error={handleInputError} name="authPassword" type="password" placeholder="Password" bind:value={password}>
       <span>Password</span>
-      <span class="forgot">Forgot Password?</span>
+      <button type="button" on:click={() => authModalState.set('forgot')} class="forgot">Forgot Password?</button>
     </Input>
   </div>
   <div class="auth-form__btn-wrapper">
     <Button full type="submit" color="primary" disabled={loading || error} arrow>{loading ? "loading" : "log in"}</Button>
   </div>
   <div class="auth-form__footer">
-    <p>No account? <Button type="button" color="primary" link on:click={() => isauthModalOpen.set('signup')}>Sign up for Potion</Button></p>
+    <p>No account? <Button type="button" color="primary" link on:click={() => authModalState.set('signup')}>Sign up for Potion</Button></p>
   </div>
 </div>
+
+<style lang="scss">
+  @import '../../../styles/vars.scss';
+  .forgot {
+    color: #777;
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover,
+    &:active,
+    &:focus {
+      color: $secondary;
+    }
+  }
+</style>

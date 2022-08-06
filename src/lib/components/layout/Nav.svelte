@@ -1,7 +1,7 @@
 <script lang="ts">
   import Section from "$lib/components/layout/Section.svelte";
   import Button from "$lib/components/global/Button.svelte";
-  import { isauthModalOpen } from "$lib/stores/authModalStore";
+  import { authModalState } from "$lib/stores/authModalStore";
 
 </script>
 
@@ -10,8 +10,8 @@
     <div>
       <h1>Logo.</h1>
       <div class="btn-wrapper">
-        <Button on:click={() => isauthModalOpen.set('signup')} color="secondary" type="button">sign up</Button>
-        <Button on:click={() => isauthModalOpen.set('login')} color="primary" type="button">log in</Button>
+        <Button on:click={() => authModalState.set('signup')} color="secondary" type="button">sign up</Button>
+        <Button on:click={() => authModalState.set('login')} color="primary" type="button">log in</Button>
       </div>
     </div>
   </Section>

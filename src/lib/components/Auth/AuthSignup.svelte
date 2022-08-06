@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isauthModalOpen } from "$lib/stores/authModalStore";
+  import { authModalState } from "$lib/stores/authModalStore";
   import Twitch from "$lib/components/icons/Twitch.svelte";
   import Youtube from "$lib/components/icons/Youtube.svelte";
   import Button from "$lib/components/global/Button.svelte";
@@ -24,7 +24,7 @@
 
 </script>
 
-<div in:fade={{duration: 200, delay: 100}} out:fade={{duration: 100}}>
+<div in:fade={{duration: 200, delay: 100}}>
   <h2 class="header">Sign up</h2>
   <p>Create an account with other platforms:</p>
   <div class="auth-form__header-icons">
@@ -45,6 +45,6 @@
   </div>
   <div class="auth-form__btn-wrapper"><Button full type="submit" color="primary" disabled={loading || error} arrow>{loading ? "loading" : "sign up"}</Button></div>
   <div class="auth-form__footer">
-    <p>Already registered? <Button type="button" color="primary" link on:click={() => isauthModalOpen.set('login')}>Login to Potion</Button></p>
+    <p>Already registered? <Button type="button" color="primary" link on:click={() => authModalState.set('login')}>Login to Potion</Button></p>
   </div>
 </div>
