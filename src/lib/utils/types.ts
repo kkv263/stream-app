@@ -27,6 +27,7 @@ export interface CallBackOptions {
   code: string
 }
 
+// Logout Params for OAuth
 export interface LogoutOptions {
   client_id?: string,
   token: string,
@@ -38,4 +39,10 @@ export interface RefreshTokenOptions {
   client_secret?: string,
   refresh_token: string,
   grant_type: 'refresh_token'
+}
+
+// Auth
+export type AuthError = {
+  regex: RegExp,
+  error: string
 }

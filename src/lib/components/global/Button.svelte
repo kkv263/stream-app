@@ -49,8 +49,9 @@
     }
 
     &[disabled] {
-      cursor: pointer;
+      pointer-events: none;
       opacity: 0.5;
+      cursor: not-allowed;
     }
 
     &.secondary {
