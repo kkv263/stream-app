@@ -10,6 +10,7 @@
   export let value:string = "";
   export let name:string;
   export let pwVisible:string = 'password';
+  export let required:boolean | null = null;
 
   const icons: Record<string, any> = {
     email: Mail,
@@ -37,7 +38,7 @@
           <svelte:component width="24px" height="24px" this={eye[pwVisible]}/>
         </div>
       {/if}
-    <input id={name} type={name === 'authPassword' ? pwVisible : type} placeholder={placeholder} {value} on:input={bindValue}/>
+    <input id={name} type={name === 'authPassword' ? pwVisible : type} placeholder={placeholder} {value} on:input={bindValue} {required}/>
   </div>
 </div>
 
@@ -93,9 +94,13 @@
   input {
     border: 1px solid #777;
     border-radius: 8px;
-    height: 36px;
-    padding: 8px 8px 8px 48px;
+    height: 32px;
+    padding: 8px 16px 8px 48px;
     flex: 1 0 auto;
+
+    &[type="password"] {
+      padding-right: 48px;
+    }
 
     &::placeholder {
       color: #ccc;

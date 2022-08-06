@@ -7,9 +7,11 @@
   export let disabled:boolean | null = null;
   export let arrow:boolean | null = null;
   export let link:boolean | null = null;
+  export let square:boolean | null = null;
+  export let full:boolean | null = null;
 </script>
 
-<button on:click class={color} class:link type={type} {disabled}>
+<button on:click class={color} class:link class:square class:full type={type} {disabled}>
   <slot></slot>
   {#if arrow}
     <CircleArrowRight width="20px" height="20px" marginLeft="16px" />
@@ -42,6 +44,10 @@
       color: $primary;
     }
 
+    &.full {
+      width: 100%;
+    }
+
     &[disabled] {
       cursor: pointer;
       opacity: 0.5;
@@ -58,6 +64,24 @@
         background-color: transparent;
         color: $secondary;
       }
+    }
+    
+    &.twitch {
+      background-color: $twitch-purple;
+      color: #fff;
+      border-color: $twitch-purple;
+
+      &:hover,
+      &:active,
+      &:focus {
+        background-color: darken($twitch-purple, 15%);
+        border-color: darken($twitch-purple, 15%);
+      }
+    }
+
+    &.square {
+      height: 36px;
+      min-width: 54px;
     }
 
     &.link {

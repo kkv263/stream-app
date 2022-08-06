@@ -34,15 +34,16 @@
       left: 50%;
       transform: translate(-50%, -50%);
       background-color: #fff;
-      padding: 32px;
+      padding: 16px 32px;
       border-radius: 8px;
+      border-bottom-right-radius: 50px;
       min-width: 375px;
     }
 
     &__close-icon {
       position: absolute;
-      top: 16px;
-      right: 16px;
+      top: 12px;
+      right: 12px;
       width: 40px;
       height: 40px;
       display: flex;
