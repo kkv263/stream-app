@@ -2,17 +2,19 @@
   import { supabase } from "$lib/utils/supabaseClient";
   import { isauthModalOpen } from "$lib/stores/authModalStore";
   import Twitch from "$lib/components/icons/Twitch.svelte";
+  import Youtube from "$lib/components/icons/Youtube.svelte";
   import Button from "$lib/components/global/Button.svelte";
   import Input from "$lib/components/global/Input.svelte";
+  import type { Provider } from "@supabase/supabase-js";
 
   let loading: boolean = false;
   let email: string;
   let password: string;
   let error: boolean = true;
 
-  const signInWithTwitch = async() => {
+  const signInWithPlatform = async(platform:Provider) => {
     const { user, session, error } = await supabase.auth.signIn({
-      provider: 'twitch',
+      provider: platform,
     })
   }
 
@@ -74,7 +76,14 @@
       <h2 class="header">Sign up</h2>
       <p>Create an account with other platforms:</p>
       <div class="auth-form__header-icons">
-        <Button on:click={signInWithTwitch} square type="button" color="twitch"><Twitch height="24px" width="24px"/></Button>
+        <Button on:click={() => signInWithPlatform('twitch')} square type="button" color="twitch">
+          <Twitch height="24px" width="24px"/>
+          <span class='icon__span'>Twitch</span>
+        </Button>
+        <Button on:click={() => signInWithPlatform('google')} square type="button" color="youtube">
+          <Youtube height="24px" width="24px"/>
+          <span class='icon__span'>YouTube</span>
+        </Button>
       </div>
       <div class="auth-form__wrapper">
         <Input on:error={handleInputError} name="authEmail" type="email" placeholder="name@example.com" bind:value={email} required={true}>Email Address</Input>
@@ -92,7 +101,14 @@
     <h2 class="header">Login</h2>
     <p>Login to your account to continue!</p>
     <div class="auth-form__header-icons">
-      <Button on:click={signInWithTwitch} square type="button" color="twitch"><Twitch height="24px" width="24px"/></Button>
+      <Button on:click={() => signInWithPlatform('twitch')} square type="button" color="twitch">
+        <Twitch height="24px" width="24px"/>
+        <span class='icon__span'>Twitch</span>
+      </Button>
+      <Button on:click={() => signInWithPlatform('google')} square type="button" color="youtube">
+        <Youtube height="24px" width="24px"/>
+        <span class='icon__span'>YouTube</span>
+      </Button>
     </div>
     <div class="auth-form__wrapper">
       <Input on:error={handleInputError} name="authEmail" type="email" placeholder="name@example.com" bind:value={email}>Email Address</Input>
@@ -150,6 +166,8 @@
     border-bottom: 1px solid #ccc;
     margin-bottom: 16px;
     position: relative;
+    gap: 8px;
+
 
     &:after {
       content: 'OR';
@@ -165,6 +183,11 @@
       justify-content: center;
       align-items: center;
     }
+  }
+
+  .icon__span {
+    margin-left: 8px;
+    font-size: 14px;
   }
 
   span.forgot {
