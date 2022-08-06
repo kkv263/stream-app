@@ -20,6 +20,7 @@
 
 <style lang="scss">
 @import '../../../styles/vars.scss';
+@import '../../../styles/breakpoints.scss';
 
   button {
     font-family: 'Nunito', sans-serif;
@@ -34,6 +35,11 @@
     align-items: center;
     justify-content: center;
     min-width: 112px;
+
+    @include bp(tablet) {
+      font-size: 14px;
+      min-width: 80px;
+    }
 
     &.full {
       width: 100%;

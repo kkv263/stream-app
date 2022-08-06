@@ -13,6 +13,7 @@
 
 <style lang="scss">
   @import "../../../styles/vars";
+  @import "../../../styles/breakpoints";
   .modal {
     position: fixed;
     width: 100%;
@@ -38,6 +39,10 @@
       border-radius: 8px;
       border-bottom-right-radius: 50px;
       min-width: 375px;
+
+      @include bp(mobile) {
+        min-width: 0px;
+      }
     }
 
     &__close-icon {

@@ -76,6 +76,7 @@
 
 <style lang="scss">
   @import '../../../styles/vars.scss';
+  @import '../../../styles/breakpoints.scss';
   .form-input {
     display: flex;
     padding-bottom: 36px;
@@ -88,6 +89,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    @include bp(tablet) {
+      font-size: 14px;
+    }
   }
 
   .input-wrapper {
@@ -130,6 +135,10 @@
     padding: 8px 16px 8px 48px;
     flex: 1 0 auto;
 
+    @include bp(tablet) {
+      height: 24px;
+    }
+
     &.error {
       border-color: $error-red;
     }
@@ -150,5 +159,9 @@
     left: 0;
     font-size: 14px;
     margin-top: 2px;
+
+    @include bp(tablet) {
+      font-size: 12px;
+    }
   }
 </style>
