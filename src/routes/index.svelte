@@ -14,30 +14,29 @@
 <script lang="ts">
   import { user } from "$lib/utils/sessionStore";
   import { supabase } from "$lib/utils/supabaseClient";
-  import Auth from "$lib/components/Auth.svelte";
+  import AuthModal from "$lib/components/Auth/AuthModal.svelte";
   import Profile from "$lib/components/Profile.svelte";
   import Twitter from "$lib/components/Twitter.svelte";
   import Section from "$lib/components/layout/Section.svelte";
   import Nav from "$lib/components/layout/Nav.svelte";
+  import { isauthModalOpen } from "$lib/stores/authModalStore";
+  import Modal from "$lib/components/global/Modal.svelte";
   import type { Session } from "@supabase/supabase-js";
+
+  export let twitterUser:string;
+  export let twitchUser:string;
 
   user.set(supabase.auth.user());
 
   supabase.auth.onAuthStateChange((_, session: Session | null) => {
     if (session) user.set(session.user);
   });
-  export let twitterUser:string;
-  export let twitchUser:string;
-
-  // Modal
-  import { isauthModalOpen } from "$lib/stores/authModalStore";
-  import Modal from "$lib/components/global/Modal.svelte";
 </script>
 
 <Nav />
 {#if $isauthModalOpen}
-  <Modal>
-    <Auth />
+  <Modal type="auth">
+    <AuthModal />
   </Modal>
 {/if}
 
