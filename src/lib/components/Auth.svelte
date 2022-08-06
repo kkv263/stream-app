@@ -8,6 +8,7 @@
   let loading: boolean = false;
   let email: string;
   let password: string;
+  let error: boolean = true;
 
   const signInWithTwitch = async() => {
     const { user, session, error } = await supabase.auth.signIn({
@@ -19,11 +20,6 @@
     try {
       loading = true;
       const { user, error } = await supabase.auth.signUp({ email, password });
-      // twitch login
-      // discord probably don't need it
-      // const { user, session, error } = await supabase.auth.signIn({
-      //   provider: 'twitch',
-      // })
       if (error) throw error;
     } catch (error: any) {
       alert(error.error_description || error.message);
@@ -58,11 +54,6 @@
     try {
       loading = true;
       const { user, session, error } = await supabase.auth.signIn({ email, password });
-      // twitch login
-      // discord probably don't need it
-      // const { user, session, error } = await supabase.auth.signIn({
-      //   provider: 'twitch',
-      // })
       if (error) throw error;
     } catch (error: any) {
       console.log(error);
@@ -71,6 +62,10 @@
       loading = false;
     }
   };
+
+  const handleInputError = (e: CustomEvent) => {
+    error = e.detail.state;
+  }
 </script>
 
 <form on:submit|preventDefault={$isauthModalOpen === "signup" ? handleSignup : handleLogin} class="{$isauthModalOpen}">
@@ -82,12 +77,12 @@
         <Button on:click={signInWithTwitch} square type="button" color="twitch"><Twitch height="24px" width="24px"/></Button>
       </div>
       <div class="auth-form__wrapper">
-        <Input name="authEmail" type="email" placeholder="name@example.com" bind:value={email} required={true}>Email Address</Input>
-        <Input name="authPassword" type="password" placeholder="Password" bind:value={password} required={true}>
+        <Input on:error={handleInputError} name="authEmail" type="email" placeholder="name@example.com" bind:value={email} required={true}>Email Address</Input>
+        <Input on:error={handleInputError} name="authPassword" type="password" placeholder="Password" bind:value={password} required={true}>
           <span>Password</span>
         </Input>
       </div>
-      <div class="auth-form__btn-wrapper"><Button full type="submit" color="primary" disabled={loading} arrow>{loading ? "loading" : "sign up"}</Button></div>
+      <div class="auth-form__btn-wrapper"><Button full type="submit" color="primary" disabled={loading || error} arrow>{loading ? "loading" : "sign up"}</Button></div>
       <div class="auth-form__footer">
         <p>Already registered? <Button type="button" color="primary" link on:click={() => isauthModalOpen.set('login')}>Login to Potion</Button></p>
       </div>
@@ -100,14 +95,14 @@
       <Button on:click={signInWithTwitch} square type="button" color="twitch"><Twitch height="24px" width="24px"/></Button>
     </div>
     <div class="auth-form__wrapper">
-      <Input name="authEmail" type="email" placeholder="name@example.com" bind:value={email}>Email Address</Input>
-      <Input name="authPassword" type="password" placeholder="Password" bind:value={password}>
+      <Input on:error={handleInputError} name="authEmail" type="email" placeholder="name@example.com" bind:value={email}>Email Address</Input>
+      <Input on:error={handleInputError} name="authPassword" type="password" placeholder="Password" bind:value={password}>
         <span>Password</span>
         <span class="forgot">Forgot Password?</span>
       </Input>
     </div>
     <div class="auth-form__btn-wrapper">
-      <Button full type="submit" color="primary" disabled={loading} arrow>{loading ? "loading" : "log in"}</Button>
+      <Button full type="submit" color="primary" disabled={loading || error} arrow>{loading ? "loading" : "log in"}</Button>
     </div>
     <div class="auth-form__footer">
       <p>No account? <Button type="button" color="primary" link on:click={() => isauthModalOpen.set('signup')}>Sign up for Potion</Button></p>
