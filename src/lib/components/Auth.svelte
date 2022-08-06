@@ -9,6 +9,12 @@
   let email: string;
   let password: string;
 
+  const signInWithTwitch = async() => {
+    const { user, session, error } = await supabase.auth.signIn({
+      provider: 'twitch',
+    })
+  }
+
   const handleSignup = async () => {
     try {
       loading = true;
@@ -72,8 +78,8 @@
     <div class="col-6 form-widget">
       <h2 class="header">Sign up</h2>
       <p>Create an account with other platforms:</p>
-      <div class="auth-form__footer-icons">
-        <Button square type="button" color="twitch"><Twitch height="24px" width="24px"/></Button>
+      <div class="auth-form__header-icons">
+        <Button on:click={signInWithTwitch} square type="button" color="twitch"><Twitch height="24px" width="24px"/></Button>
       </div>
       <div class="auth-form__wrapper">
         <Input name="authEmail" type="email" placeholder="name@example.com" bind:value={email} required={true}>Email Address</Input>
@@ -90,6 +96,9 @@
   <div class="col-6 form-widget">
     <h2 class="header">Login</h2>
     <p>Login to your account to continue!</p>
+    <div class="auth-form__header-icons">
+      <Button on:click={signInWithTwitch} square type="button" color="twitch"><Twitch height="24px" width="24px"/></Button>
+    </div>
     <div class="auth-form__wrapper">
       <Input name="authEmail" type="email" placeholder="name@example.com" bind:value={email}>Email Address</Input>
       <Input name="authPassword" type="password" placeholder="Password" bind:value={password}>
@@ -97,8 +106,12 @@
         <span class="forgot">Forgot Password?</span>
       </Input>
     </div>
-    <div class="auth-form__btn-wrapper"><Button type="submit" color="primary" disabled={loading} arrow>{loading ? "loading" : "log in"}</Button></div>
-    <p class="auth-form__footer">No account? <Button type="button" color="primary" link on:click={() => isauthModalOpen.set('signup')}>Sign up for Potion</Button></p>
+    <div class="auth-form__btn-wrapper">
+      <Button full type="submit" color="primary" disabled={loading} arrow>{loading ? "loading" : "log in"}</Button>
+    </div>
+    <div class="auth-form__footer">
+      <p>No account? <Button type="button" color="primary" link on:click={() => isauthModalOpen.set('signup')}>Sign up for Potion</Button></p>
+    </div>
   </div>
   {/if}
   
@@ -135,7 +148,7 @@
     }
   }
 
-  .auth-form__footer-icons {
+  .auth-form__header-icons {
     display: flex;
     justify-content: center;
     padding-bottom: 16px;
