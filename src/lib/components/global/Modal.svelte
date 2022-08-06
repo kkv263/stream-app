@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { isauthModalOpen } from "$lib/stores/authModalStore";
+  import { authModalState } from "$lib/stores/authModalStore";
   import { fade } from "svelte/transition";
   export let type:string | null = null;
 </script>
 
 <aside class="modal" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-modal="true" transition:fade={{duration: 200}}>
-  <div on:click|stopPropagation={() => isauthModalOpen.set('')} class="modal__backdrop" data-dismiss="modal"></div>
+  <div on:click|stopPropagation={() => authModalState.set('')} class="modal__backdrop" data-dismiss="modal"></div>
   <section class="modal__inner {type}">
-    <button on:click={() => isauthModalOpen.set('')} type="button" class="modal__close-icon" title="Close" data-dismiss="modal">&times;</button>
+    <button on:click={() => authModalState.set('')} type="button" class="modal__close-icon" title="Close" data-dismiss="modal">&times;</button>
     <div class="modal__content"><slot></slot></div>
   </section>
 </aside>
@@ -35,7 +35,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       background-color: #fff;
-      padding: 16px 32px;
+      padding: 32px;
       border-radius: 8px;
       border-bottom-right-radius: 50px;
       min-width: 375px;
@@ -56,8 +56,8 @@
 
     &__close-icon {
       position: absolute;
-      top: 12px;
-      right: 12px;
+      top: 4px;
+      right: 4px;
       width: 40px;
       height: 40px;
       display: flex;
