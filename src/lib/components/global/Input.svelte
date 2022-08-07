@@ -153,7 +153,7 @@
     &.error {
       border-color: $error-red;
     }
-    &[type="text"],
+    &[type="text"]:not(#authPassword),
     &[type="date"] {
       padding-left: 16px;
     }
