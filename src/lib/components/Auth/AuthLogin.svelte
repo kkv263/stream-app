@@ -1,11 +1,12 @@
 <script lang="ts">
+  import { supabase } from "$lib/utils/supabaseClient";
   import { authModalState } from "$lib/stores/authModalStore";
   import Twitch from "$lib/components/icons/Twitch.svelte";
   import Youtube from "$lib/components/icons/Youtube.svelte";
   import Button from "$lib/components/global/Button.svelte";
   import Input from "$lib/components/global/Input.svelte";
   import { createEventDispatcher } from 'svelte';
-  import { fade, fly } from "svelte/transition";
+  import { fade } from "svelte/transition";
 
   let loading: boolean = false;
   let email: string;
@@ -18,15 +19,30 @@
     dispatchLogin('auth', { platform: platform });
   }
 
+  const handleLogin = async () => {
+    try {
+      loading = true;
+      const { user, session, error } = await supabase.auth.signIn({ email, password });
+      if (error) throw error;
+    } catch (error: any) {
+      console.log(error);
+      alert(error.error_description || error.message);
+    } finally {
+      loading = false;
+    }
+  };
+
   const handleInputError = (e: CustomEvent) => {
     error = e.detail.state;
   }
 
 </script>
 
-<div in:fade={{duration: 200, delay: 100}}>
-  <h2 class="header">Login</h2>
-  <p>Login to your account to continue!</p>
+<form on:submit|preventDefault={handleLogin} in:fade={{duration: 200, delay: 100}}>
+  <header class="auth-form__header">
+    <h2 class="header">Login</h2>
+    <p>Login to your account to continue!</p>
+  </header>
   <div class="auth-form__header-icons">
     <Button on:click={() => signInWithPlatform('twitch')} square type="button" color="twitch">
       <Twitch height="24px" width="24px"/>
@@ -50,7 +66,7 @@
   <div class="auth-form__footer">
     <p>No account? <Button type="button" color="primary" link on:click={() => authModalState.set('signup')}>Sign up for Potion</Button></p>
   </div>
-</div>
+</form>
 
 <style lang="scss">
   @import '../../../styles/vars.scss';

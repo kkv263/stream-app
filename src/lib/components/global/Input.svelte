@@ -25,7 +25,16 @@
     password: {
       regex: new RegExp(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/),
       error: 'Password must contain minimum 8 characters, 1 uppercase letter, 1 lowercase letter, and 1 special character.'
+    },
+    text: {
+      regex: new RegExp(/^(?=[a-zA-Z0-9._]{2,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/),
+      error: 'Name format is invalid'
+    },
+    date: {
+      regex: new RegExp(/.*/),
+      error: ''
     }
+    
   }
 
   const icons: Record<string, any> = {
@@ -61,10 +70,12 @@
         </div>
       {/if}
     <input 
+      class="{value ? 'has-value': ''}"
       class:error 
       id={name} 
       type={name === 'authPassword' ? pwVisible : type} 
-      placeholder={placeholder} {value} 
+      placeholder={placeholder} 
+      {value} 
       {required} 
       on:input={bindValue}
       on:blur={(e) => validateInput(e,type)}/>
@@ -142,13 +153,30 @@
     &.error {
       border-color: $error-red;
     }
+    &[type="text"],
+    &[type="date"] {
+      padding-left: 16px;
+    }
 
     &[type="password"] {
       padding-right: 48px;
     }
 
+    &::-webkit-datetime-edit-text,
+    &::-webkit-datetime-edit-month-field,
+    &::-webkit-datetime-edit-day-field,
+    &::-webkit-datetime-edit-year-field,
     &::placeholder {
       color: #ccc;
+    }
+
+    &.has-value {
+      &::-webkit-datetime-edit-text,
+      &::-webkit-datetime-edit-month-field,
+      &::-webkit-datetime-edit-day-field,
+      &::-webkit-datetime-edit-year-field {
+        color: $text-color;
+      }
     }
   }
 
