@@ -35,6 +35,7 @@
     align-items: center;
     justify-content: center;
     min-width: 112px;
+    min-height: 40px;
 
     @include bp(tablet) {
       font-size: 14px;

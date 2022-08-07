@@ -42,11 +42,12 @@
       overflow: hidden;
 
       &.auth {
-        max-height: 490px;
+        max-height: 520px;
       }
 
       @include bp(mobile) {
-        min-width: 0px;
+        min-width: 300px;
+        padding: 24px;
       }
     }
 

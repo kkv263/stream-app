@@ -6,40 +6,11 @@
   import type { Provider } from "@supabase/supabase-js";
   import AuthForgot from "$lib/components/Auth/AuthForgot.svelte";
 
-  let loading: boolean = false;
-  let email: string;
-  let password: string;
-
   const signInWithPlatform = async(e: CustomEvent) => {
     const { user, session, error } = await supabase.auth.signIn({
       provider: <Provider>e.detail.platform,
     })
   }
-
-  const handleLogin = async () => {
-    try {
-      loading = true;
-      const { user, session, error } = await supabase.auth.signIn({ email, password });
-      if (error) throw error;
-    } catch (error: any) {
-      console.log(error);
-      alert(error.error_description || error.message);
-    } finally {
-      loading = false;
-    }
-  };
-
-  const handleSignup = async () => {
-    try {
-      loading = true;
-      const { user, error } = await supabase.auth.signUp({ email, password });
-      if (error) throw error;
-    } catch (error: any) {
-      alert(error.error_description || error.message);
-    } finally {
-      loading = false;
-    }
-  };
 
   // Example session
   // access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNjU5NjYxMjM1LCJzdWIiOiIyOGIzMjE0Mi1jNTY2LTRmNDAtYTlmNi1mZGZiMDJlYzFhMmUiLCJlbWFpbCI6InNwcmFudG1hc3RlckBnbWFpbC5jb20iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7fSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQifQ.12nwYcDbEzVCBoEEKFQuxjcB7QJXeX43GzQyuY5pXJI"
@@ -65,7 +36,7 @@
 
 </script>
 
-<form on:submit|preventDefault={$authModalState === "signup" ? handleSignup : handleLogin} class="{$authModalState}">
+<div class="auth-modal {$authModalState}">
   {#if $authModalState === 'signup'}
     <AuthSignup on:auth={signInWithPlatform} />
   {:else if $authModalState === 'login'}
@@ -75,41 +46,50 @@
   {/if}
   
 
-</form>
+</div>
 
 <style lang="scss">
-  form :global(.auth-form__wrapper) {
+  @import '../../../styles/vars.scss';
+  @import "../../../styles/breakpoints";
+
+  .auth-modal :global(.auth-form__wrapper) {
     padding-bottom: 16px;
   }
 
-  form :global(.header) {
+  .auth-modal :global(.header) {
     padding-bottom: 16px;
     text-align: center;
     font-size: 32px; 
   }
 
-  form :global(.header + p) {
+  .auth-modal :global(.header + p) {
     padding-bottom: 8px;
     color: #777;
     font-size: 14px;
     text-align: center;
   }
 
-  form :global(.auth-form__btn-wrapper) {
-    margin-bottom: 16px;
+  .auth-modal :global(.auth-form__btn-wrapper) {
+    padding-bottom: 16px;
+    display: flex;
+    gap: 16px;
+
+    @include bp(mobile) {
+      flex-direction: column;
+    }
   }
 
-  form :global(.auth-form__footer) {
+  .auth-modal :global(.auth-form__footer) {
     padding-top: 16px;
   }
 
-  form :global(.auth-form__footer p) {
+  .auth-modal :global(.auth-form__footer p) {
     font-size: 14px;
     color: #777;
     text-align: center;
   }
 
-  form :global(.auth-form__header-icons) {
+  .auth-modal :global(.auth-form__header-icons) {
     display: flex;
     justify-content: center;
     padding-bottom: 16px;
@@ -135,8 +115,9 @@
     }
   }
 
-  form :global(.icon__span) {
+  .auth-modal :global(.icon__span) {
     margin-left: 8px;
     font-size: 14px;
   }
+
 </style>
