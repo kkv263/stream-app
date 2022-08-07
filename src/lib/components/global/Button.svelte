@@ -93,6 +93,7 @@
       text-decoration: none;
       transition: $transition;
       border-radius:  0;
+      min-height: 0;
 
       &.primary {
         color: $primary;

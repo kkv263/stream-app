@@ -14,6 +14,7 @@
   export let pwVisible:string = 'password';
   export let required:boolean | null = null;
   export let error:boolean = false;
+  export let noerror:boolean | null = null;
 
   const dispatchError = createEventDispatcher();
 
@@ -78,7 +79,7 @@
       {value} 
       {required} 
       on:input={bindValue}
-      on:blur={(e) => validateInput(e,type)}/>
+      on:blur={(e) => {if(!noerror) validateInput(e,type)}}/>
       {#if error}
         <span class="error-text">{authError[type]?.error}</span>
       {/if}
@@ -152,6 +153,7 @@
 
     &.error {
       border-color: $error-red;
+      background-color: rgba($error-red, 0.05);
     }
     &[type="text"]:not(#authPassword),
     &[type="date"] {

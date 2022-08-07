@@ -11,7 +11,7 @@
   let loading: boolean = false;
   let email: string;
   let password: string;
-  let error: boolean = true;
+  let errorString: string | null = null;
 
   const dispatchLogin = createEventDispatcher();
 
@@ -25,23 +25,19 @@
       const { user, session, error } = await supabase.auth.signIn({ email, password });
       if (error) throw error;
     } catch (error: any) {
-      console.log(error);
-      alert(error.error_description || error.message);
+      if (error.description || error.message) {
+        errorString = 'Email address or password is invalid.'
+      }
     } finally {
       loading = false;
     }
   };
-
-  const handleInputError = (e: CustomEvent) => {
-    error = e.detail.state;
-  }
-
 </script>
 
 <form on:submit|preventDefault={handleLogin} in:fade={{duration: 200, delay: 100}}>
   <header class="auth-form__header">
     <h2 class="header">Login</h2>
-    <p>Login to your account to continue!</p>
+    <p>Sign in with:</p>
   </header>
   <div class="auth-form__header-icons">
     <Button on:click={() => signInWithPlatform('twitch')} square type="button" color="twitch">
@@ -53,15 +49,18 @@
       <span class='icon__span'>YouTube</span>
     </Button>
   </div>
-  <div class="auth-form__wrapper">
-    <Input on:error={handleInputError} name="authEmail" type="email" placeholder="name@example.com" bind:value={email}>Email Address</Input>
-    <Input on:error={handleInputError} name="authPassword" type="password" placeholder="Password" bind:value={password}>
+  <div class="auth-form__wrapper" class:errorString>
+    <Input noerror name="authEmail" type="email" placeholder="name@example.com" bind:value={email}>Email Address</Input>
+    <Input noerror name="authPassword" type="password" placeholder="Password" bind:value={password}>
       <span>Password</span>
       <button type="button" on:click={() => authModalState.set('forgot')} class="forgot">Forgot Password?</button>
     </Input>
+    {#if errorString}
+      <div class="error-text">{errorString}</div>
+    {/if}
   </div>
   <div class="auth-form__btn-wrapper">
-    <Button full type="submit" color="primary" disabled={loading || error} arrow>{loading ? "loading" : "log in"}</Button>
+    <Button full type="submit" color="primary" disabled={loading} arrow>{loading ? "loading" : "log in"}</Button>
   </div>
   <div class="auth-form__footer">
     <p>No account? <Button type="button" color="primary" link on:click={() => authModalState.set('signup')}>Sign up for Potion</Button></p>
@@ -70,6 +69,7 @@
 
 <style lang="scss">
   @import '../../../styles/vars.scss';
+  @import "../../../styles/breakpoints";
   .forgot {
     color: #777;
     background-color: transparent;
@@ -82,5 +82,24 @@
     &:focus {
       color: $secondary;
     }
+  }
+
+  .auth-form__wrapper{
+    position: relative;
+
+    .error-text {
+      position: absolute;
+      bottom: 32px;
+      left: 0;
+      color: $error-red;
+      @include bp(tablet) {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .errorString :global(input) {
+    border-color: $error-red;
+    background-color: rgba($error-red, 0.05);
   }
 </style>
