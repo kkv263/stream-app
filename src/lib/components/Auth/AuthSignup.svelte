@@ -28,13 +28,13 @@
       loading = true;
       const { user, error } = await supabase.auth.signUp(
         { email, password },
-        // {
-        //   data: { 
-        //     username: userName, 
-        //     display_name: displayName,
-        //     birthdate: birthdate,
-        //   }
-        // }
+        {
+          data: { 
+            username: userName, 
+            display_name: displayName,
+            birthdate: birthdate,
+          }
+        }
       );
       if (error) throw error;
     } catch (error: any) {
