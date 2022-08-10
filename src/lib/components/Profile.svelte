@@ -1,11 +1,11 @@
 <script lang="ts">
   import { supabase } from "$lib/utils/supabaseClient";
-  import { user } from "$lib/utils/sessionStore";
+  import { user } from "$lib/stores/sessionStore";
+  import { goto } from '$app/navigation';
 
   let loading = true;
   let username: string | null = null;
-  let website: string | null = null;
-  let avatar_url: string | null = null;
+  let displayName: string | null = null;
 
   const getProfile = async () => {
     try {
@@ -14,15 +14,14 @@
 
       let { data, error, status } = await supabase
         .from("profiles")
-        .select(`username, website, avatar_url`)
+        .select(`username, display_name`)
         .eq("id", user?.id)
         .single();
 
       if (error && status !== 406) throw error;
       if (data) {
         username = data.username;
-        website = data.website;
-        avatar_url = data.avatar_url;
+        displayName = data.display_name;
       }
     } catch (error: any) {
       alert(error.message);
@@ -33,13 +32,13 @@
 
   const updateProfile = async () => {
     try {
+      // https://supabase.com/docs/reference/javascript/auth-update
       loading = true;
       const user = supabase.auth.user();
       const updates = {
         id: user?.id,
         username,
-        website,
-        avatar_url,
+        displayName,
         updated_at: new Date(),
       };
 
@@ -64,6 +63,7 @@
       alert(error.message);
     } finally {
       loading = false;
+      goto('/welcome');
     }
   }
 </script>
@@ -78,8 +78,8 @@
     <input id="username" type="text" bind:value={username} />
   </div>
   <div>
-    <label for="website">Website</label>
-    <input id="website" type="website" bind:value={website} />
+    <label for="website">Display Name</label>
+    <input id="displayName" type="text" bind:value={displayName} />
   </div>
 
   <div>
@@ -87,8 +87,6 @@
   </div>
 
   <div>
-    <button class="button block" on:click={signOut} disabled={loading}>
-      Sign Out
-    </button>
+    <button class="button block" on:click={signOut} disabled={loading}>Sign Out</button>
   </div>
 </form>

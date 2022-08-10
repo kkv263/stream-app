@@ -1,6 +1,6 @@
 import { get } from 'svelte/store';
 import cookie from 'cookie';
-import { oauth_verifiers } from '$lib/utils/sessionStore';
+import { oauth_verifiers } from '$lib/stores/sessionStore';
 import { getUser } from '$lib/utils/helpers'
 import type { RequestHandler } from "@sveltejs/kit";
 import type { CallBackOptions } from '$lib/utils/types';
