@@ -7,6 +7,7 @@
   import Input from "$lib/components/global/Input.svelte";
   import { createEventDispatcher } from 'svelte';
   import { fade } from "svelte/transition";
+  import { goto } from '$app/navigation';
 
   let loading: boolean = false;
   let email: string;
@@ -23,7 +24,10 @@
     try {
       loading = true;
       const { user, session, error } = await supabase.auth.signIn({ email, password });
-      if (error) throw error;
+      if (error) {throw error;}
+
+      authModalState.set('')
+      goto('/');
     } catch (error: any) {
       if (error.description || error.message) {
         errorString = 'Email address or password is invalid.'
