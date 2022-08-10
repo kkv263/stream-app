@@ -8,6 +8,7 @@
     padding: 0 16px;
     width: 100%;
     box-sizing: border-box;
+    margin: 0 auto;
   }
 </style>
 

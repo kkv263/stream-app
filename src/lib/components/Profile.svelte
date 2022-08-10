@@ -6,15 +6,15 @@
   let loading = true;
   let username: string | null = null;
   let displayName: string | null = null;
+  let firstLogin: boolean;
 
   const getProfile = async () => {
     try {
       loading = true;
       const user = supabase.auth.user();
-
       let { data, error, status } = await supabase
         .from("profiles")
-        .select(`username, display_name`)
+        .select(`username, display_name, first_login`)
         .eq("id", user?.id)
         .single();
 
@@ -22,13 +22,57 @@
       if (data) {
         username = data.username;
         displayName = data.display_name;
+        firstLogin = data.first_login;
       }
+      if (firstLogin) { return };
+      await removeInitialMetadata();
+
     } catch (error: any) {
       alert(error.message);
     } finally {
       loading = false;
     }
   };
+
+  const removeInitialMetadata = async () => {
+    try {
+      const user = supabase.auth.user();
+      loading = true
+      const { error } = await supabase.auth.update({ 
+        data: { 
+          username: null, 
+          display_name: null,
+          birthdate: null,
+        }
+      });
+
+      if (error) throw error;
+    } catch(error: any) {
+      alert(error.message);
+    } finally {
+      loading = false;
+    }
+
+    try {
+      const user = supabase.auth.user();
+      loading = true
+      const updates = {
+        id: user?.id,
+        first_login: true,
+        updated_at: new Date(),
+      };
+
+      let { error } = await supabase.from("profiles").upsert(updates, {
+        returning: "minimal", // Don't return the value after inserting
+      });
+
+      if (error) throw error;
+    } catch(error: any) {
+      alert(error.message);
+    } finally {
+      loading = false;
+    }
+  }
 
   const updateProfile = async () => {
     try {

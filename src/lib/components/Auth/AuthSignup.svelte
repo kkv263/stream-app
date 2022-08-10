@@ -15,7 +15,7 @@
   let birthdate: string;
   let displayName: string;
   let error: boolean = true;
-  let step: 1 | 2 = 1;
+  let step: 1 | 2 | 3 = 1;
 
   const dispatchSignup = createEventDispatcher();
 
@@ -26,7 +26,7 @@
   const handleSignup = async () => {
     try {
       loading = true;
-      const { user, error } = await supabase.auth.signUp(
+      const { error } = await supabase.auth.signUp(
         { email, password },
         {
           data: { 
@@ -36,22 +36,23 @@
           }
         }
       );
+
       if (error) throw error;
     } catch (error: any) {
       alert(error.error_description || error.message);
     } finally {
       loading = false;
+      step = 3;
     }
   };
 
   const handleInputError = (e: CustomEvent) => {
     error = e.detail.state;
   }
-
 </script>
 
-{#if step === 1} 
-  <div in:fade={{duration: 200, delay: 100}}>
+{#if step === 1 } 
+  <form on:submit|preventDefault={() => step = 2} in:fade={{duration: 200, delay: 100}}>
     <header class="auth-form__header">
       <h2 class="header">Sign up</h2>
       <p>Create an account with other platforms:</p>
@@ -73,12 +74,12 @@
       </Input>
     </div>
     <div class="auth-form__btn-wrapper">
-      <Button on:click={() => step = 2} full type="button" color="primary" disabled={error} arrow>sign up</Button>
+      <Button full type="submit" color="primary" disabled={error} arrow>sign up</Button>
     </div>
     <div class="auth-form__footer">
       <p>Already registered? <Button type="button" color="primary" link on:click={() => authModalState.set('login')}>Login to Potion</Button></p>
     </div>
-  </div>
+  </form>
 {:else if step === 2} 
   <form on:submit|preventDefault={handleSignup} in:fade={{duration: 200, delay: 100}}>
     <header class="auth-form__header">
@@ -95,10 +96,29 @@
       <Button full type="submit" color="primary" disabled={loading || error} arrow>{loading ? "loading" : "finish sign up"}</Button>
     </div>
   </form>
+
+{:else if step === 3}
+  <div in:fade={{duration: 200, delay: 100}}>
+    <header class="auth-form__header">
+      <h2 class="header">Verify your email!</h2>
+      <p>Check your email and verify your email<br>to gain acccess to your Potion account </p>
+    </header>
+    <span class="temp">[image here]</span>
+    <div class="auth-form__btn-wrapper">
+      <Button on:click={() => authModalState.set('')} full type="button" color="primary">Close</Button>
+    </div>
+  </div>
 {/if}
 
 <style lang="scss">
   .auth-form__header {
     padding-bottom: 8px;
+  }
+
+  .temp {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 32px;
   }
 </style>
