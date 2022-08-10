@@ -1,7 +1,7 @@
 import { get } from 'svelte/store';
 import cryptoRandomString from 'crypto-random-string';
 import crypto from 'crypto';
-import { oauth_verifiers } from '$lib/stores/sessionStore';
+import { oauth_verifiers } from '$lib/stores/oauthVerifiersStore';
 import type { RedirectOptions, OAuthVerifiers } from '$lib/utils/types';
 import type { RequestHandler } from "@sveltejs/kit";
 
