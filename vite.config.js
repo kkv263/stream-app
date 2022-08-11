@@ -6,6 +6,10 @@ const config = {
 	define: {
 		'process.env': process.env,
 	},
+	test: {
+    globals: true,
+		environment: 'jsdom',
+  },
 };
 
 export default config;

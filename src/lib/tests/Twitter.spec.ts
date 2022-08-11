@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/svelte';
-import Twitter from "../components/Twitter.svelte";
+import { expect, test } from 'vitest';
+import Twitter from "$lib/components/Twitter.svelte";
 
 test("says 'hello world!'", () => {
     render(Twitter);

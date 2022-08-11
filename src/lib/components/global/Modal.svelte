@@ -5,7 +5,7 @@
 </script>
 
 <aside class="modal" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-modal="true" transition:fade={{duration: 200}}>
-  <div on:click|stopPropagation={() => authModalState.set('')} class="modal__backdrop" data-dismiss="modal"></div>
+  <div on:click|stopPropagation={() => authModalState.set('')} data-testid="modal__backdrop" class="modal__backdrop" data-dismiss="modal"></div>
   <section class="modal__inner {type}">
     <button on:click={() => authModalState.set('')} type="button" class="modal__close-icon" title="Close" data-dismiss="modal">&times;</button>
     <div class="modal__content"><slot></slot></div>
