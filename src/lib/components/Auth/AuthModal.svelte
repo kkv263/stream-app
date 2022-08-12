@@ -44,8 +44,6 @@
   {:else if $authModalState === 'forgot'}
     <AuthForgot />
   {/if}
-  
-
 </div>
 
 <style lang="scss">
