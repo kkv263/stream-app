@@ -52,7 +52,7 @@
 </script>
 
 {#if step === 1 } 
-  <form on:submit|preventDefault={() => step = 2} in:fade={{duration: 200, delay: 100}}>
+  <form data-testid="auth-form__signup" on:submit|preventDefault={() => step = 2} in:fade={{duration: 200, delay: 100}}>
     <header class="auth-form__header">
       <h2 class="header">Sign up</h2>
       <p>Create an account with other platforms:</p>
