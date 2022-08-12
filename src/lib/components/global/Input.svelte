@@ -76,6 +76,7 @@
       id={name} 
       type={name === 'authPassword' ? pwVisible : type} 
       placeholder={placeholder} 
+      data-testid={`${type}-input`}
       {value} 
       {required} 
       on:input={bindValue}
