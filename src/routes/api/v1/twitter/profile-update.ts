@@ -3,11 +3,12 @@ import cookie from 'cookie';
 import { getRefreshToken } from '$lib/utils/authHelpers';
 import { filterNullCookieString } from '$lib/utils/authHelpers';
 import type { RequestHandler } from "@sveltejs/kit";
-import type { TweetPostOptions } from '$lib/components/types/twitter';
+import type { TweetProfileUpdateOptions } from '$lib/components/types/twitter';
 
-
-const writeTweet = (token:string, body:TweetPostOptions) => {
-  const endpoint = 'https://api.twitter.com/2/tweets';
+const writeTweet = (token:string, body:TweetProfileUpdateOptions) => {
+  // Migrate to v2 once there is a endpoint 
+  // https://developer.twitter.com/en/docs/twitter-api/migrate/twitter-api-endpoint-map
+  const endpoint = 'https://api.twitter.com/1.1/account/update_profile.json';
   return fetch(endpoint, {
     method: 'POST',
     headers: {

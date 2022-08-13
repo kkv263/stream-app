@@ -1,5 +1,11 @@
-import type { RefreshTokenOptions } from "$lib/utils/types";
+import type { RefreshTokenOptions } from "$lib/components/types/auth";
 
+/**
+ * @description Call this function whenever there is potential for an access token to be expired from making an API call.
+ * @param refresh_token Refresh token stored usually in HTTPonly cookie
+ * @param platform (ex. twitter/twitch etc)
+ * @returns a response with a new access token and refresh token. 
+ */
 export const getRefreshToken = async(refresh_token:string, platform:string) => {
   let endpoint = '/oauth2/token';
   switch(platform) {
@@ -36,6 +42,12 @@ export const getRefreshToken = async(refresh_token:string, platform:string) => {
   })
 };
 
+/**
+ * @description Get's username using platform API. Mainly used to store user session.
+ * @param token Access token to make the API call
+ * @param platform (ex. twitter/twitch etc)
+ * @returns the username of the user from the platform
+ */
 export const getUser = async(token:string, platform: string) => {
   let endpoint = '';
   switch(platform) {
@@ -63,11 +75,15 @@ export const getUser = async(token:string, platform: string) => {
   });
 };
 
-// Filter weird null / undefined cookies
+/**
+ * @description Some cookies are appended with null/undefined are unused; filter those cookies out.
+ * @param cookieString the original cookie string before parsing.
+ * @returns a cookie string ready to be parsed.
+ */
 export const filterNullCookieString = (cookieString:string|null) => cookieString?.split(';').filter(name => !name.includes('undefined') &&  !name.includes('null') ).join(';')
 
 /* 
-Example of acces token
+Example of access token
 {
   token_type: 'bearer',
   expires_in: 7200,

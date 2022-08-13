@@ -12,7 +12,6 @@
 
 <script lang="ts">
   import AuthModal from "$lib/components/Auth/AuthModal.svelte";
-  import Twitter from "$lib/components/Twitter.svelte";
   import Section from "$lib/components/layout/Section.svelte";
   import Nav from "$lib/components/layout/Nav.svelte";
   import { authModalState } from "$lib/stores/authModalStore";

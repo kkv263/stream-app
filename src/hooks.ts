@@ -1,6 +1,6 @@
 import cookie from 'cookie';
 import type { Handle, GetSession } from "@sveltejs/kit";
-import { filterNullCookieString } from '$lib/utils/helpers';
+import { filterNullCookieString } from '$lib/utils/authHelpers';
 
 // https://kit.svelte.dev/docs/hooks
 export const handle:Handle = async({event, resolve}) => {

@@ -17,7 +17,7 @@
   import Section from "$lib/components/layout/Section.svelte";
   import Profile from "$lib/components/Profile.svelte";
   import type { Session } from "@supabase/supabase-js";
-  import Twitter from "$lib/components/Twitter.svelte";
+  import Twitter from "$lib/components/Twitter/Twitter.svelte";
 
   user.set(supabase.auth.user());
 

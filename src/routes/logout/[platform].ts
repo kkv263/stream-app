@@ -1,5 +1,5 @@
 import cookie from 'cookie';
-import type { LogoutOptions } from "$lib/utils/types";
+import type { LogoutOptions } from "$lib/components/types/auth";
 import type { RequestHandler } from "@sveltejs/kit";
 
 export const GET:RequestHandler = async (event) => {

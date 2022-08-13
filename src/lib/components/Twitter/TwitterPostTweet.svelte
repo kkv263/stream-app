@@ -1,7 +1,6 @@
 <script lang="ts">
-	import Section from "$lib/components/layout/Section.svelte";
-
 	let tweet:string;
+  
 	const  handleClick = async() => {
 		try {
 			const data = await fetch('/api/v1/twitter/tweet', {
@@ -19,6 +18,8 @@
 			if (data.status === 403) {
 				// Create a modal for error
 				console.log(data.detail);
+        alert('twitter error')
+        return;
 			}
 
 			// Update with data
@@ -29,18 +30,14 @@
 			console.log(error);
 		}
 	}
-	export let twtUser:string;
 </script>
 
-<Section>
-	<h1>Hello world!</h1>
-  {#if twtUser}
-    <h2>Welcome {twtUser}</h2>
-    <a href='logout/twitter'>logout tweeter</a>
-		<input type="text"  bind:value={tweet}>
-		<button on:click={handleClick}>Click me</button>
-  {:else}
-		<h2>You are not logged in</h2>
-    <a href='login/twitter' rel="external">authorize tweeter</a>
-  {/if}
-</Section>
+<h3>Post Tweet</h3>
+<textarea type="text" bind:value={tweet} />
+<button on:click={handleClick}>Post tweet</button>
+
+<style lang="scss">
+  h3 {
+    padding-bottom: 0;
+  }
+</style>
