@@ -1,17 +1,8 @@
 import cryptoRandomString from 'crypto-random-string';
-import crypto from 'crypto';
+import { sha256, base64URLEncode } from '$lib/utils/generalHelpers';
 import { oauth_verifiers } from '$lib/stores/oauthVerifiersStore';
 import type { RedirectOptions, OAuthVerifiers } from '$lib/components/types/auth';
 import type { RequestHandler } from "@sveltejs/kit";
-
-const base64URLEncode = (str:Buffer) => {
-  return str.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-}
-
-const sha256 = (buffer:any) => {
-  return crypto.createHash('sha256').update(buffer).digest();
-}
-
 
 // Ask for OAuth token from twitter.
 export const GET:RequestHandler = async (event) => {

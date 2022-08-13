@@ -16,8 +16,9 @@
   import { supabase } from "$lib/utils/supabaseClient";
   import Section from "$lib/components/layout/Section.svelte";
   import Profile from "$lib/components/Profile.svelte";
-  import type { Session } from "@supabase/supabase-js";
+  import OBS from "$lib/components/OBS/OBS.svelte";
   import Twitter from "$lib/components/Twitter/Twitter.svelte";
+  import type { Session } from "@supabase/supabase-js";
 
   user.set(supabase.auth.user());
 
@@ -31,6 +32,7 @@
 <Section>
   {#if $user}
     <Twitter twtUser={twitterUser}/>
+    <OBS />
     <!-- <Profile />
     <a href="/settings">This is settings page</a> -->
   {:else}
