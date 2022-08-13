@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { supabase } from "$lib/utils/supabaseClient";
+  import { supabase } from "$lib/_includes/supabaseClient";
   import { authModalState } from "$lib/stores/authModalStore";
   import AuthSignup from "$lib/components/Auth/AuthSignup.svelte";
   import AuthLogin from "$lib/components/Auth/AuthLogin.svelte";

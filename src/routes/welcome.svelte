@@ -15,7 +15,7 @@
   import Section from "$lib/components/layout/Section.svelte";
   import Nav from "$lib/components/layout/Nav.svelte";
   import { authModalState } from "$lib/stores/authModalStore";
-  import Modal from "$lib/components/global/Modal.svelte";
+  import Modal from "$lib/components/_global/Modal.svelte";
 
   export let twitchUser:string;
 </script>

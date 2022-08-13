@@ -1,6 +1,6 @@
 <script lang="ts">
   import { setContext } from "svelte";
-  import { supabase } from "$lib/utils/supabaseClient";
+  import { supabase } from "$lib/_includes/supabaseClient";
   import OBSWebSocket from 'obs-websocket-js';
   import Section from "$lib/components/layout/Section.svelte";
   import ObsInput from "./OBSInput.svelte";

@@ -1,9 +1,9 @@
 import { get } from 'svelte/store';
 import cookie from 'cookie';
 import { oauth_verifiers } from '$lib/stores/oauthVerifiersStore';
-import { getUser } from '$lib/utils/authHelpers'
+import { getUser } from '$lib/_includes/authHelpers'
 import type { RequestHandler } from "@sveltejs/kit";
-import type { CallBackOptions } from '$lib/components/types/auth';
+import type { CallBackOptions } from '$lib/types/auth';
 
 
 export const GET: RequestHandler = async(event) => {

@@ -1,8 +1,8 @@
 <script lang="ts">
   import { authModalState } from "$lib/stores/authModalStore";
-  import { supabase } from "$lib/utils/supabaseClient";
-  import Button from "$lib/components/global/Button.svelte";
-  import Input from "$lib/components/global/Input.svelte";
+  import { supabase } from "$lib/_includes/supabaseClient";
+  import Button from "$lib/components/_global/Button.svelte";
+  import Input from "$lib/components/_global/Input.svelte";
   import { fade } from "svelte/transition";
 
   let loading: boolean = false;

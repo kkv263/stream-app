@@ -1,4 +1,4 @@
-import type { RefreshTokenOptions } from "$lib/components/types/auth";
+import type { RefreshTokenOptions } from "$lib/types/auth";
 
 /**
  * @description Call this function whenever there is potential for an access token to be expired from making an API call.

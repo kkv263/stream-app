@@ -1,7 +1,7 @@
 import cryptoRandomString from 'crypto-random-string';
-import { sha256, base64URLEncode } from '$lib/utils/generalHelpers';
+import { sha256, base64URLEncode } from '$lib/_includes/generalHelpers';
 import { oauth_verifiers } from '$lib/stores/oauthVerifiersStore';
-import type { RedirectOptions, OAuthVerifiers } from '$lib/components/types/auth';
+import type { RedirectOptions, OAuthVerifiers } from '$lib/types/auth';
 import type { RequestHandler } from "@sveltejs/kit";
 
 // Ask for OAuth token from twitter.

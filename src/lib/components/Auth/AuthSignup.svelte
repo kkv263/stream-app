@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { supabase } from "$lib/utils/supabaseClient";
+  import { supabase } from "$lib/_includes/supabaseClient";
   import { authModalState } from "$lib/stores/authModalStore";
   import Twitch from "$lib/components/icons/Twitch.svelte";
   import Youtube from "$lib/components/icons/Youtube.svelte";
-  import Button from "$lib/components/global/Button.svelte";
-  import Input from "$lib/components/global/Input.svelte";
+  import Button from "$lib/components/_global/Button.svelte";
+  import Input from "$lib/components/_global/Input.svelte";
   import { createEventDispatcher } from 'svelte';
   import { fade } from "svelte/transition";
 

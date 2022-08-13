@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitForElementToBeRemoved } from '@testing-library/svelte';
-import Modal from "$lib/components/global/Modal.svelte";
+import Modal from "$lib/components/_global/Modal.svelte";
 
 describe('modal content', () => {
   it('close button should have x', () => {

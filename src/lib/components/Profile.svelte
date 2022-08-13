@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { supabase } from "$lib/utils/supabaseClient";
+  import { supabase } from "$lib/_includes/supabaseClient";
   import { user } from "$lib/stores/sessionStore";
   import { goto } from '$app/navigation';
 

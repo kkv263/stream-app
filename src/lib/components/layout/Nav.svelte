@@ -1,6 +1,6 @@
 <script lang="ts">
   import Section from "$lib/components/layout/Section.svelte";
-  import Button from "$lib/components/global/Button.svelte";
+  import Button from "$lib/components/_global/Button.svelte";
   import { authModalState } from "$lib/stores/authModalStore";
 
 </script>

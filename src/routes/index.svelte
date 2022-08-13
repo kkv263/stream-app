@@ -13,7 +13,7 @@
 
 <script lang="ts">
   import { user } from "$lib/stores/sessionStore";
-  import { supabase } from "$lib/utils/supabaseClient";
+  import { supabase } from "$lib/_includes/supabaseClient";
   import Section from "$lib/components/layout/Section.svelte";
   import Profile from "$lib/components/Profile.svelte";
   import OBS from "$lib/components/OBS/OBS.svelte";

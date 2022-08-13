@@ -1,9 +1,9 @@
 
 import cookie from 'cookie';
-import { getRefreshToken } from '$lib/utils/authHelpers';
-import { filterNullCookieString } from '$lib/utils/authHelpers';
+import { getRefreshToken } from '$lib/_includes/authHelpers';
+import { filterNullCookieString } from '$lib/_includes/authHelpers';
 import type { RequestHandler } from "@sveltejs/kit";
-import type { TweetProfileUpdateOptions } from '$lib/components/types/twitter';
+import type { TweetProfileUpdateOptions } from '$lib/types/twitter';
 
 const writeTweet = (token:string, body:TweetProfileUpdateOptions) => {
   // Migrate to v2 once there is a endpoint 
