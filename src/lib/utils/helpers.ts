@@ -63,6 +63,9 @@ export const getUser = async(token:string, platform: string) => {
   });
 };
 
+// Filter weird null / undefined cookies
+export const filterNullCookieString = (cookieString:string|null) => cookieString?.split(';').filter(name => !name.includes('undefined') &&  !name.includes('null') ).join(';')
+
 /* 
 Example of acces token
 {

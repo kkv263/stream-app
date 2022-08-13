@@ -1,19 +1,22 @@
 import cookie from 'cookie';
 import type { Handle, GetSession } from "@sveltejs/kit";
+import { filterNullCookieString } from '$lib/utils/helpers';
 
 // https://kit.svelte.dev/docs/hooks
 export const handle:Handle = async({event, resolve}) => {
-  const cookies = Object.assign({user: null}, cookie.parse(event.request.headers.get('cookie') || ''));
+  const preparsedCookies = event.request.headers.get('cookie');
+  const cookies = Object.assign({user: null}, cookie.parse(filterNullCookieString(preparsedCookies) || ''));
   event.locals.platform = cookies.platform;
   event.locals.user = (<Record<string,any>>cookies)[`${cookies.platform}user`];
   event.locals.token = (<Record<string,any>>cookies)[`${cookies.platform}token`];
 
   const response = await resolve(event);
+
   const platform = event.locals.platform;
   const setCookies = {
-    'user': `${platform}user=${event.locals.user || ''}; path=/; HttpOnly`,
-    'token': `${platform}token=${event.locals.token || ''}; path=/; HttpOnly`,
-    'platform': `platform=${platform || ''}; path=/; HttpOnly`
+    'user':  cookie.serialize(`${platform}user`, `${event.locals.user || ''}`, {path: '/', httpOnly: true}),
+    'token':  cookie.serialize(`${platform}token`, `${event.locals.token || ''}`, {path: '/', httpOnly: true}),
+    'platform':  cookie.serialize(`platform`, `${platform || ''}`, {path: '/', httpOnly: true}),
   }
 
   // Set all necessary cookies depending on route

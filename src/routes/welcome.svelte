@@ -4,7 +4,6 @@
   export const load:Load = async({session}) => {
     return {
       props: {
-        ...(session.platform === 'twitter') && {twitterUser: session.user},
         ...(session.platform === 'twitch') && {twitchUser: session.user},
       }
     };
@@ -19,7 +18,6 @@
   import { authModalState } from "$lib/stores/authModalStore";
   import Modal from "$lib/components/global/Modal.svelte";
 
-  export let twitterUser:string;
   export let twitchUser:string;
 </script>
 
@@ -30,18 +28,6 @@
   </Modal>
 {/if}
 
-<!-- should dynamically generate -->
-<Section>
-  {#if twitterUser}
-    <h2>Welcome {twitterUser}</h2>
-
-    <Twitter/>
-
-    <a href='logout/twitter'>logout tweeter</a>
-  {:else}
-    <a href='login/twitter' rel="external">authorize tweeter</a>
-  {/if}
-</Section>
 
 <Section>
   {#if twitchUser}
