@@ -67,7 +67,7 @@ export const GET: RequestHandler = async(event) => {
     status: 302,
     headers: {
       location: '/',
-      'set-cookie': `${cookie.serialize(`${platform}refresh`, tokenResponse.refresh_token)}; path=/; HttpOnly`
+      'set-cookie': cookie.serialize(`${platform}refresh`, tokenResponse.refresh_token, {path: '/', httpOnly: true})
     }
   }
 };
