@@ -3,7 +3,6 @@ export interface TweetPostOptions {
   reply_settings?:string
 }
 
-
 export interface TweetProfileUpdateOptions {
   name?:string
   description?:string
