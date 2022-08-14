@@ -5,13 +5,18 @@
   import OBSWebSocket from 'obs-websocket-js';
   import Section from "$lib/components/layout/Section.svelte";
   import ObsInput from "./OBSInput.svelte";
+  import ObsScene from "./OBSScene.svelte";
   
   const obs:OBSWebSocket = new OBSWebSocket();
   let localhost:string;
   let password:string;
+  // TODO: types
   let loadedInputs:any = [];
+  let loadedScenes:any = [];
   let connectedToObs:boolean = false;
   let existingOBSParams:boolean = false;
+  let activeSceneName:string | undefined;
+  let activeScenePreviewName:string | undefined;
 
   setContext('obs', obs)
 
@@ -50,20 +55,27 @@
 
   const loadOBSComponents = async () => {
     if(!connectedToObs) { return; }
-    const { inputs }  = await obs.call('GetInputList');
+    const specialInputs = await obs.call('GetSpecialInputs');
+    const { currentProgramSceneName, scenes, currentPreviewSceneName } = await obs.call('GetSceneList');
     const loadInputs = [];
+    const loadScenes = [];
 
-    for (const input of inputs) {
-      const { inputVolumeDb } = await obs.call('GetInputVolume', {inputName: input.inputName!.toString()});
-      const { inputMuted } = await obs.call('GetInputMute', {inputName: input.inputName!.toString()});
-      loadInputs.push({
-        name: input.inputName!.toString(),
-        volume: inputVolumeDb.toFixed(1),
-        muted: inputMuted
-      })
+    for (const input of Object.values(specialInputs)) {
+      if (!input) { continue; }
+      loadInputs.push({ name: input })
     }
 
-    return loadInputs;
+    for (const input of Object.values(scenes)) {
+      if (!input) { continue; }
+      loadScenes.push({ name: input.sceneName, index: input.sceneIndex })
+    }
+
+    return { 
+      'activeScenePreviewName': currentPreviewSceneName ?? '',
+      'activeSceneName': currentProgramSceneName ?? '',
+      'inputs': loadInputs, 
+      'scenes': loadScenes  
+    };
   }
 
   const obsConnect = async() => {
@@ -92,7 +104,13 @@
       }
 
       connectedToObs = true;
-      loadedInputs = await loadOBSComponents();
+      const obsComponents = await loadOBSComponents();
+      loadedInputs = obsComponents?.inputs;
+      loadedScenes = obsComponents?.scenes;
+      activeSceneName = obsComponents?.activeSceneName;
+      activeScenePreviewName = obsComponents?.activeScenePreviewName;
+      
+      obs.on('CurrentProgramSceneChanged', (e) => activeSceneName = e.sceneName);
     } catch (error: any) {
       console.log(error);
       console.error('Failed to connect', error.code, error.message);
@@ -128,8 +146,12 @@
   {:else}
     <button on:click={obsDisconnect}>disconnect from obs</button>
     <div class="wrapper">
-      {#each loadedInputs as { name, volume, muted }, i}
-        <ObsInput name={name} volume={volume}, muted={muted}/>
+      <span>currentActiveScene: {activeSceneName}</span>
+      {#each loadedScenes as { name }, i}
+        <ObsScene name={name}/>
+      {/each}
+      {#each loadedInputs as { name }, i}
+        <ObsInput name={name}/>
       {/each}
     </div>
   {/if}
@@ -141,5 +163,6 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    gap: 32px;
   }
 </style>
