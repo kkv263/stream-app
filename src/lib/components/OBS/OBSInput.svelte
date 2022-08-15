@@ -1,45 +1,60 @@
 <script lang="ts">
-  import { getContext, onMount } from 'svelte';
+  import { getContext, onMount, onDestroy } from 'svelte';
   import type OBSWebSocket from 'obs-websocket-js';
+  import type { ObsInputs } from '$lib/types/obs';
 
-  export let name:string;
-  let volume:string;
-  let muted:boolean;
   let obs:OBSWebSocket = getContext('obs');
+  let inputs:ObsInputs = {};
 
   onMount(async () => {
+    inputs = await loadInputs();
+
     // Load volume and muted status
-    const { inputVolumeDb } = await obs.call('GetInputVolume', {inputName: name});
-    const { inputMuted } = await obs.call('GetInputMute', {inputName: name});
-
-    volume = inputVolumeDb.toFixed(1);
-    muted = inputMuted;
-
-    obs.on('InputMuteStateChanged', (e) => {
-      if (name != e.inputName) { return; } 
-      muted = e.inputMuted;
-    })
-
-    obs.on('InputVolumeChanged', (e) => {
-      if (name != e.inputName) { return; } 
-      volume = e.inputVolumeDb.toFixed(1);
-    })
+    obs.on('InputMuteStateChanged', (e) => inputs[e.inputName].muted = e.inputMuted);
+    obs.on('InputVolumeChanged', (e) => inputs[e.inputName].volume = e.inputVolumeDb.toFixed(0));
+    obs.on('InputVolumeMeters', (e) => {
+      // console.log(e.inputs)
+    });
 	});
 
-  const obsToggleMute = async() => {
-    const { inputMuted } = await obs.call('ToggleInputMute', { inputName: name });
-    muted = (inputMuted)
+  onDestroy(() => {
+    obs.off('InputMuteStateChanged', () => {});
+    obs.off('InputVolumeChanged', () => {});
+    obs.off('InputVolumeMeters', () => {});
+	});
+
+  const loadInputs = async() => {
+    const specialInputs = await obs.call('GetSpecialInputs');
+    let loadInputs:ObsInputs = {};
+
+    for (const input of Object.values(specialInputs)) {
+      if (!input) { continue; }
+      const { inputVolumeDb } = await obs.call('GetInputVolume', {inputName: input});
+      const { inputMuted } = await obs.call('GetInputMute', {inputName: input});
+      loadInputs[input] = { volume: inputVolumeDb.toFixed(1), muted: inputMuted }
+    }
+
+    return loadInputs;
   }
 
-  const obsHandleVolume = async () => {
-    await obs.call('SetInputVolume', { inputName: name, inputVolumeDb: parseFloat(volume)})
+  const obsToggleMute = async(name:string) => {
+    const { inputMuted } = await obs.call('ToggleInputMute', { inputName: name });
+    inputs[name].muted = inputMuted
+  }
+
+  const obsHandleVolume = async (name:string) => {
+    await obs.call('SetInputVolume', { inputName: name, inputVolumeDb: parseFloat(inputs[name].volume)})
   }
 </script>
 
 <!-- Definite inpplement settings for % on input -->
 
-<span>input: {name}</span>
-<span>vol: {volume}</span>
-<input list="my-detents" step='.1' type="range" min="-100" max="0" bind:value={volume} on:input={obsHandleVolume}/>
-<span>muted: {muted}</span>
-<button on:click={obsToggleMute}>toggleMute</button>
+{#each Object.entries(inputs) as [ name, values ] }
+  <div>
+    <span>input: {name}</span>
+    <span>vol: {values.volume}</span>
+    <input step='1' type="range" min="-100" max="0" bind:value={values.volume} on:input={()=>obsHandleVolume(name)}/>
+    <span>muted: {values.muted}</span>
+    <button on:click={()=>obsToggleMute(name)}>toggleMute</button>
+  </div>
+{/each}
