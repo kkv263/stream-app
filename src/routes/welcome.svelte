@@ -4,7 +4,7 @@
   export const load:Load = async({session}) => {
     return {
       props: {
-        ...(session.platform === 'twitch') && {twitchUser: session.user},
+        ...(session.twitchuser) && {twitchUser: session.twitchuser},
       }
     };
   }
