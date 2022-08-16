@@ -4,7 +4,7 @@
   export const load:Load = async({session}) => {
     return {
       props: {
-        ...(session.platform === 'twitter') && {twitterUser: session.user},
+        ...(session.twitteruser) && {twitterUser: session.twitteruser},
       }
     };
   }

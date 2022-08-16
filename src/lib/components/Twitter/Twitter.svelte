@@ -1,9 +1,10 @@
 <script lang="ts">
 	import Section from "$lib/components/layout/Section.svelte";
+	import TwitterGetTweets from "./TwitterGetTweets.svelte";
 	import TwitterPostTweet from "./TwitterPostTweet.svelte";
 	import TwitterUpdateProfile from "./TwitterUpdateProfile.svelte";
 	export let twtUser:string;
-	let components = [TwitterPostTweet, TwitterUpdateProfile]
+	let components = [TwitterPostTweet, TwitterUpdateProfile, TwitterGetTweets]
 </script>
 
 <Section>

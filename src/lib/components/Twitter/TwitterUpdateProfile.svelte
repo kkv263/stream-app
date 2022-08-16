@@ -35,7 +35,7 @@
   <h3>Update profile (mainly name for now)</h3>
   <label for="">change name</label>
   <input type="text" bind:value={twitterName} />
-  <!-- Currently in review for elevated access. Aug/13 -->
+  <!-- Must setup OAUTH 1.0 for this to work... is it worth it or just wait for v2 endpoint.  -->
   <!-- <button on:click={handleClick}>Update Profile</button> -->
   
   <style lang="scss">

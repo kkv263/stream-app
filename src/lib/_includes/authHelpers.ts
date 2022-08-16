@@ -67,10 +67,10 @@ export const getUser = async(token:string, platform: string) => {
   }).then(res => res.json())
   .then(data => {
     if (platform === 'twitter') {
-      return data?.data.name;
+      return data?.data;
     }
     else if (platform === 'twitch') {
-      return data?.data[0].display_name;
+      return data?.data[0];
     }
   });
 };
