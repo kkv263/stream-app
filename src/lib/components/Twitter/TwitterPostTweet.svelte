@@ -23,7 +23,6 @@
 			}
 
 			// Update with data
-			console.log(data);
 			alert('success');
 		}
 		catch (error) {

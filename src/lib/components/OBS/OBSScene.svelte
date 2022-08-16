@@ -74,7 +74,7 @@
     <small></small>
   {/each}
   <input type="text" bind:value={createSceneName} />
-  <button type="button"  on:click={OBSCreateScene} >create scene</button>
+  <button type="button" on:click={OBSCreateScene} >create scene</button>
 </div>
 
 <style lang="scss">
