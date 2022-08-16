@@ -12,6 +12,9 @@
   let password:string;
   let connectedToObs:boolean = false;
   let existingOBSParams:boolean = false;
+  //TODO: add automatic reconnect to supabase
+
+  let automaticReconnect = false;
 
   setContext('obs', obs);
 
@@ -32,7 +35,9 @@
 
         if (localhost !== '' && password !== '') {
           existingOBSParams = true;
-          obsConnect();
+          if (automaticReconnect) {
+            obsConnect();
+          }
         }
       }
 

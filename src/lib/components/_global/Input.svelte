@@ -5,7 +5,7 @@
   import Key from "$lib/components/icons/Key.svelte";
   import Eye from "$lib/components/icons/Eye.svelte";
   import EyeOff from "$lib/components/icons/EyeOff.svelte";
-  import type { AuthError } from "$lib/utils/types";
+  import type { AuthError } from "$lib/types/auth";
 
   export let type:string;
   export let placeholder:string;
