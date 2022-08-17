@@ -43,8 +43,7 @@ export const GET:RequestHandler = async (event) => {
   }
 
   if (event.url.searchParams.get('state')) {
-      return { status: 302, headers: { location: '/'}
-    }
+      return new Response(undefined, { status: 302, headers: { location: '/'} })
   }
   // Subscribe and set value then unsubscribe
   const unsub = oauth_verifiers.subscribe(data => {<OAuthVerifiers>{state: data.state, code_verifier:data.code_verifier}});
@@ -53,10 +52,10 @@ export const GET:RequestHandler = async (event) => {
 
   const locationURL = `${endpoint}?${Object.entries(params).flatMap(([key,val]) => val ? `${key}=${params[key as keyof RedirectOptions]}` : []).join('&')}`;
   
-  return {
+  return new Response(undefined, {
     status: 302,
     headers: {
       location: locationURL
     }
-  }
+  })
 };
