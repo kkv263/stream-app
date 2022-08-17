@@ -3,43 +3,45 @@ import cookie from 'cookie';
 import { getRefreshToken } from '$lib/_includes/authHelpers';
 import { filterNullCookieString } from '$lib/_includes/authHelpers';
 import type { RequestHandler } from "@sveltejs/kit";
+import type { TweetProfileUpdateOptions } from '$lib/types/twitter';
 
-
-const deleteTweet = (token:string, id:any) => {
-  const endpoint = `https://api.twitter.com/2/tweets/${id}`;
+const writeTweet = (token:string, body:TweetProfileUpdateOptions) => {
+  // Migrate to v2 once there is a endpoint 
+  // https://developer.twitter.com/en/docs/twitter-api/migrate/twitter-api-endpoint-map
+  const endpoint = 'https://api.twitter.com/1.1/account/update_profile.json';
   return fetch(endpoint, {
-    method: 'DELETE',
+    method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
+    body: JSON.stringify(body)
   })
 }
 
 export const POST: RequestHandler = async({request}) => {
   const preparsedCookies = request.headers.get('cookie');
   const cookies = cookie.parse(filterNullCookieString(preparsedCookies) || '');
-  const id = await request.json();
+  const body = await request.json();
   let refreshTokenResponse = null;
-  let tweet = await deleteTweet(cookies.twittertoken, id.id)
+  let tweet = await writeTweet(cookies.twittertoken, body)
 
   // Access token expired -> unauthorized. 
   if (tweet.status === 401) {
     refreshTokenResponse = await getRefreshToken(cookies.twitterrefresh, 'twitter').then(res => res.json());
-    tweet = await deleteTweet(refreshTokenResponse.access_token, id.id)
+    tweet = await writeTweet(refreshTokenResponse.access_token, body)
   }
 
   const tweetJSON = await tweet.json()
 
-  return {
+  return new Response(JSON.stringify(tweetJSON), {
     status: 201,
     headers: {
       ...(refreshTokenResponse) && {'set-cookie': [
         cookie.serialize(`twittertoken`, refreshTokenResponse.access_token, {path: '/', httpOnly: true}),
         cookie.serialize(`twitterrefresh`, refreshTokenResponse.refresh_token, {path: '/', httpOnly: true}),
       ]}
-    },
-    body: JSON.stringify(tweetJSON)
-  }
+    }
+  })
 };

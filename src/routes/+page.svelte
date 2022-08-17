@@ -1,16 +1,3 @@
-<script lang="ts" context="module">
-  import type { Load } from "@sveltejs/kit";
-
-  export const load:Load = async({session}) => {
-    return {
-      props: {
-        ...(session.twitteruser) && {twitterUser: session.twitteruser},
-      }
-    };
-  }
-</script>
-
-
 <script lang="ts">
   import { user } from "$lib/stores/sessionStore";
   import { supabase } from "$lib/_includes/supabaseClient";
@@ -25,7 +12,9 @@
   supabase.auth.onAuthStateChange((_, session: Session | null) => {
     if (session) user.set(session.user);
   });
-  export let twitterUser:string;
+
+  export let data:any;
+  $: ({ twitterUser } = data);
 </script>
 
 

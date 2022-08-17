@@ -4,40 +4,41 @@ import { getRefreshToken } from '$lib/_includes/authHelpers';
 import { filterNullCookieString } from '$lib/_includes/authHelpers';
 import type { RequestHandler } from "@sveltejs/kit";
 
-const getTweets = (token:string, id:string) => {
-  const endpoint = `https://api.twitter.com/2/users/${id}/tweets?tweet.fields=created_at,public_metrics,referenced_tweets`;
+
+const deleteTweet = (token:string, id:any) => {
+  const endpoint = `https://api.twitter.com/2/tweets/${id}`;
   return fetch(endpoint, {
-    method: 'GET',
+    method: 'DELETE',
     headers: {
       'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
   })
 }
 
-export const GET: RequestHandler = async(events) => {
-  const preparsedCookies = events.request.headers.get('cookie');
+export const POST: RequestHandler = async({request}) => {
+  const preparsedCookies = request.headers.get('cookie');
   const cookies = cookie.parse(filterNullCookieString(preparsedCookies) || '');
-  const id = cookies.twitterid;
+  const id = await request.json();
   let refreshTokenResponse = null;
-  let tweet = await getTweets(cookies.twittertoken, id)
+  let tweet = await deleteTweet(cookies.twittertoken, id.id)
 
   // Access token expired -> unauthorized. 
   if (tweet.status === 401) {
     refreshTokenResponse = await getRefreshToken(cookies.twitterrefresh, 'twitter').then(res => res.json());
-    tweet = await getTweets(refreshTokenResponse.access_token, id)
+    tweet = await deleteTweet(refreshTokenResponse.access_token, id.id)
   }
 
   const tweetJSON = await tweet.json()
 
-  return {
+  return new Response(JSON.stringify(tweetJSON), {
     status: 201,
     headers: {
       ...(refreshTokenResponse) && {'set-cookie': [
         cookie.serialize(`twittertoken`, refreshTokenResponse.access_token, {path: '/', httpOnly: true}),
         cookie.serialize(`twitterrefresh`, refreshTokenResponse.refresh_token, {path: '/', httpOnly: true}),
       ]}
-    },
-    body: JSON.stringify(tweetJSON)
-  }
+    }
+  })
 };

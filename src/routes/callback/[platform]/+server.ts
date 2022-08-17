@@ -2,9 +2,8 @@ import { get } from 'svelte/store';
 import cookie from 'cookie';
 import { oauth_verifiers } from '$lib/stores/oauthVerifiersStore';
 import { getUser } from '$lib/_includes/authHelpers'
-import type { RequestHandler } from "@sveltejs/kit";
 import type { CallBackOptions } from '$lib/types/auth';
-
+import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async(event) => {
   const verifyObject = get(oauth_verifiers);
@@ -64,11 +63,11 @@ export const GET: RequestHandler = async(event) => {
   event.locals.platform = platform;
 
   // Redirect to homepage for now. 
-  return {
+  return new Response('', {
     status: 302,
     headers: {
       location: '/',
       'set-cookie': cookie.serialize(`${platform}refresh`, tokenResponse.refresh_token, {path: '/', httpOnly: true})
     }
-  }
+  });
 };

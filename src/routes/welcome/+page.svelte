@@ -1,15 +1,3 @@
-<script lang="ts" context="module">
-  import type { Load } from "@sveltejs/kit";
-
-  export const load:Load = async({session}) => {
-    return {
-      props: {
-        ...(session.twitchuser) && {twitchUser: session.twitchuser},
-      }
-    };
-  }
-</script>
-
 <script lang="ts">
   import AuthModal from "$lib/components/Auth/AuthModal.svelte";
   import Section from "$lib/components/layout/Section.svelte";
@@ -17,7 +5,8 @@
   import { authModalState } from "$lib/stores/authModalStore";
   import Modal from "$lib/components/_global/Modal.svelte";
 
-  export let twitchUser:string;
+  export let data:any;
+  $: ({ twitchUser } = data)
 </script>
 
 <Nav />
