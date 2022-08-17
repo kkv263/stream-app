@@ -6,6 +6,7 @@
   import type { Provider } from "@supabase/supabase-js";
   import AuthForgot from "$lib/components/Auth/AuthForgot.svelte";
 
+  //TODO: Messes up import in Auth.spec.ts for AuthModal.svelte.
   const signInWithPlatform = async(e: CustomEvent) => {
     const { user, session, error } = await supabase.auth.signIn({
       provider: <Provider>e.detail.platform,
