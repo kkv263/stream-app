@@ -41,8 +41,9 @@ export const GET:RequestHandler = async (event) => {
   };
 
   // Once user "logout" make these null => handled in hooks.ts
-  event.locals.user = null
-  event.locals.token = null;
+  event.locals[`${platform}token`] = null;
+  event.locals[`${platform}user`] = null;
+  event.locals[`${platform}id`] = null;
   event.locals.platform = null;
 
   await revokeToken();
@@ -51,5 +52,6 @@ export const GET:RequestHandler = async (event) => {
   headers.append('location', '/');
   headers.append('set-cookie', cookie.serialize(`${platform}refresh`, 'revoked', {path: '/', httpOnly: true, expires: new Date(1970, 1, 1, 0, 0, 0, 0)}));
   headers.append('set-cookie', cookie.serialize(`${platform}token`, 'revoked', {path: '/', httpOnly: true, expires: new Date(1970, 1, 1, 0, 0, 0, 0)}));
+  headers.append('set-cookie', cookie.serialize(`${platform}id`, 'revoked', {path: '/', httpOnly: true, expires: new Date(1970, 1, 1, 0, 0, 0, 0)}));
   return new Response('', { status: 302, headers });
 };
