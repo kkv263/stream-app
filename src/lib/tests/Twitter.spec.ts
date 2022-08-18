@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/svelte';
-import Twitter from '$lib/components/Twitter/Twitter.svelte';
+import Twitter from '../components/Twitter/Twitter.svelte';
 
 describe('twitter conditional render', () => {
   it('should not render twitter content if user is not logged in', () => {
