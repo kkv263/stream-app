@@ -58,7 +58,7 @@ export const GET: RequestHandler = async(event) => {
   const token = tokenResponse.access_token;
   const data = await getUser(token, platform);
   event.locals[`${platform}token`] = token;
-  event.locals[`${platform}user`] = data?.name || data?.display_name;
+  event.locals[`${platform}user`] = data?.username || data?.display_name;
   event.locals[`${platform}id`] = data?.id;
   event.locals.platform = platform;
 

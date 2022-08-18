@@ -2,6 +2,8 @@
   import { user } from "$lib/stores/sessionStore";
   import { supabase } from "$lib/_includes/supabaseClient";
   import Section from "$lib/components/layout/Section.svelte";
+  import SideDrawer from "$lib/components/_global/SideDrawer.svelte";
+  import { sideDrawerState } from "$lib/stores/sideDrawerStore";
   import Profile from "$lib/components/Profile.svelte";
   import OBS from "$lib/components/OBS/OBS.svelte";
   import Twitter from "$lib/components/Twitter/Twitter.svelte";
@@ -17,7 +19,9 @@
   $: ({ twitterUser } = data);
 </script>
 
-
+{#if $sideDrawerState}
+  <SideDrawer />
+{/if}
 <Section>
   {#if $user}
     <Twitter twtUser={twitterUser}/>
