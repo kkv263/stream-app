@@ -1,7 +1,7 @@
 <script lang="ts">
   import { supabase } from "$lib/_includes/supabaseClient";
   import { authModalState } from "$lib/stores/authModalStore";
-  import Twitch from "$lib/components/icons/Twitch.svelte";
+  import Twitch from "$lib/components/icons/TwitchLogo.svelte";
   import Youtube from "$lib/components/icons/Youtube.svelte";
   import Button from "$lib/components/_global/Button.svelte";
   import Input from "$lib/components/_global/Input.svelte";

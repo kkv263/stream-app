@@ -2,6 +2,7 @@ import type { Load } from "@sveltejs/kit";
 
 export const load:Load = async({session}) => {
   return {
-  ...(session.twitteruser) && {twitterUser: session.twitteruser},
-};
+    ...(session.twitteruser) && {twitterUser: session.twitteruser},
+    ...(session.twitchuser) && {twitchUser: session.twitchuser},
+  };
 }

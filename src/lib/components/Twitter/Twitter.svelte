@@ -25,7 +25,7 @@
 		{/each}
 
   {:else}
-		<h2>You are not logged in</h2>
+		<h2>You are not logged in to twitter</h2>
     <a href='login/twitter' rel="external">authorize tweeter</a>
   {/if}
 </Section>

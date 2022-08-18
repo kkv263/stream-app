@@ -7,6 +7,7 @@
   import Profile from "$lib/components/Profile.svelte";
   import OBS from "$lib/components/OBS/OBS.svelte";
   import Twitter from "$lib/components/Twitter/Twitter.svelte";
+  import Twitch from "$lib/components/Twitch/Twitch.svelte";
   import type { Session } from "@supabase/supabase-js";
 
   user.set(supabase.auth.user());
@@ -16,7 +17,7 @@
   });
 
   export let data:any;
-  $: ({ twitterUser } = data);
+  $: ({ twitterUser, twitchUser } = data);
 </script>
 
 {#if $sideDrawerState}
@@ -26,8 +27,9 @@
   {#if $user}
     <Twitter twtUser={twitterUser}/>
     <OBS />
-    <!-- <Profile />
-    <a href="/settings">This is settings page</a> -->
+    <Twitch twitchUser={twitchUser} />
+    <!-- <Profile /> -->
+    <!-- <a href="/settings">This is settings page</a> -->
   {:else}
     <a href="/welcome">Weclome page</a>
     <h1>not logged in lol</h1>

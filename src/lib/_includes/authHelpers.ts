@@ -48,11 +48,11 @@ export const getRefreshToken = async(refresh_token:string, platform:string) => {
  * @param platform (ex. twitter/twitch etc)
  * @returns the username of the user from the platform
  */
-export const getUser = async(token:string, platform: string) => {
+export const getUser = async(token:string, platform: string, params:string='') => {
   let endpoint = '';
   switch(platform) {
     case 'twitter': 
-      endpoint = 'https://api.twitter.com/2/users/me'; break;
+      endpoint = `https://api.twitter.com/2/users/me?${params}`; break;
     case 'twitch':
       endpoint = 'https://api.twitch.tv/helix/users'; break;
   }
