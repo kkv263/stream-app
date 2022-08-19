@@ -4,7 +4,7 @@ import Twitter from '../components/Twitter/Twitter.svelte';
 describe('twitter conditional render', () => {
   it('should not render twitter content if user is not logged in', () => {
     render(Twitter, {'twtUser': null});
-    const node = screen.getByText('You are not logged in');
+    const node = screen.getByText('You are not logged in to twitter');
     expect(node).not.toBeNull();
   });
   it('should render twitter content if user is logged in', () => {
