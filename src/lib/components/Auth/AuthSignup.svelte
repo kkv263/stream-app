@@ -4,7 +4,11 @@
   import Twitch from "$lib/components/icons/TwitchLogo.svelte";
   import Youtube from "$lib/components/icons/Youtube.svelte";
   import Button from "$lib/components/_global/Button.svelte";
-  import Input from "$lib/components/_global/Input.svelte";
+  import InputWrapper from "$lib/components/_global/InputWrapper.svelte";
+  import EmailInput from "$lib/components/_global/EmailInput.svelte";
+  import PasswordInput from "$lib/components/_global/PasswordInput.svelte";
+  import TextInput from "$lib/components/_global/TextInput.svelte";
+  import DateInput from "$lib/components/_global/DateInput.svelte";
   import { createEventDispatcher } from 'svelte';
   import { fade } from "svelte/transition";
 
@@ -68,10 +72,14 @@
       </Button>
     </div>
     <div class="auth-form__wrapper">
-      <Input on:error={handleInputError} name="authEmail" type="email" placeholder="name@example.com" bind:value={email} required={true}>Email Address</Input>
-      <Input on:error={handleInputError} name="authPassword" type="password" placeholder="Password" bind:value={password} required={true}>
-        <span>Password</span>
-      </Input>
+      <InputWrapper>
+        <EmailInput on:email_error={handleInputError} name="authEmail" inputtype="email" placeholder="name@example.com" bind:value={email}>Email Address</EmailInput>
+      </InputWrapper>
+      <InputWrapper>
+        <PasswordInput on:password_error={handleInputError} name="authPassword" inputtype="authpassword" placeholder="Password" bind:value={password}>
+          <span>Password</span>
+        </PasswordInput>
+      </InputWrapper>
     </div>
     <div class="auth-form__btn-wrapper">
       <Button full type="submit" color="primary" disabled={error} arrow>sign up</Button>
@@ -87,9 +95,16 @@
       <p>Fill out the remaining fields to complete sign up</p>
     </header>
     <div class="auth-form__wrapper">
-      <Input on:error={handleInputError} name="authUsername" type="text" placeholder="Username" bind:value={userName} required={true}>Username</Input>
-      <Input on:error={handleInputError} name="authDisplayname" type="text" placeholder="Display Name" bind:value={displayName} required={true}>Display Name</Input>
-      <Input on:error={handleInputError} name="authBirthdate" type="date" placeholder="MM/DD/YYYY" bind:value={birthdate} required={true}>Birthdate</Input>
+
+      <InputWrapper>      
+        <TextInput on:text_error={handleInputError} name="authUsername" inputtype="name" noicon placeholder="Username" bind:value={userName} required={true}>Username</TextInput>
+      </InputWrapper>
+      <InputWrapper>
+        <TextInput on:text_error={handleInputError} name="authDisplayname" inputtype="name" noicon placeholder="Display Name" bind:value={displayName} required={true}>Display Name</TextInput>
+      </InputWrapper>
+      <InputWrapper>
+        <DateInput name="authBirthdate" placeholder="MM/DD/YYYY" bind:value={birthdate} required={true}>Birthdate</DateInput>
+      </InputWrapper>
     </div>
     <div class="auth-form__btn-wrapper">
       <Button color="secondary" on:click={() => step = 1} type="button">back</Button>

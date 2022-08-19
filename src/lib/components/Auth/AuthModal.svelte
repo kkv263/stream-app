@@ -51,72 +51,71 @@
   @import '../../../styles/vars.scss';
   @import "../../../styles/breakpoints";
 
-  .auth-modal :global(.auth-form__wrapper) {
-    padding-bottom: 16px;
-  }
+  .auth-modal{
+    :global {
+      .auth-form__wrapper {
+        padding-bottom: 16px;
+      }
 
-  .auth-modal :global(.header) {
-    padding-bottom: 16px;
-    text-align: center;
-    font-size: 32px; 
-  }
+      .header {
+        padding-bottom: 16px;
+        text-align: center;
+        font-size: 32px; 
+        + p {
+          padding-bottom: 8px;
+          color: #777;
+          font-size: 14px;
+          text-align: center;
+        }
+      }
 
-  .auth-modal :global(.header + p) {
-    padding-bottom: 8px;
-    color: #777;
-    font-size: 14px;
-    text-align: center;
-  }
+      .auth-form__btn-wrapper {
+        padding-bottom: 16px;
+        display: flex;
+        gap: 16px;
 
-  .auth-modal :global(.auth-form__btn-wrapper) {
-    padding-bottom: 16px;
-    display: flex;
-    gap: 16px;
+        @include bp(mobile) {
+          flex-direction: column;
+        }
+      }
 
-    @include bp(mobile) {
-      flex-direction: column;
+      .auth-form__footer {
+        padding-top: 16px;
+        p {
+          font-size: 14px;
+          color: #777;
+          text-align: center;
+        }
+      }
+      .auth-form__header-icons {
+        display: flex;
+        justify-content: center;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 16px;
+        position: relative;
+        gap: 8px;
+
+        &:after {
+          content: 'OR';
+          position: absolute;
+          bottom: -10px;
+          color: #777;
+          left: 50%;
+          font-size: 14px;
+          transform: translateX(-50%);
+          background-color: #fff;
+          width: 48px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+
+      .icon__span {
+        margin-left: 8px;
+        font-size: 14px;
+      }
     }
   }
-
-  .auth-modal :global(.auth-form__footer) {
-    padding-top: 16px;
-  }
-
-  .auth-modal :global(.auth-form__footer p) {
-    font-size: 14px;
-    color: #777;
-    text-align: center;
-  }
-
-  .auth-modal :global(.auth-form__header-icons) {
-    display: flex;
-    justify-content: center;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #ccc;
-    margin-bottom: 16px;
-    position: relative;
-    gap: 8px;
-
-
-    &:after {
-      content: 'OR';
-      position: absolute;
-      bottom: -10px;
-      color: #777;
-      left: 50%;
-      font-size: 14px;
-      transform: translateX(-50%);
-      background-color: #fff;
-      width: 48px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  }
-
-  .auth-modal :global(.icon__span) {
-    margin-left: 8px;
-    font-size: 14px;
-  }
-
 </style>

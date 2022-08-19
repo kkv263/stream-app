@@ -2,7 +2,8 @@
   import { authModalState } from "$lib/stores/authModalStore";
   import { supabase } from "$lib/_includes/supabaseClient";
   import Button from "$lib/components/_global/Button.svelte";
-  import Input from "$lib/components/_global/Input.svelte";
+  import EmailInput from "$lib/components/_global/EmailInput.svelte";
+  import InputWrapper from "$lib/components/_global/InputWrapper.svelte";
   import { fade } from "svelte/transition";
 
   let loading: boolean = false;
@@ -36,7 +37,9 @@
     <p>Enter your email address you used <br> to register your Potion account</p>
   </header>
   <div class="auth-form__wrapper">
-    <Input on:error={handleInputError} name="authEmail" type="email" placeholder="name@example.com" bind:value={email}>Email Address</Input>
+    <InputWrapper>
+      <EmailInput on:email_error={handleInputError} name="authEmail" inputtype="email" placeholder="name@example.com" bind:value={email}>Email Address</EmailInput>
+    </InputWrapper>
   </div>
   <div class="auth-form__btn-wrapper">
     <Button color="secondary" on:click={() => authModalState.set('login')} type="button">back</Button>

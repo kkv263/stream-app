@@ -4,7 +4,9 @@
   import Twitch from "$lib/components/icons/TwitchLogo.svelte";
   import Youtube from "$lib/components/icons/Youtube.svelte";
   import Button from "$lib/components/_global/Button.svelte";
-  import Input from "$lib/components/_global/Input.svelte";
+  import EmailInput from "$lib/components/_global/EmailInput.svelte";
+  import PasswordInput from "$lib/components/_global/PasswordInput.svelte";
+  import InputWrapper from "$lib/components/_global/InputWrapper.svelte";
   import { createEventDispatcher } from 'svelte';
   import { fade } from "svelte/transition";
   import { goto } from '$app/navigation';
@@ -54,11 +56,15 @@
     </Button>
   </div>
   <div class="auth-form__wrapper" class:errorString>
-    <Input noerror name="authEmail" type="email" placeholder="name@example.com" bind:value={email}>Email Address</Input>
-    <Input noerror name="authPassword" type="password" placeholder="Password" bind:value={password}>
-      <span>Password</span>
-      <button type="button" on:click={() => authModalState.set('forgot')} class="forgot">Forgot Password?</button>
-    </Input>
+    <InputWrapper>
+      <EmailInput noerror name="authEmail" inputtype="email" placeholder="name@example.com" bind:value={email}>Email Address</EmailInput>
+    </InputWrapper>
+    <InputWrapper>
+      <PasswordInput noerror name="authPassword" inputtype="authpassword" placeholder="Password" bind:value={password}>
+        <span>Password</span>
+        <button type="button" on:click={() => authModalState.set('forgot')} class="forgot">Forgot Password?</button>
+      </PasswordInput>
+    </InputWrapper>
     {#if errorString}
       <div class="error-text">{errorString}</div>
     {/if}

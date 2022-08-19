@@ -1,7 +1,13 @@
 <script lang="ts">
   import TwitterSideDrawer from "$lib/components/Twitter/TwitterSideDrawer.svelte";
+  import ObsSideDrawer from "../OBS/OBSSideDrawer.svelte";
   import { sideDrawerState } from "$lib/stores/sideDrawerStore";
   import { fly, fade } from "svelte/transition";
+
+  const states: Record<string, any> = {
+    twitter: TwitterSideDrawer,
+    obs: ObsSideDrawer
+  }
 </script>
 
 <aside class="sidedrawer" tabindex="-1" role="dialog" aria-labelledby="sidedrawer-label" aria-modal="true" in:fade={{duration: 250}} out:fade={{duration:400}}>
@@ -10,8 +16,8 @@
     <button on:click={() => sideDrawerState.set('')} type="button" class="sidedrawer__close-icon" title="Close" data-dismiss="sidedrawer">&times;</button>
     <div class="sidedrawer__content">
       <!-- <slot></slot> -->
-      {#if $sideDrawerState === 'twitter'}
-        <TwitterSideDrawer />
+      {#if $sideDrawerState}
+        <svelte:component this={states[$sideDrawerState]}/>
       {/if}
     </div>
   </section>
@@ -46,6 +52,30 @@
       height: 100%;
 
       @include bp(mobile) {
+      }
+    }
+
+    &__close-icon {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      padding: 0;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      font-size: 24px;
+      border: 0;
+      color: $text-color;
+      cursor: pointer;
+      transition: $transition;
+
+      &:hover,
+      &:active,
+      &:focus {
+        opacity: .5;
       }
     }
   }
