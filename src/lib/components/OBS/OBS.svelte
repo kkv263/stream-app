@@ -4,6 +4,7 @@
   import Section from "$lib/components/layout/Section.svelte";
   import ObsInput from "./OBSInput.svelte";
   import ObsScene from "./OBSScene.svelte";
+  import ObsControl from "./OBSControl.svelte";
   import OBSWebSocket from 'obs-websocket-js';
   import { checkExistingSession, obsConnect, obsDisconnect, obsSession, obsConnected } from "$lib/stores/obsSessionStore";
   
@@ -42,6 +43,7 @@
     <div class="wrapper">
       <ObsScene />
       <ObsInput />
+      <ObsControl />
     </div>
   {/if}
 

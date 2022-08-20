@@ -57,8 +57,9 @@ export const obsConnect = async(localhost:string, password:string, obs:OBSWebSoc
     }
 
     const user = supabase.auth.user();
+    // TODO Change event subscript down the line to the ones we only need.
     const { obsWebSocketVersion, negotiatedRpcVersion } = await obs.connect(url, password, {
-      eventSubscriptions: EventSubscription.InputVolumeMeters,
+      eventSubscriptions: EventSubscription.All | EventSubscription.InputVolumeMeters,
     });
     console.log(`Connected to server ${obsWebSocketVersion} (using RPC ${negotiatedRpcVersion})`)
 
