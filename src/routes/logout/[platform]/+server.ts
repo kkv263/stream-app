@@ -53,5 +53,6 @@ export const GET:RequestHandler = async (event) => {
   headers.append('set-cookie', cookie.serialize(`${platform}refresh`, 'revoked', {path: '/', httpOnly: true, expires: new Date(1970, 1, 1, 0, 0, 0, 0)}));
   headers.append('set-cookie', cookie.serialize(`${platform}token`, 'revoked', {path: '/', httpOnly: true, expires: new Date(1970, 1, 1, 0, 0, 0, 0)}));
   headers.append('set-cookie', cookie.serialize(`${platform}id`, 'revoked', {path: '/', httpOnly: true, expires: new Date(1970, 1, 1, 0, 0, 0, 0)}));
+  headers.append('set-cookie', cookie.serialize(`${platform}user`, 'revoked', {path: '/', httpOnly: true, expires: new Date(1970, 1, 1, 0, 0, 0, 0)}));
   return new Response('', { status: 302, headers });
 };
