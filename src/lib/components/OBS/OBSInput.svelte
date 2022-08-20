@@ -49,6 +49,7 @@
 
 <!-- Definite inpplement settings for % on input -->
 
+<h2>obs inputs</h2>
 {#each Object.entries(inputs) as [ name, values ] }
   <div>
     <span>input: {name}</span>

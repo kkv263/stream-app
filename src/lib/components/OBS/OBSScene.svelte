@@ -65,6 +65,7 @@
 </script>
 
 <div>
+  <h2>obs scenes</h2>
   <span>currentActiveScene: {activeSceneName}</span>
   <small></small>
   {#each obsScenes as {name}, i}
