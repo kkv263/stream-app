@@ -35,7 +35,7 @@ import { onMount } from "svelte";
 
 		}
 		catch (error) {
-			console.log(error);
+			console.error(error);
 		}
 	}
 
@@ -64,7 +64,7 @@ import { onMount } from "svelte";
 			}
 		}
 		catch (error) {
-			console.log(error);
+			console.error(error);
 		}
 	};
 </script>

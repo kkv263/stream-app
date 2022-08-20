@@ -22,7 +22,6 @@ export const checkExistingSession = async() => {
     if (data) {
       const localhost = data.websocket_url ?? '';
       const password = data.password ?? '';
-      console.log(data);
 
       if (localhost !== '' && password !== '') {
         obsSession.set({localhost: localhost, password:password});
@@ -39,7 +38,7 @@ export const checkExistingSession = async() => {
     }
     return false;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -90,6 +89,6 @@ export const obsDisconnect = async(obs:OBSWebSocket) => {
     obsSession.set({localhost: '', password:''});
     obsConnected.set(false);
   } catch (error: any) {
-    console.log(error)
+    console.error(error)
   }
 }
