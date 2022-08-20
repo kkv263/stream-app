@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Section from "$lib/components/layout/Section.svelte";
 	import { sideDrawerState } from "$lib/stores/sideDrawerStore";
+	import TwitchGetChannelInfo from "./TwitchGetChannelInfo.svelte";
 	export let twitchUser:string;
 </script>
 
@@ -11,6 +12,8 @@
   {#if twitchUser}
     <h2>Welcome {twitchUser}</h2>
     <a href='logout/twitch'>revoke twitch</a>
+
+		<TwitchGetChannelInfo />
   {:else}
     <h2>You are not logged in to twitch</h2>
     <a href='login/twitch' rel="external">authorize twitch</a>

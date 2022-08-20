@@ -13,7 +13,7 @@ export const getRefreshToken = async(refresh_token:string, platform:string) => {
     case 'twitter': 
       endpoint = 'https://api.twitter.com/2' + endpoint; break;
     case 'twitch':
-      endpoint = 'https://id.twitch.tv/' + endpoint; break;
+      endpoint = 'https://id.twitch.tv' + endpoint; break;
   }
 
   const twitterParams = {
