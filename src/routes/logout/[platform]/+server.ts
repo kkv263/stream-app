@@ -44,6 +44,7 @@ export const GET:RequestHandler = async (event) => {
   event.locals[`${platform}token`] = null;
   event.locals[`${platform}user`] = null;
   event.locals[`${platform}id`] = null;
+  event.locals[`${platform}refresh`] = null;
   event.locals.platform = null;
 
   await revokeToken();

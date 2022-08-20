@@ -17,7 +17,7 @@ const deleteTweet = (token:string, id:any) => {
   })
 }
 
-export const POST: RequestHandler = async({request}) => {
+export const POST: RequestHandler = async({locals, request}) => {
   const preparsedCookies = request.headers.get('cookie');
   const cookies = cookie.parse(filterNullCookieString(preparsedCookies) || '');
   const id = await request.json();
@@ -28,17 +28,13 @@ export const POST: RequestHandler = async({request}) => {
   if (tweet.status === 401) {
     refreshTokenResponse = await getRefreshToken(cookies.twitterrefresh, 'twitter').then(res => res.json());
     tweet = await deleteTweet(refreshTokenResponse.access_token, id.id)
+    locals.twittertoken = refreshTokenResponse.access_token
+    locals.twitterrefresh = refreshTokenResponse.refresh_token
   }
 
   const tweetJSON = await tweet.json()
 
   return new Response(JSON.stringify(tweetJSON), {
     status: 201,
-    headers: {
-      ...(refreshTokenResponse) && {'set-cookie': [
-        cookie.serialize(`twittertoken`, refreshTokenResponse.access_token, {path: '/', httpOnly: true}),
-        cookie.serialize(`twitterrefresh`, refreshTokenResponse.refresh_token, {path: '/', httpOnly: true}),
-      ]}
-    }
   })
 };

@@ -59,6 +59,7 @@ export const GET: RequestHandler = async(event) => {
   const userdata = await getUser(token, platform);
 
   event.locals[`${platform}token`] = token;
+  event.locals[`${platform}refresh`] = tokenResponse.refresh_token
   event.locals[`${platform}user`] = userdata?.username || userdata?.display_name;
   event.locals[`${platform}id`] = userdata?.id;
   event.locals.platform = platform
@@ -68,7 +69,6 @@ export const GET: RequestHandler = async(event) => {
     status: 302,
     headers: {
       location: '/',
-      'set-cookie': cookie.serialize(`${platform}refresh`, tokenResponse.refresh_token, {path: '/', httpOnly: true})
     }
   });
 };

@@ -11,6 +11,7 @@ export const handle:Handle = async({event, resolve}) => {
     event.locals[`${cookies.platform}user`] = (<Record<string,any>>cookies)[`${cookies.platform}user`];
     event.locals[`${cookies.platform}id`] = (<Record<string,any>>cookies)[`${cookies.platform}id`];
     event.locals[`${cookies.platform}token`] = (<Record<string,any>>cookies)[`${cookies.platform}token`];
+    event.locals[`${cookies.platform}refresh`] = (<Record<string,any>>cookies)[`${cookies.platform}refresh`];
   }
 
   const response = await resolve(event);
@@ -20,6 +21,7 @@ export const handle:Handle = async({event, resolve}) => {
     'user':  cookie.serialize(`${platform}user`, `${event.locals[`${platform}user`] || ''}`, {path: '/', httpOnly: true}),
     'user_id':  cookie.serialize(`${platform}id`, `${event.locals[`${platform}id`] || ''}`, {path: '/', httpOnly: true}),
     'token':  cookie.serialize(`${platform}token`, `${event.locals[`${platform}token`] || ''}`, {path: '/', httpOnly: true}),
+    'refresh':  cookie.serialize(`${platform}refresh`, `${event.locals[`${platform}refresh`] || ''}`, {path: '/', httpOnly: true}),
     'platform':  cookie.serialize(`platform`, `${platform || ''}`, {path: '/', httpOnly: true}),
   }
 

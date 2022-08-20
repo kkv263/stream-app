@@ -6,41 +6,40 @@ import type { RequestHandler } from "@sveltejs/kit";
 import type { TweetPostOptions } from '$lib/types/twitter';
 
 
-const writeTweet = (token:string, body:TweetPostOptions) => {
+const postTweet = async(token:string, body:TweetPostOptions) => {
   const endpoint = 'https://api.twitter.com/2/tweets';
   return fetch(endpoint, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
-      'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(body)
-  })
+  });
 }
 
-export const POST: RequestHandler = async({request}) => {
+export const POST: RequestHandler = async({locals, request}) => {
   const preparsedCookies = request.headers.get('cookie');
   const cookies = cookie.parse(filterNullCookieString(preparsedCookies) || '');
   const body = await request.json();
   let refreshTokenResponse = null;
-  let tweet = await writeTweet(cookies.twittertoken, body)
+  let tweet = await postTweet(cookies.twittertoken, body)
 
   // Access token expired -> unauthorized. 
   if (tweet.status === 401) {
     refreshTokenResponse = await getRefreshToken(cookies.twitterrefresh, 'twitter').then(res => res.json());
-    tweet = await writeTweet(refreshTokenResponse.access_token, body)
+    tweet = await postTweet(refreshTokenResponse.access_token, body)
+    locals.twittertoken = refreshTokenResponse.access_token
+    locals.twitterrefresh = refreshTokenResponse.refresh_token
   }
 
-  const tweetJSON = await tweet.json()
+	// TODO Doesn't return text and id -- do we really need it though?
+  // This line breaks
+  // const tweetJSON = await tweet.json();
 
-  return new Response(JSON.stringify(tweetJSON), {
-    status: 201,
-    headers: {
-      ...(refreshTokenResponse) && {'set-cookie': [
-        cookie.serialize(`twittertoken`, refreshTokenResponse.access_token, {path: '/', httpOnly: true}),
-        cookie.serialize(`twitterrefresh`, refreshTokenResponse.refresh_token, {path: '/', httpOnly: true}),
-      ]}
-    }
-  })
+  return new Response(undefined)
+
+  // return new Response(JSON.stringify(tweetJSON), {
+  //   status: 201
+  // })
 };

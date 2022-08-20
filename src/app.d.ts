@@ -9,9 +9,11 @@ declare namespace App {
 		twitteruser?: string | null,
 		twitterid?: string | null,
 		twittertoken?: string | null,
+		twitterrefresh?: string | null,
 		twitchuser?: string | null,
 		twitchid?: string | null,
 		twitchtoken?: string | null,
+		twitchrefresh?: string | null,
 		platform: string | null
 	}
 	// interface Platform {}
