@@ -1,4 +1,5 @@
 import type { RefreshTokenOptions } from "$lib/types/auth";
+import { supabase } from "$lib/_includes/supabaseClient";
 
 /**
  * @description Call this function whenever there is potential for an access token to be expired from making an API call.
@@ -81,6 +82,26 @@ export const getUser = async(token:string, platform: string, params:string='') =
  * @returns a cookie string ready to be parsed.
  */
 export const filterNullCookieString = (cookieString:string|null) => cookieString?.split(';').filter(name => !name.includes('undefined') &&  !name.includes('null') ).join(';')
+
+export const upsertPlatformData = async(platform:string, refresh_token:string, user:string, id:string) => {
+  //TODO: encrypt and decryrpt refresh token with AES
+  try {
+    const user = supabase.auth.user();
+    const { error } = await supabase
+    .from(platform)
+    .upsert({ 
+      id: user?.id,
+      user: user,
+      platform_id: id,
+      refresh_token: refresh_token
+    }, 
+    { returning: "minimal" });
+    
+    if (error) { throw error; }
+  } catch(error) {
+    console.error(error)
+  }
+}
 
 /* 
 Example of access token

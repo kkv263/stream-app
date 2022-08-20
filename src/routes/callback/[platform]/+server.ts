@@ -56,11 +56,12 @@ export const GET: RequestHandler = async(event) => {
   // TODO: Rename events.local.user since user is kinda vague
   const tokenResponse = await getToken();
   const token = tokenResponse.access_token;
-  const data = await getUser(token, platform);
+  const userdata = await getUser(token, platform);
+
   event.locals[`${platform}token`] = token;
-  event.locals[`${platform}user`] = data?.username || data?.display_name;
-  event.locals[`${platform}id`] = data?.id;
-  event.locals.platform = platform;
+  event.locals[`${platform}user`] = userdata?.username || userdata?.display_name;
+  event.locals[`${platform}id`] = userdata?.id;
+  event.locals.platform = platform
 
   // Redirect to homepage for now. 
   return new Response('', {

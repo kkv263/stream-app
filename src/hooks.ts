@@ -6,11 +6,13 @@ import { filterNullCookieString } from '$lib/_includes/authHelpers';
 export const handle:Handle = async({event, resolve}) => {
   const preparsedCookies = event.request.headers.get('cookie');
   const cookies = Object.assign({user: null}, cookie.parse(filterNullCookieString(preparsedCookies) || ''));
-  event.locals.platform = cookies.platform;
-  event.locals[`${cookies.platform}user`] = (<Record<string,any>>cookies)[`${cookies.platform}user`];
-  event.locals[`${cookies.platform}id`] = (<Record<string,any>>cookies)[`${cookies.platform}id`];
-  event.locals[`${cookies.platform}token`] = (<Record<string,any>>cookies)[`${cookies.platform}token`];
-  
+  if (cookies.platform) {
+    event.locals.platform = cookies.platform;
+    event.locals[`${cookies.platform}user`] = (<Record<string,any>>cookies)[`${cookies.platform}user`];
+    event.locals[`${cookies.platform}id`] = (<Record<string,any>>cookies)[`${cookies.platform}id`];
+    event.locals[`${cookies.platform}token`] = (<Record<string,any>>cookies)[`${cookies.platform}token`];
+  }
+
   const response = await resolve(event);
 
   const platform = event.locals.platform;
