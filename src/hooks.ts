@@ -1,5 +1,5 @@
 import cookie from 'cookie';
-import type { Handle, GetSession } from "@sveltejs/kit";
+import type { Handle } from "@sveltejs/kit";
 import { filterNullCookieString } from '$lib/_includes/authHelpers';
 
 // https://kit.svelte.dev/docs/hooks
@@ -28,10 +28,3 @@ export const handle:Handle = async({event, resolve}) => {
   });
   return response;
 }
-
-export const getSession: GetSession = async(event) => {
-  return {
-    ...(event.locals.platform === 'twitter') && {twitteruser: event.locals[`${event.locals.platform}user`]},
-    ...(event.locals.platform === 'twitch') && {twitchuser: event.locals[`${event.locals.platform}user`]},
-  }
-} 

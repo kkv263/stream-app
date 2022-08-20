@@ -17,7 +17,6 @@
 
   onMount(async () => {
     const obsStatus = await loadStatus();
-    console.log(obsStatus);
     recording = obsStatus.recordStatus.outputActive;
     recordingPaused = obsStatus.recordStatus.outputPaused;
     streaming = obsStatus.streamStatus.outputActive;
