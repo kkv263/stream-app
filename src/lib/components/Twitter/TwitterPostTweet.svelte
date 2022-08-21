@@ -1,6 +1,7 @@
 <script lang="ts">
 	let tweet:string;
   
+	// TODO: Maybe combine this with TwitterGetTweets -- since it returns ID we can use it to update list.
 	const  handleClick = async() => {
 		try {
 			// TODO Doesn't return text and id -- do we really need it though?
