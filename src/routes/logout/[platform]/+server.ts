@@ -41,20 +41,26 @@ export const GET:RequestHandler = async (event) => {
   };
 
   // Once user "logout" make these null => handled in hooks.ts
-  event.locals[`${platform}token`] = null;
-  event.locals[`${platform}user`] = null;
-  event.locals[`${platform}id`] = null;
-  event.locals[`${platform}refresh`] = null;
-  event.locals.platform = null;
+  event.locals[`${platform}tokens`] = { access_token: null, refresh_token: null }
 
   await revokeToken();
 
   const headers = new Headers();
+  const platforms = ['twitter', 'twitch']
   headers.append('location', '/');
-  headers.append('set-cookie', cookie.serialize(`${platform}refresh`, 'revoked', {path: '/', httpOnly: true, expires: new Date(1970, 1, 1, 0, 0, 0, 0)}));
-  headers.append('set-cookie', cookie.serialize(`${platform}token`, 'revoked', {path: '/', httpOnly: true, expires: new Date(1970, 1, 1, 0, 0, 0, 0)}));
-  headers.append('set-cookie', cookie.serialize(`${platform}id`, 'revoked', {path: '/', httpOnly: true, expires: new Date(1970, 1, 1, 0, 0, 0, 0)}));
-  headers.append('set-cookie', cookie.serialize(`${platform}user`, 'revoked', {path: '/', httpOnly: true, expires: new Date(1970, 1, 1, 0, 0, 0, 0)}));
-  headers.append('set-cookie', cookie.serialize(`${platform}`, 'revoked', {path: '/', httpOnly: true, expires: new Date(1970, 1, 1, 0, 0, 0, 0)}));
+  
+  platforms.forEach(item => {
+    headers.append('set-cookie', cookie.serialize(`${item}refresh`, item === platform ? 'revoked' : event.locals[`${item}tokens`]?.refresh_token, {
+      path: '/', 
+      httpOnly: true, 
+      ...(item === platform) && {expires: new Date(1970, 1, 1, 0, 0, 0, 0)}
+    }));
+    headers.append('set-cookie', cookie.serialize(`${item}token`, item === platform ? 'revoked' : event.locals[`${item}tokens`]?.access_token, {
+      path: '/', 
+      httpOnly: true, 
+      ...(item === platform) && {expires: new Date(1970, 1, 1, 0, 0, 0, 0)}
+    }));
+  });
+
   return new Response('', { status: 302, headers });
 };

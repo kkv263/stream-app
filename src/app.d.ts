@@ -6,20 +6,11 @@
 declare namespace App {
 	interface Locals {
 		[locals:string],
-		twitteruser?: string | null,
-		twitterid?: string | null,
-		twittertoken?: string | null,
-		twitterrefresh?: string | null,
-		twitchuser?: string | null,
-		twitchid?: string | null,
-		twitchtoken?: string | null,
-		twitchrefresh?: string | null,
+		twittertokens?: any,
+		twitchtokens?: any,
 		platform: string | null
 	}
 	// interface Platform {}
-	interface Session {
-		twitteruser?: string | null,
-		twitchuser?: string | null,
-	}
-	// interface Stuff {}
+	// interface PrivateEnv {}
+  // interface PublicEnv {}
 }

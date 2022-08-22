@@ -1,5 +1,4 @@
 import type { RefreshTokenOptions } from "$lib/types/auth";
-import { supabase } from "$lib/_includes/supabaseClient";
 
 /**
  * @description Call this function whenever there is potential for an access token to be expired from making an API call.
@@ -47,9 +46,9 @@ export const getRefreshToken = async(refresh_token:string, platform:string) => {
  * @description Get's username using platform API. Mainly used to store user session.
  * @param token Access token to make the API call
  * @param platform (ex. twitter/twitch etc)
- * @returns the username of the user from the platform
+ * @returns user data from API
  */
-export const getUser = async(token:string, platform: string, params:string='') => {
+const callUserAPI = async(token:string, platform:string, params:string) => {
   let endpoint = '';
   switch(platform) {
     case 'twitter': 
@@ -65,15 +64,33 @@ export const getUser = async(token:string, platform: string, params:string='') =
       'Accept': 'application/json',
       ...(platform === 'twitch') && {'Client-Id' : import.meta.env.DEV ? import.meta.env.VITE_TWITCH_CLIENT_ID as string : process.env.TWITCH_CLIENT_ID!}
     }
-  }).then(res => res.json())
-  .then(data => {
-    if (platform === 'twitter') {
-      return data?.data;
-    }
-    else if (platform === 'twitch') {
-      return data?.data[0];
-    }
   });
+};
+
+/**
+ * @description Get's username using platform API. Mainly used to store user session. 
+ * Also refreshs token if access token is invalid
+ * @param token Access token to make the API call
+ * @param refresh_token Refresh token
+ * @param platform (ex. twitter/twitch etc)
+ * @param params extra query params for API call
+ * @returns the user data from platform
+ */
+export const getUser = async(token:string, refresh_token:string, platform: string, params:string='') => {
+  let userResponse = await callUserAPI(token, platform, params);
+  let refreshTokenResponse = null;
+
+  if (userResponse.status === 401) {
+    refreshTokenResponse = await getRefreshToken(refresh_token, platform).then(res => res.json());
+    userResponse = await callUserAPI(token, platform, params);
+  }
+
+  const userdata = await userResponse.json();
+
+  return { 
+    userdata,
+    ...(refreshTokenResponse) && {tokens: {access_token: refreshTokenResponse.access_token, refresh_token: refreshTokenResponse.refresh_token}}
+  }
 };
 
 /**
@@ -82,26 +99,6 @@ export const getUser = async(token:string, platform: string, params:string='') =
  * @returns a cookie string ready to be parsed.
  */
 export const filterNullCookieString = (cookieString:string|null) => cookieString?.split(';').filter(name => !name.includes('undefined') &&  !name.includes('null') ).join(';')
-
-export const upsertPlatformData = async(platform:string, refresh_token:string, user:string, id:string) => {
-  //TODO: encrypt and decryrpt refresh token with AES
-  try {
-    const user = supabase.auth.user();
-    const { error } = await supabase
-    .from(platform)
-    .upsert({ 
-      id: user?.id,
-      user: user,
-      platform_id: id,
-      refresh_token: refresh_token
-    }, 
-    { returning: "minimal" });
-    
-    if (error) { throw error; }
-  } catch(error) {
-    console.error(error)
-  }
-}
 
 /* 
 Example of access token

@@ -6,29 +6,35 @@ import { filterNullCookieString } from '$lib/_includes/authHelpers';
 export const handle:Handle = async({event, resolve}) => {
   const preparsedCookies = event.request.headers.get('cookie');
   const cookies = Object.assign({user: null}, cookie.parse(filterNullCookieString(preparsedCookies) || ''));
-  if (cookies.platform) {
-    event.locals.platform = cookies.platform;
-    event.locals[`${cookies.platform}user`] = (<Record<string,any>>cookies)[`${cookies.platform}user`];
-    event.locals[`${cookies.platform}id`] = (<Record<string,any>>cookies)[`${cookies.platform}id`];
-    event.locals[`${cookies.platform}token`] = (<Record<string,any>>cookies)[`${cookies.platform}token`];
-    event.locals[`${cookies.platform}refresh`] = (<Record<string,any>>cookies)[`${cookies.platform}refresh`];
-  }
+
+  const platforms = ['twitter', 'twitch'];
+
+  platforms.forEach(platform => {
+    if (cookies[`${platform}token`]) {
+      event.locals[`${platform}tokens`] = {
+        access_token: cookies[`${platform}token`],
+        refresh_token:cookies[`${platform}refresh`]
+      }; 
+    }
+  });
 
   const response = await resolve(event);
 
-  const platform = event.locals.platform;
-  const setCookies = {
-    'user':  cookie.serialize(`${platform}user`, `${event.locals[`${platform}user`] || ''}`, {path: '/', httpOnly: true}),
-    'user_id':  cookie.serialize(`${platform}id`, `${event.locals[`${platform}id`] || ''}`, {path: '/', httpOnly: true}),
-    'token':  cookie.serialize(`${platform}token`, `${event.locals[`${platform}token`] || ''}`, {path: '/', httpOnly: true}),
-    'refresh':  cookie.serialize(`${platform}refresh`, `${event.locals[`${platform}refresh`] || ''}`, {path: '/', httpOnly: true}),
-    'platform':  cookie.serialize(`platform`, `${platform || ''}`, {path: '/', httpOnly: true}),
+  interface SetCookieData {
+    [platform:string]: string;
   }
 
+  const setCookies:SetCookieData = {}
+
+  platforms.forEach(platform => {
+    setCookies[`${platform}token`] = cookie.serialize(`${platform}token`, `${event.locals[`${platform}tokens`]?.access_token || ''}`, {path: '/', httpOnly: true})
+    setCookies[`${platform}refresh`] = cookie.serialize(`${platform}refresh`, `${event.locals[`${platform}refresh`]?.refresh_token || ''}`, {path: '/', httpOnly: true})
+  });
+
   // Set all necessary cookies depending on route
-  // This could mean setting them to null too
+  // This could mean setting them to empty string too
   Object.values(setCookies).forEach(cookie => {
-    response.headers.append('set-cookie', cookie);
+    response.headers.append('set-cookie', <string>cookie);
   });
   return response;
 }

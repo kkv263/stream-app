@@ -2,6 +2,8 @@
 import cookie from 'cookie';
 import { getRefreshToken } from '$lib/_includes/authHelpers';
 import { filterNullCookieString } from '$lib/_includes/authHelpers';
+import { get } from 'svelte/store'
+import { twitchUser } from '$lib/stores/twitchSessionStore';
 import type { RequestHandler } from "@sveltejs/kit";
 
 const getChannelInfo = (token:string, id:string) => {
@@ -19,7 +21,7 @@ const getChannelInfo = (token:string, id:string) => {
 export const GET: RequestHandler = async(event) => {
   const preparsedCookies = event.request.headers.get('cookie');
   const cookies = cookie.parse(filterNullCookieString(preparsedCookies) || '');
-  const id = cookies.twitchid;
+  const id = get(twitchUser).id;
   let refreshTokenResponse = null;
   let channel = await getChannelInfo(cookies.twitchtoken, id)
 

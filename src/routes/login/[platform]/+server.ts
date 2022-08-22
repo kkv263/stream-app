@@ -1,7 +1,7 @@
 import cryptoRandomString from 'crypto-random-string';
 import { sha256, base64URLEncode } from '$lib/_includes/generalHelpers';
-import { oauth_verifiers } from '$lib/stores/oauthVerifiersStore';
-import type { RedirectOptions, OAuthVerifiers } from '$lib/types/auth';
+import { oauth_verifiers, setSessions} from '$lib/stores/oauthVerifiersStore';
+import type { RedirectOptions, OAuthVerifiers, Token } from '$lib/types/auth';
 import type { RequestHandler } from "@sveltejs/kit";
 
 // Ask for OAuth token from twitter.
@@ -45,10 +45,9 @@ export const GET:RequestHandler = async (event) => {
   if (event.url.searchParams.get('state')) {
       return new Response(undefined, { status: 302, headers: { location: '/'} })
   }
-  // Subscribe and set value then unsubscribe
-  const unsub = oauth_verifiers.subscribe(data => {<OAuthVerifiers>{state: data.state, code_verifier:data.code_verifier}});
   oauth_verifiers.set(<OAuthVerifiers>{state: params.state, code_verifier: params.code_verifier});
-  unsub();
+
+  setSessions(event.locals, false)
 
   const locationURL = `${endpoint}?${Object.entries(params).flatMap(([key,val]) => val ? `${key}=${params[key as keyof RedirectOptions]}` : []).join('&')}`;
   
