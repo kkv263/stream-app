@@ -6,7 +6,7 @@
 	import TwitterUpdateProfile from "./TwitterUpdateProfile.svelte";
 	import { sideDrawerState } from "$lib/stores/sideDrawerStore";
 	export let twtUser:string;
-	let components = [TwitterPostTweet, TwitterUpdateProfile, TwitterGetTweets]
+	let components = [TwitterPostTweet, TwitterGetTweets]
 </script>
 
 <Section>

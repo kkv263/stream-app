@@ -12,21 +12,8 @@
 				})
 			})
 
-			console.log(data)
-			
-			// if (data.errors) {
-			// 	console.log(data.errors);
-			// 	return;
-			// }
-
-			// if (data.status === 403) {
-			// 	// Create a modal for error
-			// 	console.log(data.detail);
-      //   alert('twitter error')
-      //   return;
-			// }
-
 			// Update with data
+
 			alert('success');
 		}
 		catch (error) {
