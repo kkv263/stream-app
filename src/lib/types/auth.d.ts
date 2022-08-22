@@ -41,6 +41,11 @@ export interface RefreshTokenOptions {
   grant_type: 'refresh_token'
 }
 
+export interface Token {
+  access_token: string,
+  refresh_token: string
+}
+
 // Auth
 export type AuthError = {
   regex: RegExp,

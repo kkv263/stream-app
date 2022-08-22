@@ -1,5 +1,7 @@
 <script lang="ts">
   import { user } from "$lib/stores/sessionStore";
+  import { twitterUser } from "$lib/stores/twitterSessionStore";
+  import { twitchUser } from "$lib/stores/twitchSessionStore";
   import { supabase } from "$lib/_includes/supabaseClient";
   import Section from "$lib/components/layout/Section.svelte";
   import SideDrawer from "$lib/components/_global/SideDrawer.svelte";
@@ -16,7 +18,12 @@
   supabase.auth.onAuthStateChange((_, session: Session | null) => {
     if (session) user.set(session.user);
   });
+
   const { twitteruser, twitchuser } = $page.data;
+
+  if (twitteruser) { twitterUser.set(twitteruser) };
+  if (twitchuser) { twitchUser.set(twitchuser) };
+
 </script>
 
 {#if $sideDrawerState}
@@ -24,9 +31,9 @@
 {/if}
 <Section>
   {#if $user}
-    <Twitter twtUser={twitteruser}/>
+    <Twitter twtUser={twitteruser?.name}/>
     <OBS />
-    <Twitch twitchUser={twitchuser} />
+    <Twitch twitchUser={twitchuser?.display_name} />
     <!-- <Profile /> -->
     <!-- <a href="/settings">This is settings page</a> -->
   {:else}

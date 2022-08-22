@@ -1,5 +1,7 @@
 
 import cookie from 'cookie';
+import { get } from 'svelte/store'
+import { twitterUser } from '$lib/stores/twitterSessionStore';
 import { getRefreshToken } from '$lib/_includes/authHelpers';
 import { filterNullCookieString } from '$lib/_includes/authHelpers';
 import type { RequestHandler } from "@sveltejs/kit";
@@ -18,7 +20,7 @@ const getTweets = (token:string, id:string) => {
 export const GET: RequestHandler = async({locals, request}) => {
   const preparsedCookies = request.headers.get('cookie');
   const cookies = cookie.parse(filterNullCookieString(preparsedCookies) || '');
-  const id = cookies.twitterid;
+  const id = get(twitterUser).id;
   let refreshTokenResponse = null;
   let tweet = await getTweets(cookies.twittertoken, id)
 

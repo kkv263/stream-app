@@ -1,8 +1,6 @@
 import { get } from 'svelte/store';
-import cookie from 'cookie';
-import { oauth_verifiers } from '$lib/stores/oauthVerifiersStore';
-import { getUser } from '$lib/_includes/authHelpers'
-import type { CallBackOptions } from '$lib/types/auth';
+import { oauth_verifiers, setSessions, sessions} from '$lib/stores/oauthVerifiersStore';
+import type { CallBackOptions, OAuthVerifiers, Token } from '$lib/types/auth';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async(event) => {
@@ -53,16 +51,25 @@ export const GET: RequestHandler = async(event) => {
 
   // States don't match (vulnerable to attack)
   if (state != params.state) {throw Error("States do not match, aborting");}
-  // TODO: Rename events.local.user since user is kinda vague
-  const tokenResponse = await getToken();
-  const token = tokenResponse.access_token;
-  const userdata = await getUser(token, platform);
 
-  event.locals[`${platform}token`] = token;
-  event.locals[`${platform}refresh`] = tokenResponse.refresh_token
-  event.locals[`${platform}user`] = userdata?.username || userdata?.display_name;
-  event.locals[`${platform}id`] = userdata?.id;
-  event.locals.platform = platform
+  const tokenResponse = await getToken();
+  const { access_token, refresh_token } = tokenResponse
+
+  Object.entries(sessions).forEach(([key, value]) => {
+    const sessionValue = get(value);
+    if (sessionValue) {
+      event.locals[`${key}tokens`] = sessionValue
+    }
+  });
+
+  event.locals[`${platform}tokens`] = { 
+    access_token:access_token,
+    refresh_token:refresh_token
+  };
+
+  oauth_verifiers.set(<OAuthVerifiers>{state: '', code_verifier: ''});
+
+  setSessions(event.locals, true);
 
   // Redirect to homepage for now. 
   return new Response('', {
