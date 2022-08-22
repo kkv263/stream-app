@@ -70,11 +70,20 @@ import { onMount } from "svelte";
 </script>
 
 <h3>Get Tweets</h3>
-{#each tweets as {text, id}, i}
-	<div>
-		<span>twitter tweet: {text}</span>
-		<small>{id}</small>
+{#each tweets as {text, id, public_metrics}, i}
+	<div class="tweet">
 		<button on:click={() => deleteTweet(id, i)}>&times;</button>
+		<div>
+			<span>twitter tweet: {text}</span>
+		</div>
+		<div>
+			<span>retweets: {public_metrics.retweet_count}</span>
+			<span>likes: {public_metrics.like_count}</span>
+			<span>replies: {public_metrics.reply_count}</span>
+		</div>
+		<div>
+			<small>{id}</small>
+		</div>
 	</div>
 {/each}
 <button on:click={getTweets} disabled={disabled}>refresh</button>
@@ -84,7 +93,7 @@ import { onMount } from "svelte";
     padding-bottom: 0;
   }
 
-	div {
+	.tweet {
 		border: 2px solid paleturquoise;
 		padding: 16px;
 	}
