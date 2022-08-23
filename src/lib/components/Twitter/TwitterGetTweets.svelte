@@ -1,5 +1,7 @@
 <script lang="ts">
-import { onMount } from "svelte";
+	import { onMount } from "svelte";
+	import { twitterUser } from '$lib/stores/twitterSessionStore'
+
 	//TODO: Update type
   let tweets:any = [];
 	let disabled = false;
@@ -13,6 +15,8 @@ import { onMount } from "svelte";
 			const data = await fetch('/api/v1/twitter/gettweets', {
 				method: 'GET'
 			}).then(res => res.json());
+
+			console.log(data);
 
 			if (data.errors) {
 				console.log(data.errors);
@@ -69,33 +73,113 @@ import { onMount } from "svelte";
 	};
 </script>
 
-<h3>Get Tweets</h3>
-{#each tweets as {text, id, public_metrics}, i}
-	<div class="tweet">
-		<button on:click={() => deleteTweet(id, i)}>&times;</button>
-		<div>
-			<span>twitter tweet: {text}</span>
-		</div>
-		<div>
-			<span>retweets: {public_metrics.retweet_count}</span>
-			<span>likes: {public_metrics.like_count}</span>
-			<span>replies: {public_metrics.reply_count}</span>
-		</div>
-		<div>
-			<small>{id}</small>
-		</div>
-	</div>
-{/each}
-<button on:click={getTweets} disabled={disabled}>refresh</button>
+<div class="recent-tweets__container">
+	<header>
+		<h2>Recent tweets</h2>
+		<button on:click={getTweets} disabled={disabled}>refresh</button>
+	</header>
+	<ul class="recent-tweets">
+		{#each tweets as {text, id, public_metrics, created_at}, i}
+			<li class="recent-tweets__tweet">
+				<button class="tweet-delete" on:click={() => deleteTweet(id, i)}>&times;</button>
+				<a class="recent-tweets__link" href={`https://twitter.com/${$twitterUser?.username}/status/${id}`}>
+					<div class="recent-tweets__tweet-header">
+						<span class="recent-tweets__tweet-name">{$twitterUser?.name}</span>
+						<span class="recent-tweets__tweet-user">@{$twitterUser?.username}</span>
+						<span class="recent-tweets__tweet-time">{created_at}</span>
+					</div>
+					<div class="recent-tweets__text">{text}</div>
+					<div class="recent-tweets__metrics">
+						<span>retweets: {public_metrics.retweet_count}</span>
+						<span>likes: {public_metrics.like_count}</span>
+						<span>replies: {public_metrics.reply_count}</span>
+					</div>
+					<div>
+					</div>
+				</a>
+
+			</li>
+		{/each}
+		</ul>
+
+</div>
 
 <style lang="scss">
-  h3 {
+	@import '../../../styles/vars.scss';
+  h2 {
     padding-bottom: 0;
+		color: #fff;
   }
 
-	.tweet {
-		border: 2px solid paleturquoise;
-		padding: 16px;
+	.recent-tweets__container {
+		background-color: $off-black;
+		padding: 16px 0px;
+	}
+
+	.recent-tweets {
+		padding-left: 0;
+		list-style: none;
+	}
+
+	.recent-tweets__link {
+		padding: 16px 24px 8px;
+		display: block;
+		text-decoration: none;
+
+		&:hover,
+		&:active,
+		&:focus {
+			text-decoration: none;
+			background-color: lighten($off-black, 10%);
+			box-shadow: none;
+		}
+	}
+
+	.recent-tweets__tweet {
+		position: relative;
+		color: #fff;
+		min-width: 320px;
+
+		&-header {
+			padding-top: 16px;
+			padding-bottom: 4px;
+			color: #fff;
+		}
+
+		&-name {
+			font-weight: 600;
+		}
+
+		&-user {
+			color: $off-white;
+			opacity: .75;
+		}
+
+		&-time {
+			color: $off-white;
+			opacity: .75;
+		}
+	}
+
+	.recent-tweets__text {
+		padding-bottom: 16px;
+		color: #fff;
+	}
+
+	.recent-tweets__metrics {
+		color: #fff;
+		padding-bottom: 8px;
+		border-bottom: 1px solid #ccc;
+	}
+
+	.tweet-delete {
+		position: absolute;
+		top: 0;
+		right: 0;
+		border: 0;
+		background-color: transparent;
+		color: #fff;
+		cursor: pointer;
 	}
 
 	button {

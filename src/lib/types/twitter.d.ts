@@ -11,5 +11,6 @@ export interface TweetProfileUpdateOptions {
 export interface TwitterUser {
   id: string,
   name: string,
-  username: string
+  username: string,
+  profile_image_url: string
 }

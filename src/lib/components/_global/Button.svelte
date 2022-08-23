@@ -23,7 +23,7 @@
 @import '../../../styles/breakpoints.scss';
 
   button {
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Roboto Condensed', sans-serif;
     font-weight: 600;
     border-radius: 8px;
     padding: 8px 16px;
