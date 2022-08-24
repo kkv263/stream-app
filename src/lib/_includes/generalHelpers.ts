@@ -26,3 +26,25 @@ export const convertMsToTime = (milliseconds:number) => {
 
   return `${padTo2Digits(hours)}:${padTo2Digits(minutes)}:${padTo2Digits(seconds)}`;
 }
+
+export const timeSince = (date:number) => {
+  const seconds = Math.floor(((<any>new Date()) - date) / 1000);
+
+  // Don't need this now, but maybe in the future.
+  // let interval = seconds / 31536000;
+  // if (interval > 1) {return Math.floor(interval) + " years";}
+  // interval = seconds / 2592000;
+  // if (interval > 1) {return Math.floor(interval) + " months";}
+  // interval = seconds / 86400;
+  // if (interval > 1) {return Math.floor(interval) + " days";}
+
+  let interval = seconds / 3600;
+  if (interval > 1) {
+    return Math.floor(interval) + 'h';
+  }
+  interval = seconds / 60;
+  if (interval > 1) {
+    return Math.floor(interval) + 'm';
+  }
+  return Math.floor(seconds) + 's';
+  }

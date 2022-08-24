@@ -14,7 +14,7 @@
 <button on:click class={color} class:link class:square class:full type={type} {disabled}>
   <slot></slot>
   {#if arrow}
-    <CircleArrowRight width="20px" height="20px" marginLeft="16px" />
+    <CircleArrowRight width="20px" height="20px" marginLeft="12px" />
   {/if}
 </button>
 
