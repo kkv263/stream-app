@@ -7,7 +7,7 @@ import { filterNullCookieString } from '$lib/_includes/authHelpers';
 import type { RequestHandler } from "@sveltejs/kit";
 
 const getTweets = (token:string, id:string) => {
-  const endpoint = `https://api.twitter.com/2/users/${id}/tweets?tweet.fields=entities,created_at,public_metrics,referenced_tweets&expansions=attachments.media_keys&media.fields=url`;
+  const endpoint = `https://api.twitter.com/2/users/${id}/tweets?tweet.fields=entities,created_at,public_metrics,referenced_tweets&expansions=attachments.media_keys,attachments.poll_ids&media.fields=url,preview_image_url,alt_text`;
   return fetch(endpoint, {
     method: 'GET',
     headers: {

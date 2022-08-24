@@ -12,6 +12,7 @@
   let tweets:any = [];
 	let disabled = false;
 	let medias:any[] = [];
+	let polls:any[] = []
 
   onMount(async () => {
 		getTweets();
@@ -40,7 +41,7 @@
 			// Update with data
       tweets = data.data;
 			medias = data?.includes?.media;
-			console.log(medias);
+			polls = data?.includes?.polls;
 			disabled = true;
 			setTimeout(() => {
 				disabled = false;
@@ -93,16 +94,57 @@
 		return formattedTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 	};
 
-	const getMedia = (mediaKey:string) => {
-		const index = medias.map((media) => { return media.media_key; }).indexOf(mediaKey);
+	const formatText = (text:string, entities:any) => {
+		let formatText = text;
+		formatText = formatText.replace(/https?:\/\/t.co\/[a-zA-Z0-9\-\.]*/, '');
 
-		return medias[index];
+		if (!entities) {
+			return formatText;
+		} 
+
+		if (entities.mentions) {
+			entities?.mentions.forEach((mention:any) => {
+				formatText = formatText.replaceAll(`@${mention.username}`, `<a target="_blank" rel="noopener noreferrer" href="https://twitter.com/${mention.username}">@${mention.username}</a>`)
+			})
+		}
+
+		if (entities.hashtags) {
+			entities?.hashtags.forEach((hash:any) => {
+				formatText = formatText.replaceAll(`#${hash.tag}`, `<a target="_blank" rel="noopener noreferrer" href="https://twitter.com/hashtag/${hash.tag}">#${hash.tag}</a>`)
+			});
+		}
+
+		if (entities.urls) {
+			entities?.urls.forEach((url:any) => {
+				formatText += url?.unwound_url ? `<a target="_blank" rel="noopener noreferrer" href="${url?.unwound_url}">${url?.unwound_url}</a>` : ''
+			});
+		}
+
+		return formatText
+	};
+
+	const getMedia = (mediaKey:string, entities:any) => {
+		const index = medias.map((media) => { return media.media_key; }).indexOf(mediaKey);
+		const media = medias[index];
+
+		if (media.type === 'photo') {
+			return `<img data-type="photo" src="${media.url}" alt="" loading="lazy"/>`
+		}
+
+		return `<a target="_blank" data-hover="View ${media.type === 'video' ? 'video' : 'GIF'} on Twitter" rel="noopener noreferrer" href="${entities.urls?.[0]?.expanded_url}">
+			<img data-type="${media.type}" src="${media.preview_image_url}" alt="" loading="lazy"/>
+		</a>`;
+	};
+
+	const getPolls = (pollId:string) => {
+		const index = polls.map((poll) => { return poll.id; }).indexOf(pollId);
+		const poll = polls[index];	
+
+		return poll
 	}
 </script>
 
-<!-- TODO: Look into entities. -->
-
-<div class="recent-tweets__container">
+<section class="recent-tweets__container">
 	<header>
 		<h2>Recent tweets</h2>
 		<button class="recent-tweets__refresh" on:click={getTweets} disabled={disabled}>
@@ -110,22 +152,33 @@
 		</button>
 	</header>
 	<ul class="recent-tweets">
-		{#each tweets as {text, id, public_metrics, created_at, attachments}, i}
+		{#each tweets as {text, id, public_metrics, created_at, attachments, entities, referenced_tweets}, i}
 			<li class="tweet">
 				<button class="delete" on:click={() => deleteTweet(id, i)}>&times;</button>
-				
 				<div class="tweet-header">
 					<span class="name">{$twitterUser?.name}</span>
 					<span class="user">@{$twitterUser?.username}</span>
 					<span class="time">&middot; {convertTime(created_at)}</span>
 				</div>
-				<div class="text">{text}</div>
-				{#if attachments}
+				<div class="text">
+					{@html formatText(text, entities)}
+					{#if referenced_tweets?.[0].type === 'quoted'}
+						&mdash; <a target="_blank" rel="noopener noreferrer" href={`https://twitter.com/${$twitterUser?.username}/status/${id}`}>View Quote Retweet</a>
+					{/if}
+				</div>
+				{#if attachments?.media_keys}
 					<div class="img-grid">
 						{#each attachments?.media_keys as mediaKey, i}
 							<div class="img-wrapper">
-								<img src={getMedia(mediaKey)?.url} alt="" loading="lazy">
+								{@html getMedia(mediaKey, entities)}
 							</div>
+						{/each}
+					</div>
+				{:else if attachments?.poll_ids}
+					<div class="poll-wrapper">
+						{#each getPolls(attachments?.poll_ids[0]).options as {label, votes}, i}
+							<div>{label}</div> 
+							<div>{votes} votes</div>
 						{/each}
 					</div>
 				{/if}
@@ -153,7 +206,7 @@
 		{/each}
 		</ul>
 
-</div>
+</section>
 
 <style lang="scss">
 	@import '../../../styles/vars.scss';
@@ -161,6 +214,24 @@
     padding-bottom: 0;
 		color: #fff;
   }
+
+	div {
+		font-size: 14px;
+	}
+
+	a {
+		display: inline-block;
+		text-decoration: none;
+		color: $twitter-blue;
+		font-size: 14px;
+		&:hover,
+		&:active,
+		&:focus {
+			text-decoration: none;
+			color: lighten($twitter-blue, 10%);
+			box-shadow: none;
+		}
+	}
 
 	.recent-tweets__container {
 		background-color: #243447;
@@ -243,7 +314,6 @@
 		padding-top: 16px;
 		padding-bottom: 4px;
 		color: #fff;
-		font-size: 14px;
 	}
 
 	.name {
@@ -263,7 +333,22 @@
 	.text {
 		padding-bottom: 16px;
 		color: #fff;
-		font-size: 14px;
+
+		:global {
+			a {
+				display: inline-block;
+				text-decoration: none;
+				color: $twitter-blue;
+				font-size: 14px;
+				&:hover,
+				&:active,
+				&:focus {
+					text-decoration: none;
+					color: lighten($twitter-blue, 10%);
+					box-shadow: none;
+				}
+			}
+		}
 	}
 
 	.img-grid {
@@ -292,18 +377,79 @@
 
 	.img-wrapper {
 		width: 100%;
-		img {
-			width: 100%;
-			border-radius: 4px;
-			height: 100%;
-			object-fit: cover;
+
+		&:global {
+			img {
+				width: 100%;
+				border-radius: 4px;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			a {
+				text-decoration: none;
+				cursor: pointer;
+				position: relative;
+				width: 100%;
+				height: 100%;
+				display: block;
+				border-radius: 4px;
+				max-height: 208px;
+
+
+				&:after {
+					border-radius: 4px;
+					transition: $transition;
+					opacity: 0;
+					visibility: hidden;
+					content: attr(data-hover);
+					position: absolute;
+					top: 0;
+					left: 0;
+					background-color: #000;
+					width: 100%;
+					height: 100%;
+					z-index: 1;
+					color: #fff;
+					display: flex;
+					align-items: center;
+					text-align: center;
+					justify-content: center;
+					font-weight: bold;
+				}
+
+				&:hover,
+				&:active,
+				&:focus {
+					box-shadow: none;
+					text-decoration: none;
+					&:after {
+						visibility: visible;
+						opacity: .75;
+					}
+				}	
+			}
+		}
+
+	}
+
+	.poll-wrapper {
+		display: grid;
+		grid-template-columns: min-content auto;
+		border: 1px solid #fff;
+		padding-bottom: 0;
+		border-radius: 4px;
+		margin-bottom: 12px;
+		div {
+			border: 1px solid #fff;
+  		grid-gap: 1px;
+			padding: 4px 8px;
 		}
 	}
 
 	.metrics {
 		color: #fff;
 		padding-bottom: 8px;
-		font-size: 14px;
 		display: flex;
 		justify-content: space-between;
 	}
