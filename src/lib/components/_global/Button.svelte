@@ -36,6 +36,7 @@
     justify-content: center;
     min-width: 112px;
     min-height: 40px;
+    box-shadow: none;
 
     @include bp(tablet) {
       font-size: 14px;
@@ -56,7 +57,6 @@
       background-color: $primary;
       border: 2px solid $primary;
       &:hover,
-      &:active,
       &:focus {
         background-color: transparent;
         color: $primary;
@@ -70,7 +70,6 @@
       border: 2px solid $secondary;
 
       &:hover,
-      &:active,
       &:focus {
         background-color: transparent;
         color: $secondary;
@@ -99,7 +98,6 @@
         color: $primary;
 
         &:hover,
-        &:active,
         &:focus {
           box-shadow: 0 2px 1px -1px $primary;
         }
@@ -108,7 +106,6 @@
         color: $secondary;
 
         &:hover,
-        &:active,
         &:focus {
           box-shadow: 0 2px 1px -1px $secondary;
         }
@@ -121,7 +118,6 @@
         color: #fff;
         border-color: $brand-color;
         &:hover,
-        &:active,
         &:focus {
           background-color: darken($brand-color, 15%);
           border-color: darken($brand-color, 15%);

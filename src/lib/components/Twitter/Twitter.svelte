@@ -20,7 +20,6 @@
   {#if twtUser}
   	<h2>Welcome @{twtUser}</h2>
 		<div class="twitter-header">
-			<div>@{$twitterUser?.username} {$twitterUser?.name}</div>
     	<a href='logout/twitter'>logout tweeter</a>
 		</div>
 		<div class="twitter-wrapper">
@@ -49,6 +48,7 @@
 		height: 64px;
 		padding: 16px;
 		cursor: pointer;
+		color: #fff;
 	}
 	a {
 		margin-bottom: 32px;
@@ -59,7 +59,6 @@
 		flex-direction: column;
 		align-items: flex-start;
 		gap: 16px;
-		border-bottom: 10px solid slateblue;
 		margin-bottom: 16px;
 	}
 </style>

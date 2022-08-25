@@ -88,7 +88,6 @@
     transition: $transition;
 
     &:hover,
-    &:active,
     &:focus {
       color: $secondary;
     }

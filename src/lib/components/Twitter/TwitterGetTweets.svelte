@@ -228,7 +228,6 @@
 		color: $twitter-blue;
 		font-size: 14px;
 		&:hover,
-		&:active,
 		&:focus {
 			text-decoration: none;
 			color: lighten($twitter-blue, 10%);
@@ -241,7 +240,7 @@
 		padding: 16px;
 		overflow: auto;
 		// Temporary
-		max-width: 420px;
+		max-width: 375px;
 		max-height: 420px;
 	}
 
@@ -270,7 +269,6 @@
 		cursor: pointer;
 		transition: $transition;
 
-		&:active,
 		&:hover,
 		&:focus {
 			opacity: .5;
@@ -294,7 +292,6 @@
 		color: #fff;
 
 		&:hover,
-		&:active,
 		&:focus {
 			text-decoration: none;
 			opacity: .5;
@@ -344,7 +341,6 @@
 				color: $twitter-blue;
 				font-size: 14px;
 				&:hover,
-				&:active,
 				&:focus {
 					text-decoration: none;
 					color: lighten($twitter-blue, 10%);
@@ -422,7 +418,6 @@
 				}
 
 				&:hover,
-				&:active,
 				&:focus {
 					box-shadow: none;
 					text-decoration: none;

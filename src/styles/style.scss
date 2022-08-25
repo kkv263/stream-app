@@ -52,7 +52,6 @@ a {
   transition: $transition;
 
   &:hover,
-  &:active,
   &:focus {
     box-shadow: 0 2px 1px -1px $primary;
   }

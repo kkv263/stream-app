@@ -48,7 +48,6 @@
       color: #fff;
 
       &:hover,
-      &:active,
       &:focus {
         text-decoration: none;
         opacity: .5;
