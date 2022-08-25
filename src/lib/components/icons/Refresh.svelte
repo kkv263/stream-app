@@ -1,4 +1,3 @@
-
 <script lang="ts">
   export let width:string;
   export let height:string;

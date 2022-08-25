@@ -73,7 +73,6 @@
       transition: $transition;
 
       &:hover,
-      &:active,
       &:focus {
         opacity: .5;
       }
