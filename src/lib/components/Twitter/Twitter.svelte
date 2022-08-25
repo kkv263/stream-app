@@ -5,6 +5,8 @@
 	import TwitterPostTweet from "./TwitterPostTweet.svelte";
 	import TwitterUpdateProfile from "./TwitterUpdateProfile.svelte";
 	import { sideDrawerState } from "$lib/stores/sideDrawerStore";
+	import { twitterUser } from '$lib/stores/twitterSessionStore'
+
 	export let twtUser:string;
 	let components = [TwitterPostTweet, TwitterGetTweets]
 </script>
@@ -12,18 +14,22 @@
 <Section>
 	<h1>Hello world!</h1>
 
-	<button type="button" class="twitter-wrapper" on:click={() => sideDrawerState.set('twitter')}>
+	<button type="button" class="twitter-button" on:click={() => sideDrawerState.set('twitter')}>
 		<TwitterLogo width={'32px'} height={'32px'}/>
 	</button>
   {#if twtUser}
-    <h2>Welcome @{twtUser}</h2>
-    <a href='logout/twitter'>logout tweeter</a>
-		{#each components as component, i}
-			<div class="wrapper">
-				<svelte:component this={component} />
-			</div>
-		{/each}
-
+  	<h2>Welcome @{twtUser}</h2>
+		<div class="twitter-header">
+			<div>@{$twitterUser?.username} {$twitterUser?.name}</div>
+    	<a href='logout/twitter'>logout tweeter</a>
+		</div>
+		<div class="twitter-wrapper">
+			{#each components as component, i}
+				<div class="wrapper">
+					<svelte:component this={component} />
+				</div>
+			{/each}
+		</div>
   {:else}
 		<h2>You are not logged in to twitter</h2>
     <a href='login/twitter' rel="external">authorize tweeter</a>
@@ -32,7 +38,7 @@
 
 <style lang="scss">
 
-	.twitter-wrapper {
+	.twitter-button {
 		background-color: #1DA1F2;
 		display: flex;
 		align-items: center;

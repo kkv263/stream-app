@@ -4,6 +4,6 @@
   export let marginLeft:string = '';
 </script>
 
-<svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} style="margin-left:{marginLeft}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+<svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} style="margin-left:{marginLeft}" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM6.75 9.25a.75.75 0 000 1.5h4.59l-2.1 1.95a.75.75 0 001.02 1.1l3.5-3.25a.75.75 0 000-1.1l-3.5-3.25a.75.75 0 10-1.02 1.1l2.1 1.95H6.75z" clip-rule="evenodd" />
 </svg>

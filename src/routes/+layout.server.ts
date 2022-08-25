@@ -11,7 +11,8 @@ export const load:ServerLoad = async({locals, request}) => {
   
   const setUser = async(platform: string) => {
     if (cookies[`${platform}token`] != '') {
-      const userResponse = await getUser(cookies[`${platform}token`], cookies[`${platform}refresh`], platform);
+      const params = platform === 'twitter' ? 'user.fields=profile_image_url' : ''
+      const userResponse = await getUser(cookies[`${platform}token`], cookies[`${platform}refresh`], platform, params);
       const userdata = platform === 'twitter' ? userResponse.userdata?.data : userResponse.userdata?.data?.[0];
       if (userResponse?.tokens) {
         locals[`${platform}tokens`] = userResponse.tokens;
