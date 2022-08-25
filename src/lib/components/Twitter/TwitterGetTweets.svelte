@@ -7,6 +7,7 @@
 	import ArrowOutBox from "$lib/components/icons/ArrowOutBox.svelte";
 	import Chat from "$lib/components/icons/Chat.svelte";
 	import { timeSince } from '$lib/_includes/generalHelpers'
+	import TwitterHeader from "$lib/components/Twitter/TwitterHeader.svelte";
 
 	//TODO: Update type
   let tweets:any = [];
@@ -144,13 +145,15 @@
 	}
 </script>
 
+
 <section class="recent-tweets__container">
-	<header>
+	<TwitterHeader />
+	<div class="header">
 		<h2>Recent tweets</h2>
 		<button class="recent-tweets__refresh" on:click={getTweets} disabled={disabled}>
 			<Refresh width="16px" height="16px"/>
 		</button>
-	</header>
+	</div>
 	<ul class="recent-tweets">
 		{#each tweets as {text, id, public_metrics, created_at, attachments, entities, referenced_tweets}, i}
 			<li class="tweet">
@@ -242,7 +245,7 @@
 		max-height: 420px;
 	}
 
-	header {
+	.header {
 		display: flex;
 		align-items: center;
 	}
