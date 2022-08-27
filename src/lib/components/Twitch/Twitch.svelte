@@ -29,7 +29,6 @@
 		flex-direction: column;
 		align-items: flex-start;
 		gap: 16px;
-		border-bottom: 10px solid slateblue;
 		margin-bottom: 16px;
 	}
 </style>

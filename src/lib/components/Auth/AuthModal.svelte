@@ -66,6 +66,7 @@
           color: #777;
           font-size: 14px;
           text-align: center;
+          margin: 0;
         }
       }
 

@@ -17,6 +17,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        font-family: 'Roboto Condensed', sans-serif;
 
         @include bp(tablet) {
           font-size: 14px;
@@ -65,6 +66,10 @@
         &.error {
           border-color: $error-red;
           background-color: rgba($error-red, 0.05);
+        }
+
+        &.noicon {
+          padding-left: 16px;
         }
       }
     }
