@@ -1,18 +1,17 @@
 <script lang="ts">
-	import { twitterUser } from '$lib/stores/twitterSessionStore'
+	import { twitchUser } from '$lib/stores/twitchSessionStore'
   import Ellipsis from '$lib/components/icons/Ellipsis.svelte';
-  import TwitterLogo from '$lib/components/icons/TwitterLogo.svelte';
+  import TwitchLogo from '$lib/components/icons/TwitchLogo.svelte';
 </script>
 
 <header>
   <div class="top">
-    <a href={`https://twitter.com/${$twitterUser.username}`} target="_blank" rel="noopener noreferrer"><TwitterLogo width="24px" height="24px" /></a>  
+    <a href={`https://twitch.tv/${$twitchUser.login}`} target="_blank" rel="noopener noreferrer"><TwitchLogo width="24px" height="24px" /></a>  
 
     <div class="profile-wrapper">
-      <img src="{$twitterUser.profile_image_url}" alt="{$twitterUser.name} profile image" loading="lazy">
+      <img src="{$twitchUser.profile_image_url}" alt="{$twitchUser.login} profile image" loading="lazy">
       <div class="name-wrapper">
-        <h3>{$twitterUser.name}</h3>
-        <span>@{$twitterUser.username}</span>
+        <h3>{$twitchUser.display_name}</h3>
       </div>
     </div>
 
@@ -26,7 +25,7 @@
   header {
     color: #fff;
     padding: 8px 16px;;
-    background-color: #1DA1F2;
+    background-color: #6441A5;
   }
 
   button {
@@ -80,10 +79,6 @@
       padding-bottom: 0;
       color: #fff;
       font-size: 14px;
-    }
-
-    span {
-      font-size: 12px;
     }
   }
 </style>

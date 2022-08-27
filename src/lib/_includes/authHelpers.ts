@@ -100,6 +100,26 @@ export const getUser = async(token:string, refresh_token:string, platform: strin
  */
 export const filterNullCookieString = (cookieString:string|null) => cookieString?.split(';').filter(name => !name.includes('undefined') &&  !name.includes('null') ).join(';')
 
+// TODO: Twitter platform
+export const validateToken = (token: string, platform: string = "twitch") => {
+  let endpoint = '';
+  switch(platform) {
+    case 'twitter': 
+      endpoint = ``; break; //TODO
+    case 'twitch':
+      endpoint = 'https://id.twitch.tv/oauth2/validate'; break;
+  }
+
+  return fetch(endpoint, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json',
+      ...(platform === 'twitch') && {'Client-Id' : import.meta.env.DEV ? import.meta.env.VITE_TWITCH_CLIENT_ID as string : process.env.TWITCH_CLIENT_ID!}
+    }
+  });
+}
+
 /* 
 Example of access token
 {

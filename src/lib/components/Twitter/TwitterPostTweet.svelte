@@ -47,9 +47,9 @@
 	const clickOutsideEmoji = () => emojihidden = true;
 </script>
 
-<section class="post-tweets__container">
+<section>
 	<TwitterHeader />
-	<div>
+	<div class="post-tweets__container">
 		<textarea type="text" bind:value={tweet} placeholder="What's happening?"/>
 		<div class="buttons">
 			<button class="emoji-btn" on:click={pickEmoji}><Smile width="20px" height="20px"/></button>
