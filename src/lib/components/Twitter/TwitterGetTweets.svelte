@@ -146,68 +146,71 @@
 </script>
 
 
-<section class="recent-tweets__container">
+<section >
 	<TwitterHeader />
-	<div class="header">
-		<h2>Recent tweets</h2>
-		<button class="recent-tweets__refresh" on:click={getTweets} disabled={disabled}>
-			<Refresh width="16px" height="16px"/>
-		</button>
-	</div>
-	<ul class="recent-tweets">
-		{#each tweets as {text, id, public_metrics, created_at, attachments, entities, referenced_tweets}, i}
-			<li class="tweet">
-				<button class="delete" on:click={() => deleteTweet(id, i)}>&times;</button>
-				<div class="tweet-header">
-					<span class="name">{$twitterUser?.name}</span>
-					<span class="user">@{$twitterUser?.username}</span>
-					<span class="time">&middot; {convertTime(created_at)}</span>
-				</div>
-				<div class="text">
-					{@html formatText(text, entities)}
-					{#if referenced_tweets?.[0].type === 'quoted'}
-						&mdash; <a target="_blank" rel="noopener noreferrer" href={`https://twitter.com/${$twitterUser?.username}/status/${id}`}>View Quote Retweet</a>
+	<div class="recent-tweets__container">
+		<div class="header">
+			<h2>Recent tweets</h2>
+			<button class="recent-tweets__refresh" on:click={getTweets} disabled={disabled}>
+				<Refresh width="16px" height="16px"/>
+			</button>
+		</div>
+		<ul class="recent-tweets">
+			{#each tweets as {text, id, public_metrics, created_at, attachments, entities, referenced_tweets}, i}
+				<li class="tweet">
+					<button class="delete" on:click={() => deleteTweet(id, i)}>&times;</button>
+					<div class="tweet-header">
+						<span class="name">{$twitterUser?.name}</span>
+						<span class="user">@{$twitterUser?.username}</span>
+						<span class="time">&middot; {convertTime(created_at)}</span>
+					</div>
+					<div class="text">
+						{@html formatText(text, entities)}
+						{#if referenced_tweets?.[0].type === 'quoted'}
+							&mdash; <a target="_blank" rel="noopener noreferrer" href={`https://twitter.com/${$twitterUser?.username}/status/${id}`}>View Quote Retweet</a>
+						{/if}
+					</div>
+					{#if attachments?.media_keys}
+						<div class="img-grid">
+							{#each attachments?.media_keys as mediaKey, i}
+								<div class="img-wrapper">
+									{@html getMedia(mediaKey, entities)}
+								</div>
+							{/each}
+						</div>
+					{:else if attachments?.poll_ids}
+						<div class="poll-wrapper">
+							{#each getPolls(attachments?.poll_ids[0]).options as {label, votes}, i}
+								<div>{label}</div> 
+								<div>{votes} votes</div>
+							{/each}
+						</div>
 					{/if}
-				</div>
-				{#if attachments?.media_keys}
-					<div class="img-grid">
-						{#each attachments?.media_keys as mediaKey, i}
-							<div class="img-wrapper">
-								{@html getMedia(mediaKey, entities)}
-							</div>
-						{/each}
+					<div class="metrics">
+						<div class="icon-wrapper">
+							<Retweet width="16px" height="16px"/> 
+							<span>{public_metrics.retweet_count}</span>
+						</div>
+						<div class="icon-wrapper">
+							<Heart width="16px" height="16px"/> 
+							<span>{public_metrics.like_count}</span>
+						</div>
+						<div class="icon-wrapper">
+							<Chat width="16px" height="16px"/> 
+							<span>{public_metrics.reply_count}</span>
+						</div>
+						<div class="icon-wrapper">
+							<a class="link" target="_blank" rel="noopener noreferrer" href={`https://twitter.com/${$twitterUser?.username}/status/${id}`}>
+								<ArrowOutBox width="16px" height="16px"/> 
+							</a>
+						</div>
 					</div>
-				{:else if attachments?.poll_ids}
-					<div class="poll-wrapper">
-						{#each getPolls(attachments?.poll_ids[0]).options as {label, votes}, i}
-							<div>{label}</div> 
-							<div>{votes} votes</div>
-						{/each}
-					</div>
-				{/if}
-				<div class="metrics">
-					<div class="icon-wrapper">
-						<Retweet width="16px" height="16px"/> 
-						<span>{public_metrics.retweet_count}</span>
-					</div>
-					<div class="icon-wrapper">
-						<Heart width="16px" height="16px"/> 
-						<span>{public_metrics.like_count}</span>
-					</div>
-					<div class="icon-wrapper">
-						<Chat width="16px" height="16px"/> 
-						<span>{public_metrics.reply_count}</span>
-					</div>
-					<div class="icon-wrapper">
-						<a class="link" target="_blank" rel="noopener noreferrer" href={`https://twitter.com/${$twitterUser?.username}/status/${id}`}>
-							<ArrowOutBox width="16px" height="16px"/> 
-						</a>
-					</div>
-				</div>
-
-			</li>
-		{/each}
+	
+				</li>
+			{/each}
 		</ul>
+	</div>
+
 
 </section>
 

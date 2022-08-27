@@ -16,9 +16,7 @@
 		<div class="wrapper">
 			<TwitchChannelInfo />
 		</div>
-		<div class="wrapper">
-			<TwitchRaid />
-		</div>
+		<TwitchRaid />
   {:else}
     <h2>You are not logged in to twitch</h2>
     <a href='login/twitch' rel="external">authorize twitch</a>

@@ -56,7 +56,7 @@ export const POST: RequestHandler = async({locals, request}) => {
     ...streamsJSON.data.find((o:any) => o.user_id === e)
   }));
 
-  console.log(raidData);
+  // console.log(raidData);
 
   return new Response(JSON.stringify(raidData), {
     status: 201,
