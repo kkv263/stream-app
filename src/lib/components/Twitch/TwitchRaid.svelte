@@ -86,7 +86,7 @@
           </div>
         {/each}
         <div class="img-wrapper">
-          <Question width="54px" height="54px"/>
+          <Question width="48px" height="48px"/>
         </div>
       </div>
       <div class="stream">
