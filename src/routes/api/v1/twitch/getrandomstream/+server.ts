@@ -3,8 +3,8 @@ import cookie from 'cookie';
 import { getRefreshToken, filterNullCookieString, validateToken } from '$lib/_includes/authHelpers';
 import type { RequestHandler } from "@sveltejs/kit";
 
-const getRandomStream = (token:string, id:string) => {
-  const endpoint = `https://api.twitch.tv/helix/streams?game_id=${id}`;
+const getRandomStream = (token:string, id:string, lang:string) => {
+  const endpoint = `https://api.twitch.tv/helix/streams?game_id=${id}&language=${lang}&first=100`;
   return fetch(endpoint, {
     method: 'GET',
     headers: {
@@ -30,11 +30,12 @@ export const POST: RequestHandler = async({locals, request}) => {
     token = locals.twitchtoken = refreshTokenResponse.access_token
     locals.twitchrefresh = refreshTokenResponse.refresh_token
   }
-
-  const channel = await getRandomStream(token, body.game_id);
+  const channel = await getRandomStream(token, body.game_id, body.lang);
   const channelJSON = await channel.json()
 
-  return new Response(JSON.stringify(channelJSON), {
+  const randomStream = channelJSON.data[Math.floor(Math.random() * 100)];
+
+  return new Response(JSON.stringify(randomStream), {
     status: 201,
   })
 };

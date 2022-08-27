@@ -45,12 +45,12 @@ export const POST: RequestHandler = async({locals, request}) => {
 
   let channel = await getUsers(token, '&id=' + body.user_ids.join('&id='))
   let streams = await getStreams(token, '&user_id=' + body.user_ids.join('&user_id='))
-
   const channelJSON = await channel.json();
   const streamsJSON = await streams.json();
 
   const dedupedArray = [...new Set([...channelJSON.data.map((e:any) => e.id), ...streamsJSON.data.map((e:any) => e.user_id)])];
 
+  // Refactor: Can grab only profile_image_url and id
   const raidData = dedupedArray.map(e => ({
     ...channelJSON.data.find((o:any) => o.id === e),
     ...streamsJSON.data.find((o:any) => o.user_id === e)

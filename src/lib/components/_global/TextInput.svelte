@@ -71,9 +71,4 @@
 </div>
 
 <style lang="scss">
-  input {
-    &.noicon {
-      padding-left: 16px;
-    }
-  }
 </style>
