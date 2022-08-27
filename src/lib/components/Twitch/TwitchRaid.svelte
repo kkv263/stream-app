@@ -4,6 +4,7 @@
   import UserOutline from "$lib/components/icons/UserOutline.svelte";
   import TwitchHeader from "./TwitchHeader.svelte";
   import Button from "$lib/components/_global/Button.svelte";
+  import Question from "$lib/components/icons/Question.svelte";
 
   let streams:any[];
   let randomIndex:number;
@@ -28,8 +29,8 @@
   }
 
   const startStreamTimer = (randomIndex:number) => {
-  const stream = streams[randomIndex]
-  stream.duration_ms = new Date().getTime() - new Date(stream.started_at).getTime();
+    const stream = streams[randomIndex]
+    stream.duration_ms = new Date().getTime() - new Date(stream.started_at).getTime();
     stream.interval = setInterval(() => {
       stream.duration_ms += 1000;
       if (stream.type != 'live') {
@@ -65,6 +66,10 @@
     randomIndex = i;
   }
 
+  const getRandom = async() => {
+    //TODO: do later with a store to minimize calls.
+  }
+
   onMount(async () => {
     getUserInfo();
   });
@@ -80,6 +85,9 @@
             <img class="profile" src="{profile_image_url}" alt="{display_name + " profile image"}" loading="lazy">
           </div>
         {/each}
+        <div class="img-wrapper">
+          <Question width="54px" height="54px"/>
+        </div>
       </div>
       <div class="stream">
         <div class="top">
