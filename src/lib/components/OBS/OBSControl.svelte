@@ -1,6 +1,12 @@
 <script lang="ts">
   import { getContext, onDestroy, onMount } from 'svelte';
   import { convertMsToTime } from '$lib/_includes/generalHelpers';
+  import OBSHeader from '$lib/components/OBS/OBSHeader.svelte';
+  import Block from '$lib/components/Grid/Block.svelte'
+  import Play from '$lib/components/icons/Play.svelte';
+  import Signal from '$lib/components/icons/Signal.svelte';
+  import Stop from '$lib/components/icons/Stop.svelte';
+  import Pause from '$lib/components/icons/Pause.svelte';
   import type OBSWebSocket from 'obs-websocket-js';
 
   let obs:OBSWebSocket = getContext('obs');
@@ -114,22 +120,104 @@
   }
 </script>
 
-<div>
-  <h2>obs control</h2>
-  <div class="wrapper">
-    {convertMsToTime(streamingTime)}
-    <button type="button" on:click={OBSStream}>{streaming ? 'Stop streaming' : 'stream'}</button>
-    {convertMsToTime(recordTime)}
-    <button type="button" on:click={OBSRecord}>{recording ? 'Stop recording' : 'Record'}</button>
+<Block size={2}>
+  <OBSHeader />
+  <div class="obs-control">
+    <div class="wrapper">
+      <div class="control">
+        <div class="time">
+          <span><Signal width="16px" height="16px"/></span>
+          <span>LIVE: {convertMsToTime(streamingTime)}</span>  
+        </div>
+        <div class="buttons">
+          <button type="button" on:click={OBSStream}>
+            <svelte:component width="20px" height="20px" this={streaming ? Stop : Play}/>
+          </button>
+        </div>
+      </div>
+      <div class="control">
+        <div data-active={recording} data-paused={recordingPaused} class="time">
+          <span class='circle'></span>
+          <span>REC: {convertMsToTime(recordTime)}</span>  
+        </div>
+        <div class="buttons">
+          <button type="button" on:click={OBSRecord}>
+            <svelte:component width="20px" height="20px" this={recording ? Stop : Play}/>
+          </button>
+          {#if recording} 
+            <button type="button" on:click={OBSRecordPause}>
+              <Pause width="20px" height="20px"/>
+            </button>
+          {/if}
+        </div>
+      </div>
+    </div>
   </div>
-  {#if recording} 
-    <button type="button" on:click={OBSRecordPause}>{!recordingPaused ? 'pause recording' : 'unpause recording'}</button>
-  {/if}
-</div>
+
+</Block>
 
 <style lang="scss">
+  @import '../../../styles/vars.scss';
+  .obs-control {
+    background-color: $off-black;
+    color: #fff;
+    overflow: auto;
+    padding: 8px 16px;
+  }
+
+  .time {
+    display: flex;
+    gap: 4px;
+    font-size: 14px;
+    align-items: center;
+
+    .circle {
+      width: 12px;
+      height: 12px;
+      background-color: currentColor;
+      border-radius: 100%;
+    }
+
+    &[data-active=true] {
+      color: $pink;
+    }
+
+    &[data-paused=true] {
+      color: yellow;
+    }
+  }
+
   .wrapper {
     display: flex;
+    justify-content: space-between;
+  }
+  
+  .control {
+    display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    gap: 4px;
+  }
+  
+  .buttons {
+    display: flex;
+    gap: 4px;
+  }
+
+  button {
+    flex: 1 0 auto;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    padding: 4px;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover,
+    &:focus {
+      opacity: .5;
+    }
   }
 </style>

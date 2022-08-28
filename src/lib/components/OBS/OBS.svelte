@@ -40,11 +40,9 @@
     <button on:click={() => obsConnect(localhost, password, obs)}>connect to obs</button>
   {:else}
     <button on:click={() => obsDisconnect(obs)}>disconnect from obs</button>
-    <div class="wrapper">
-      <ObsScene />
-      <ObsInput />
-      <ObsControl />
-    </div>
+    <ObsScene />
+    <ObsInput />
+    <ObsControl />
   {/if}
 
 </Section>
@@ -65,11 +63,5 @@
 		padding: 32px;
 		cursor: pointer;
     line-height: 0;
-  }
-  .wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 32px;
   }
 </style>

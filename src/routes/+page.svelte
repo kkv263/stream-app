@@ -12,6 +12,7 @@
   import Twitch from "$lib/components/Twitch/Twitch.svelte";
   import type { Session } from "@supabase/supabase-js";
   import { page } from "$app/stores";
+  import Grid from "$lib/components/Grid/Grid.svelte";
 
   user.set(supabase.auth.user());
 
@@ -29,6 +30,7 @@
 {#if $sideDrawerState}
   <SideDrawer />
 {/if}
+<!-- <Grid/> -->
 <Section>
   {#if $user}
     <Twitter twtUser={twitteruser?.name}/>
