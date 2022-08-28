@@ -4,6 +4,7 @@
   import Button from "$lib/components/_global/Button.svelte";
   import CheckCircle from "$lib/components/icons/CheckCircle.svelte";
   import { twitchUser } from "$lib/stores/twitchSessionStore";
+  import Block from "$lib/components/_global/Block.svelte";
 
   let disabled = false;
   let username:string;
@@ -78,12 +79,13 @@
 </script>
   <!-- TODO: for delay use broadcaster type from store to get if partner or not -->
   <!-- TODO: make fields non editable until edit button clicked. Then update all at once -->
-  <section>
+  <Block>
     <TwitchHeader />
     <div class="channel-info">
       <div class="header">
-        <h3>Channel Information</h3>
-        <div hidden={!updated}>Updated <CheckCircle width="16px" height="16px"/></div>
+        <h3>Channel Information<div hidden={!updated}><CheckCircle width="16px" height="16px"/></div></h3>
+        <button type="button" on:click={toggleEdit} disabled={loading}>{!isEdit && !loading ? 'Edit' : (!loading ? 'Update' : 'Updating')}</button>
+        <!-- <Button type="button" color="primary" on:click={toggleEdit} disabled={loading}>{!isEdit && !loading ? 'Edit' : (!loading ? 'Update' : 'Updating')}</Button> -->
       </div>
       <div class="input-wrapper">
         <label for="twitch_game">Game</label>
@@ -102,36 +104,35 @@
         <div id="twitch_delay" hidden={isEdit}>{delay}</div>
       </div>
       {/if}
-      <Button type="button" color="primary" on:click={toggleEdit} disabled={loading}>{!isEdit && !loading ? 'Edit' : (!loading ? 'Update' : 'Updating')}</Button>
     </div>
 
-  </section>
+  </Block>
   
   <style lang="scss">
     @import '../../../styles/vars.scss';
-    section {
-      width: 100%;
-      max-width: 375px;
-    }
 
     .channel-info {
       padding: 16px;
       background-color: $off-black;
       color: #fff;
+      height: 100%;
+      display:flex;
+      flex-direction: column;
     }
 
     .header {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      padding-bottom: 24px;
+      justify-content: space-between;
+      padding-bottom: 16px;
+      padding-top: 0;
       h3 {
-        padding-right: 8px;
+        display: flex;
       }
       div {
         color: $blue;
-        border: 1px solid $blue;
-        padding: 4px;
+        padding: 0 4px;
         border-radius: 4px;
         display: flex;
         align-items: center;
@@ -145,6 +146,15 @@
       }
     }
 
+    button {
+      min-width: 96px;
+      background-color: $primary;
+      color: #fff;
+      border: 0;
+      border-radius: 100px;
+      padding: 4px;
+    }
+
     h3 {
       color: #fff;
       padding: 0;
@@ -153,8 +163,9 @@
     .input-wrapper {
       display: flex;
       flex-direction: column;
+      margin-top: auto;
       &:not(:last-child) {
-        padding-bottom: 24px;
+        padding-bottom: 8px;
       }
       
       div {

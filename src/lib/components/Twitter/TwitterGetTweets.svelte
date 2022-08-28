@@ -8,6 +8,7 @@
 	import Chat from "$lib/components/icons/Chat.svelte";
 	import { timeSince } from '$lib/_includes/generalHelpers'
 	import TwitterHeader from "$lib/components/Twitter/TwitterHeader.svelte";
+	import Block from "$lib/components/_global/Block.svelte";
 
 	//TODO: Update type
   let tweets:any = [];
@@ -146,7 +147,7 @@
 </script>
 
 
-<section >
+<Block >
 	<TwitterHeader />
 	<div class="recent-tweets__container">
 		<div class="header">
@@ -210,9 +211,7 @@
 			{/each}
 		</ul>
 	</div>
-
-
-</section>
+</Block>
 
 <style lang="scss">
 	@import '../../../styles/vars.scss';
@@ -241,10 +240,8 @@
 	.recent-tweets__container {
 		background-color: #243447;
 		padding: 16px;
+		max-height: 170px;
 		overflow: auto;
-		// Temporary
-		max-width: 375px;
-		max-height: 420px;
 	}
 
 	.header {
@@ -305,7 +302,6 @@
 	.tweet {
 		position: relative;
 		color: #fff;
-		min-width: 320px;
 		border-bottom: 1px solid #ccc;
 
 		&:last-child {

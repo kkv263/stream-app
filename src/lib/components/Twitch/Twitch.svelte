@@ -13,9 +13,7 @@
   {#if twitchUser}
     <h2>Welcome {twitchUser}</h2>
     <a href='logout/twitch'>revoke twitch</a>
-		<div class="wrapper">
-			<TwitchChannelInfo />
-		</div>
+		<TwitchChannelInfo />
 		<TwitchRaid />
   {:else}
     <h2>You are not logged in to twitch</h2>
@@ -24,11 +22,4 @@
 </Section>
 
 <style lang="scss">
-	.wrapper {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 16px;
-		margin-bottom: 16px;
-	}
 </style>

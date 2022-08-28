@@ -24,9 +24,7 @@
 		</div>
 		<div class="twitter-wrapper">
 			{#each components as component, i}
-				<div class="wrapper">
-					<svelte:component this={component} />
-				</div>
+				<svelte:component this={component} />
 			{/each}
 		</div>
   {:else}
@@ -53,12 +51,5 @@
 	a {
 		margin-bottom: 32px;
 		display: inline-block;
-	}
-	.wrapper {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 16px;
-		margin-bottom: 16px;
 	}
 </style>

@@ -5,6 +5,7 @@
 	import Smile from "$lib/components/icons/Smile.svelte";
 	import TwitterHeader from "$lib/components/Twitter/TwitterHeader.svelte";
 	import Button from "$lib/components/_global/Button.svelte";
+	import Block from "$lib/components/_global/Block.svelte";
 
 	let tweet:string = '';
   let rootElement:any;
@@ -47,7 +48,7 @@
 	const clickOutsideEmoji = () => emojihidden = true;
 </script>
 
-<section>
+<Block>
 	<TwitterHeader />
 	<div class="post-tweets__container">
 		<textarea type="text" bind:value={tweet} placeholder="What's happening?"/>
@@ -55,19 +56,22 @@
 			<button class="emoji-btn" on:click={pickEmoji}><Smile width="20px" height="20px"/></button>
 			<div use:clickOutside={clickOutsideEmoji} bind:this={rootElement} class="emoji" hidden={emojihidden}></div>
 		</div>
-		<Button type="button" color="primary" full on:click={handleClick}>Tweet</Button>
+		<div class="btn-wrapper">
+			<Button type="button" color="primary" full on:click={handleClick}>Tweet</Button>
+		</div>
 	</div>
 
-</section>
+</Block>
 
 
 <style lang="scss">
 		@import '../../../styles/vars.scss';
 	.post-tweets__container {
 		background-color: #243447;
-		// Temporary
-		max-width: 375px;
-		padding: 16px 16px 32px;
+		padding: 16px;
+		flex: 1 0 auto;
+		display: flex;
+		flex-direction: column;
 
 		:global {
 			.emoji-element {
@@ -86,6 +90,7 @@
 
 	.buttons {
 		position: relative;
+		padding-top: 4px;
 		padding-bottom: 16px;
 	}
 
@@ -111,14 +116,13 @@
 	}
 
 	textarea {
-		height: 120px;
-		min-width: 375px;
 		width: 100%;
 		background-color: transparent;
 		color: #fff;
 		resize: none;
 		border: 0;
 		border-bottom: 1px solid rgba(#fff, .5);
+		flex: 1 0 auto;
 
 		&::placeholder {
 			color: #fff;

@@ -4,6 +4,7 @@
   import UserOutline from "$lib/components/icons/UserOutline.svelte";
   import TwitchHeader from "./TwitchHeader.svelte";
   import Button from "$lib/components/_global/Button.svelte";
+  import Block from "$lib/components/_global/Block.svelte";
   import Question from "$lib/components/icons/Question.svelte";
 
   let streams:any[];
@@ -119,7 +120,8 @@
 </script>
 
 <!-- TODO disable raid when not streaming. -->
-<section>
+<!-- TODO scroll on left side -->
+<Block>
   <TwitchHeader />
   <div class="twitch-raid__wrapper">
       <div class="streamers">
@@ -129,21 +131,22 @@
                 {#if streams.length - 1 != i} 
                   <img class="profile" src="{profile_image_url}" alt="{display_name + " profile image"}" loading="lazy">
                 {:else}
-                  <Question width="48px" height="48px"/>
+                  <Question width="54px" height="54px"/>
                 {/if}
               </div>
           {/each}
         {/if}
       </div>
       <div class="stream">
+        <h3 class="headline">Raid a streamer</h3>
         {#if streams?.[randomIndex]}
           <div class="top">
             <h2>{streams[randomIndex]?.user_name}</h2>
             <div>{streams[randomIndex]?.game_name}</div>
           </div>
-          <a href={`https://twitch.tv/${streams[randomIndex]?.user_login}`} target="_blank" rel="noopener noreferrer">
+          <!-- <a href={`https://twitch.tv/${streams[randomIndex]?.user_login}`} target="_blank" rel="noopener noreferrer">
             <img class="thumbnail" src="{streams[randomIndex]?.thumbnail_url.replace('{width}', '1900').replace('{height}', '1080')}" alt="">
-          </a>
+          </a> -->
           <div class="bottom">
             <div>
               <h3><UserOutline width="16px" height="16px"/>{streams[randomIndex]?.viewer_count}</h3>
@@ -155,19 +158,16 @@
       </div>
   </div>
 
-</section>
+</Block>
     
   <style lang="scss">
     @import '../../../styles/vars.scss';
-    section {
-      max-width: 375px;
-      background-color: $off-black;
-    }
     .twitch-raid__wrapper {
-      padding: 16px;
-      // Temporary
+      padding: 16px 16px 0;
+      background-color: $off-black;
       color: #fff;
       display: flex;
+      max-height: 170px;
     }
 
     h3 {
@@ -175,9 +175,13 @@
       padding-bottom: 0;
     }
 
+    .headline {
+      padding-bottom: 24px;
+    }
+
     img.profile {
-      width: 48px;
-      height: 48px;
+      width: 40px;
+      height: 40px;
       border-radius: 100%;
       object-fit: cover;
     }
@@ -193,6 +197,8 @@
       flex-direction: column;
       padding-right: 16px; 
       border-right: 1px solid rgba(#fff, .75);
+      overflow-y: auto;
+      overflow-x: hidden;
     }
 
     a {
@@ -244,6 +250,7 @@
       border-radius: 100%;
       border: 3px solid transparent;
       position: relative;
+      width: 40px;
       &[data-active="true"] {
         &::after{
           content: '';
@@ -253,10 +260,10 @@
           z-index: 1;
           border-style: solid;
           border-color: transparent #fff;
-          border-width: 10px 10px 10px 0;
+          border-width: 8px 8px 8px 0;
           top: 50%;
-          left: calc(100% + 9px);
-          margin-top: -10px;
+          left: calc(100% + 12px);
+          margin-top: -8px;
         }
       }
 
