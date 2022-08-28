@@ -4,7 +4,7 @@
   import UserOutline from "$lib/components/icons/UserOutline.svelte";
   import TwitchHeader from "./TwitchHeader.svelte";
   import Button from "$lib/components/_global/Button.svelte";
-  import Block from "$lib/components/_global/Block.svelte";
+  import Block from "$lib/components/Grid/Block.svelte";
   import Question from "$lib/components/icons/Question.svelte";
 
   let streams:any[];
@@ -167,7 +167,7 @@
       background-color: $off-black;
       color: #fff;
       display: flex;
-      max-height: 170px;
+      max-height: 160px;
     }
 
     h3 {

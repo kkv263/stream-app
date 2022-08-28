@@ -8,7 +8,7 @@
 	import Chat from "$lib/components/icons/Chat.svelte";
 	import { timeSince } from '$lib/_includes/generalHelpers'
 	import TwitterHeader from "$lib/components/Twitter/TwitterHeader.svelte";
-	import Block from "$lib/components/_global/Block.svelte";
+	import Block from "$lib/components/Grid/Block.svelte";
 
 	//TODO: Update type
   let tweets:any = [];
@@ -240,13 +240,14 @@
 	.recent-tweets__container {
 		background-color: #243447;
 		padding: 16px;
-		max-height: 170px;
+		max-height: 160px;
 		overflow: auto;
 	}
 
 	.header {
 		display: flex;
 		align-items: center;
+		padding: 0;
 	}
 
 	@keyframes spin-animation {

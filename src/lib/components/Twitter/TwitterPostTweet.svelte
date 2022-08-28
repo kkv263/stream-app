@@ -5,7 +5,7 @@
 	import Smile from "$lib/components/icons/Smile.svelte";
 	import TwitterHeader from "$lib/components/Twitter/TwitterHeader.svelte";
 	import Button from "$lib/components/_global/Button.svelte";
-	import Block from "$lib/components/_global/Block.svelte";
+	import Block from "$lib/components/Grid/Block.svelte";
 
 	let tweet:string = '';
   let rootElement:any;
@@ -51,7 +51,7 @@
 <Block>
 	<TwitterHeader />
 	<div class="post-tweets__container">
-		<textarea type="text" bind:value={tweet} placeholder="What's happening?"/>
+		<textarea type="text" bind:value={tweet} placeholder="Post a tweet!"/>
 		<div class="buttons">
 			<button class="emoji-btn" on:click={pickEmoji}><Smile width="20px" height="20px"/></button>
 			<div use:clickOutside={clickOutsideEmoji} bind:this={rootElement} class="emoji" hidden={emojihidden}></div>

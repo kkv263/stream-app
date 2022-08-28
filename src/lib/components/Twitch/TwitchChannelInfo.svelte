@@ -4,7 +4,7 @@
   import Button from "$lib/components/_global/Button.svelte";
   import CheckCircle from "$lib/components/icons/CheckCircle.svelte";
   import { twitchUser } from "$lib/stores/twitchSessionStore";
-  import Block from "$lib/components/_global/Block.svelte";
+  import Block from "$lib/components/Grid/Block.svelte";
 
   let disabled = false;
   let username:string;
