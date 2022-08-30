@@ -118,6 +118,9 @@
     await obs.call('ToggleRecordPause');
     recordingPaused = !recordingPaused;
   }
+
+  $: convertedStreamingTime  = convertMsToTime(streamingTime);
+  $: convertedRecordingTime  = convertMsToTime(recordTime);
 </script>
 
 <Block size={2}>
@@ -127,7 +130,7 @@
       <div class="control">
         <div class="time">
           <span><Signal width="16px" height="16px"/></span>
-          <span>LIVE: {convertMsToTime(streamingTime)}</span>  
+          <span>LIVE: {convertedStreamingTime}</span>  
         </div>
         <div class="buttons">
           <button type="button" on:click={OBSStream}>
@@ -138,7 +141,7 @@
       <div class="control">
         <div data-active={recording} data-paused={recordingPaused} class="time">
           <span class='circle'></span>
-          <span>REC: {convertMsToTime(recordTime)}</span>  
+          <span>REC: {convertedRecordingTime}</span>  
         </div>
         <div class="buttons">
           <button type="button" on:click={OBSRecord}>
