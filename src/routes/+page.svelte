@@ -13,6 +13,7 @@
   import type { Session } from "@supabase/supabase-js";
   import { page } from "$app/stores";
   import Grid from "$lib/components/Grid/Grid.svelte";
+  import Clock from "$lib/components/BrowserSource/Clock.svelte";
 
   user.set(supabase.auth.user());
 
@@ -36,6 +37,7 @@
     <Twitter twtUser={twitteruser?.name}/>
     <OBS />
     <Twitch twitchUser={twitchuser?.display_name} />
+    <Clock />
     <!-- <Profile /> -->
     <!-- <a href="/settings">This is settings page</a> -->
   {:else}
