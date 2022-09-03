@@ -31,7 +31,7 @@
 {#if $sideDrawerState}
   <SideDrawer />
 {/if}
-<!-- <Grid/> -->
+<Grid/>
 <Section>
   {#if $user}
     <Twitter twtUser={twitteruser?.name}/>

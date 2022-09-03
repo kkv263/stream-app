@@ -1,17 +1,17 @@
 <script lang="ts">
-  import Ellipsis from '$lib/components/icons/Ellipsis.svelte';
+  import Cog from '$lib/components/icons/Cog.svelte';
 </script>
 
 <header>
   <div class="top">
-    <div>Logo</div>  
+    <div class="logo">Logo</div>  
 
     <div class="name-wrapper">
       <h3>Browser Source:</h3>
       <span>Clock</span>
     </div>
 
-    <button type="button"><Ellipsis width="20px" height="20px"/></button>
+    <button type="button"><Cog width="16px" height="16px"/></button>
   </div>
 </header>
 
@@ -20,8 +20,12 @@
 
   header {
     color: #fff;
-    padding: 8px 16px;
+    padding: 4px 16px;
     background-color: #222;
+  }
+
+  .logo {
+    font-size: 14px;
   }
 
   button {

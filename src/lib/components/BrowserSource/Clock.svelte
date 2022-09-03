@@ -2,12 +2,13 @@
   import { supabase } from "$lib/_includes/supabaseClient";
   import { onMount } from "svelte";
   import { page } from "$app/stores";
-  import BrowserSourceHeader from '$lib/components/BrowserSource/BrowserSourceHeader.svelte';
   import Block from '$lib/components/Grid/Block.svelte'
   import Copy from '$lib/components/icons/Copy.svelte';
 
+	export let pos:number | null = null;
   const user = supabase.auth.user();
   let url:string;
+  
   onMount(async () => {
     try{
         let { error, status } = await supabase
@@ -44,8 +45,7 @@
     url = `${$page?.url.host}/browser-source/clock/${user?.id}`;
 </script>
 
-<Block size={2}>
-  <BrowserSourceHeader />
+<Block type="bs" on:dragtoggle size={2}>
   <div class="clock">
     <div class="title">Copy this url into OBS as a browser source</div>
     <div class="bs-link__wrapper">
@@ -65,6 +65,7 @@
     color: #fff;
     overflow: hidden;
     padding: 8px 16px;
+    height: 100%;
   }
 
   .title {

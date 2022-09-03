@@ -3,7 +3,6 @@
 	import { createPicker } from 'picmo';
 	import { clickOutside } from '$lib/_includes/generalHelpers';
 	import Smile from "$lib/components/icons/Smile.svelte";
-	import TwitterHeader from "$lib/components/Twitter/TwitterHeader.svelte";
 	import Button from "$lib/components/_global/Button.svelte";
 	import Block from "$lib/components/Grid/Block.svelte";
 
@@ -48,8 +47,7 @@
 	const clickOutsideEmoji = () => emojihidden = true;
 </script>
 
-<Block>
-	<TwitterHeader />
+<Block type="twitter" on:dragtoggle>
 	<div class="post-tweets__container">
 		<textarea type="text" bind:value={tweet} placeholder="Post a tweet!"/>
 		<div class="buttons">
@@ -60,7 +58,6 @@
 			<Button type="button" color="primary" full on:click={handleClick}>Tweet</Button>
 		</div>
 	</div>
-
 </Block>
 
 

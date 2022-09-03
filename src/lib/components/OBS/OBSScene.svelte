@@ -1,6 +1,5 @@
 <script lang="ts">
   import { getContext, onDestroy, onMount } from 'svelte';
-  import OBSHeader from '$lib/components/OBS/OBSHeader.svelte';
   import Block from '$lib/components/Grid/Block.svelte'
   import PlusCircle from '$lib/components/icons/PlusCircle.svelte';
   import type OBSWebSocket from 'obs-websocket-js';
@@ -84,8 +83,7 @@
   }
 </script>
 
-<Block>
-  <OBSHeader />
+<Block type="obs" on:dragtoggle>
   <div class="obs-scenes">
     <div class="top">
       <div class="title">

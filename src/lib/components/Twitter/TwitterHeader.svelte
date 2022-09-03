@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { twitterUser } from '$lib/stores/twitterSessionStore'
-  import Ellipsis from '$lib/components/icons/Ellipsis.svelte';
+  import Cog from '$lib/components/icons/Cog.svelte';
   import TwitterLogo from '$lib/components/icons/TwitterLogo.svelte';
 </script>
 
-<header>
+<div class="bar">
   <div class="top">
     <a href={`https://twitter.com/${$twitterUser.username}`} target="_blank" rel="noopener noreferrer"><TwitterLogo width="24px" height="24px" /></a>  
 
@@ -16,16 +16,16 @@
       </div>
     </div>
 
-    <button type="button"><Ellipsis width="20px" height="20px"/></button>
+    <button type="button"><Cog width="16px" height="16px"/></button>
   </div>
-</header>
+</div>
 
 <style lang="scss">
 	@import '../../../styles/vars.scss';
 
-  header {
+  .bar {
     color: #fff;
-    padding: 8px 16px;;
+    padding: 4px 16px;
     background-color: #1DA1F2;
   }
 

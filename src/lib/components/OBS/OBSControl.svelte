@@ -1,7 +1,6 @@
 <script lang="ts">
   import { getContext, onDestroy, onMount } from 'svelte';
   import { convertMsToTime } from '$lib/_includes/generalHelpers';
-  import OBSHeader from '$lib/components/OBS/OBSHeader.svelte';
   import Block from '$lib/components/Grid/Block.svelte'
   import Play from '$lib/components/icons/Play.svelte';
   import Signal from '$lib/components/icons/Signal.svelte';
@@ -123,8 +122,7 @@
   $: convertedRecordingTime  = convertMsToTime(recordTime);
 </script>
 
-<Block size={2}>
-  <OBSHeader />
+<Block type="obs" on:dragtoggle>
   <div class="obs-control">
     <div class="wrapper">
       <div class="control">

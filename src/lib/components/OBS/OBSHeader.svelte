@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Ellipsis from '$lib/components/icons/Ellipsis.svelte';
+  import Cog from '$lib/components/icons/Cog.svelte';
   import OBSLogo from '$lib/components/icons/OBSLogo.svelte';
   import { obsSession } from "$lib/stores/obsSessionStore";
 </script>
@@ -13,7 +13,7 @@
       <span>{$obsSession.localhost.replace('ws://', '')}</span>
     </div>
 
-    <button type="button"><Ellipsis width="20px" height="20px"/></button>
+    <button type="button"><Cog width="16px" height="16px"/></button>
   </div>
 </header>
 
@@ -22,7 +22,7 @@
 
   header {
     color: #fff;
-    padding: 8px 16px;
+    padding: 4px 16px;
     background-color: #222;
   }
 

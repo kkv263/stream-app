@@ -7,7 +7,6 @@
 	import ArrowOutBox from "$lib/components/icons/ArrowOutBox.svelte";
 	import Chat from "$lib/components/icons/Chat.svelte";
 	import { timeSince } from '$lib/_includes/generalHelpers'
-	import TwitterHeader from "$lib/components/Twitter/TwitterHeader.svelte";
 	import Block from "$lib/components/Grid/Block.svelte";
 
 	//TODO: Update type
@@ -25,8 +24,6 @@
 			const data = await fetch('/api/v1/twitter/gettweets', {
 				method: 'GET'
 			}).then(res => res.json());
-
-			console.log(data);
 
 			if (data.errors) {
 				console.log(data.errors);
@@ -147,8 +144,7 @@
 </script>
 
 
-<Block >
-	<TwitterHeader />
+<Block on:dragtoggle type="twitter">
 	<div class="recent-tweets__container">
 		<div class="header">
 			<h2>Recent tweets</h2>
@@ -175,12 +171,14 @@
 						<div class="img-grid">
 							{#each attachments?.media_keys as mediaKey, i}
 								<div class="img-wrapper">
+									<!-- TODO: Refactor this to not use function if possible -->
 									{@html getMedia(mediaKey, entities)}
 								</div>
 							{/each}
 						</div>
 					{:else if attachments?.poll_ids}
 						<div class="poll-wrapper">
+							<!-- TODO: Refactor this to not use function if possible -->
 							{#each getPolls(attachments?.poll_ids[0]).options as {label, votes}, i}
 								<div>{label}</div> 
 								<div>{votes} votes</div>
@@ -240,7 +238,7 @@
 	.recent-tweets__container {
 		background-color: #243447;
 		padding: 16px;
-		max-height: 160px;
+		max-height: 172px;
 		overflow: auto;
 	}
 
