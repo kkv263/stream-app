@@ -92,22 +92,25 @@
     cells = cells;
   }
 
-  // Messes up when "dragged inside itself"
+  // Messes up sometimes when dragged to edge?
   const dragDrop = (e:any, i:number) => {
-    cells[i].draggable = false;
-    cells[i].hovered = false;
-    cells[i].invisible = false;
     const oldCell = get(cellDragStore);
     const oldPos = parseInt(oldCell?.pos);
-
-    if (oldPos === i) { return; }
-
     const { sizeX, sizeY, block } = oldCell
     const checkRowOverLapX = Math.floor((i) / cols) != Math.floor((i + (sizeX - 1)) / cols);
     const checkRowOverLapY = Math.ceil((i + (rows)) / rows) > rows - 1;
     let blockOverlap = false;
     let newPos = checkRowOverLapX ? i - ((i + (sizeX)) % cols) : i;
     newPos = checkRowOverLapY ? newPos - cols : newPos;
+
+    cells[i].hovered = false;
+    cells[oldPos].draggable = false;
+    cells[oldPos].invisible = false;
+
+    if (oldPos === newPos) { 
+      cells = cells;
+      return; 
+    }
 
     // TODO: Refactor to not check the all spaces.
     for (let x = 0; x < sizeY; x++) {
@@ -120,17 +123,10 @@
       }
     } 
 
-    if (blockOverlap) { return; }
-
-    for (let x = 0; x < sizeY; x++) {
-      for (let y = newPos; y < newPos + sizeX; y++) {
-        const pos = y + x * cols;
-        if (pos === newPos) {
-          continue;
-        }
-        cells[pos].sizeY = cells[pos].sizeX = 0;
-      }
-    } 
+    if (blockOverlap) { 
+      cells = cells
+      return; 
+    }
 
     for (let x = 0; x < sizeY; x++) {
       for (let y = oldPos; y < oldPos + sizeX; y++) {
@@ -139,8 +135,16 @@
       }
     } 
 
-    cells[newPos] = {...cells[newPos], ...{ sizeX, sizeY, block}};
-    cells[oldPos].block = null;
+    for (let x = 0; x < sizeY; x++) {
+      for (let y = newPos; y < newPos + sizeX; y++) {
+        const pos = y + x * cols;
+        if (pos === newPos) {continue;}
+        cells[pos].sizeY = cells[pos].sizeX = 0;
+      }
+    } 
+
+    cells[newPos] = {...cells[newPos], ...{ sizeX, sizeY, block }};
+    cells[oldPos].block = null
     cells = cells
   }
 
