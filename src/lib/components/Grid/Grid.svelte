@@ -232,27 +232,10 @@
     z-index: 1;
   }
 
-  .grid-box {
-    background-color: #fff;
-  }
-
-  .fill {
-    background-image: url('http://source.unsplash.com/random/150x150');
-    width: 150px;
-    height: 150px;
-    position: relative;
-    cursor: pointer;
-  }
-
-  .hold {
-    border: solid orange 4px;
-  }
-
   .hovered {
     background: salmon;
     border-style: dashed;
   }
-
   .invisible {
     display: none;
   }
