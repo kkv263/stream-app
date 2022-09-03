@@ -1,7 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import TwitchHeader from "$lib/components/Twitch/TwitchHeader.svelte";
-  import Button from "$lib/components/_global/Button.svelte";
   import CheckCircle from "$lib/components/icons/CheckCircle.svelte";
   import { twitchUser } from "$lib/stores/twitchSessionStore";
   import Block from "$lib/components/Grid/Block.svelte";
@@ -30,11 +28,13 @@
 
       if (!data) { return; }
 
-      username = data.data[0].broadcaster_login;
-      displayname = data.data[0].broadcaster_name;
-      delay = data.data[0].delay;
-      game = currentGame = data.data[0].game_name;
-      streamTitle = currentTitle = data.data[0].title;
+      const [streamInfo] = data.data;
+
+      username = streamInfo.broadcaster_login;
+      displayname = streamInfo.broadcaster_name;
+      delay = streamInfo.delay;
+      game = currentGame = streamInfo.game_name;
+      streamTitle = currentTitle = streamInfo.title;
     }
     catch (error) {
       console.error(error);
@@ -79,8 +79,7 @@
 </script>
   <!-- TODO: for delay use broadcaster type from store to get if partner or not -->
   <!-- TODO: make fields non editable until edit button clicked. Then update all at once -->
-  <Block>
-    <TwitchHeader />
+  <Block type="twitch" on:dragtoggle>
     <div class="channel-info">
       <div class="header">
         <h3>Channel Information<div hidden={!updated}><CheckCircle width="16px" height="16px"/></div></h3>

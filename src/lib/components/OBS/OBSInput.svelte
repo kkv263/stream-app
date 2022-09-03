@@ -1,6 +1,5 @@
 <script lang="ts">
   import { getContext, onMount, onDestroy } from 'svelte';
-  import OBSHeader from '$lib/components/OBS/OBSHeader.svelte';
   import Block from '$lib/components/Grid/Block.svelte'
   import SpeakerMuted from '$lib/components/icons/SpeakerMuted.svelte';
   import SpeakerWave from '$lib/components//icons/SpeakerWave.svelte';
@@ -58,8 +57,7 @@
 
 <!-- Definite inpplement settings for % on input -->
 
-<Block>
-  <OBSHeader />
+<Block type="obs" on:dragtoggle>
   <div class="obs-inputs">
     <h3>Inputs</h3>
     {#each Object.entries(inputs) as [ name, values ] }

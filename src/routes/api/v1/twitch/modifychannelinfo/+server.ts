@@ -13,7 +13,9 @@ const modChannelInfo = async(token:string, id:string, body:any) => {
       return games;
     }
     const gamesJSON = await games.json();
-    body.game_id = gamesJSON.data[0].id;
+    const [gameID] =  gamesJSON.data
+    // TODO: error checking for invalid game id.
+    body.game_id = gameID.id;
   }
   
   

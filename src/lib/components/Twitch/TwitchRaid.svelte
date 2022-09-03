@@ -2,7 +2,6 @@
   import { onMount } from "svelte";
   import { convertMsToTime } from "$lib/_includes/generalHelpers";
   import UserOutline from "$lib/components/icons/UserOutline.svelte";
-  import TwitchHeader from "./TwitchHeader.svelte";
   import Button from "$lib/components/_global/Button.svelte";
   import Block from "$lib/components/Grid/Block.svelte";
   import Question from "$lib/components/icons/Question.svelte";
@@ -43,8 +42,9 @@
       }).then(res => res.json());
 
       if (!data) { return; }
-      lang = data.data[0].broadcaster_language;
-      gameId = data.data[0].game_id;
+      const [channelInfo] = data.data;
+      lang = channelInfo.broadcaster_language;
+      gameId = channelInfo.game_id;
     }
     catch (error) {
       console.error(error);
@@ -121,8 +121,7 @@
 
 <!-- TODO disable raid when not streaming. -->
 <!-- TODO scroll on left side -->
-<Block>
-  <TwitchHeader />
+<Block type="twitch" on:dragtoggle>
   <div class="twitch-raid__wrapper">
       <div class="streamers">
         {#if streams}
