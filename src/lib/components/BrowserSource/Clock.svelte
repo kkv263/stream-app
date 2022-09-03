@@ -65,6 +65,7 @@
     color: #fff;
     overflow: hidden;
     padding: 8px 16px;
+    height: 100%;
   }
 
   .title {

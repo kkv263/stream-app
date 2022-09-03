@@ -1,19 +1,15 @@
 <script lang="ts">
   import TwitterGetTweets from "$lib/components/Twitter/TwitterGetTweets.svelte";
   import Clock from "$lib/components/BrowserSource/Clock.svelte";
+  import { cellDragStore } from "$lib/stores/cellDragStore";
+  import { get } from "svelte/store";
   import { onMount } from "svelte";
-  
-  let blocks:any = []
-  let fill:HTMLDivElement;
-  let empty:HTMLDivElement;
-  let hovered:boolean = false;
-  let hold:boolean = false;
-  let invisible:boolean = false;
+  import type { CellBlock } from '$lib/types/general';
   
   const cols = Math.floor(1024 / 90); // 11
   const rows = Math.floor(768 / 60); // 12
-
-  let cells:any = []
+  let blocks:any = []
+  let cells:CellBlock[] = [];
 
   onMount(() => {
     cells = renderCells();
@@ -34,15 +30,17 @@
       }
     }
 
-    const init:any = [];
+    const init:CellBlock[string] = [];
     for (let x = 0; x < rows; x++) {
       for (let y = 0; y < cols; y++) {
         init.push({
           block: null,
           sizeX: 1,
           sizeY: 1,
-          pos: x * cols + y,
+          pos: (x * cols + y).toString(),
           draggable: false,
+          hovered: false,
+          invisible: false,
           x,
           y,
         });
@@ -54,6 +52,7 @@
       const keyInt = parseInt(key);
       init[key] = {...init[key], ...value}
 
+      // TODO: Refactor to reuse this function
       for (let x = 0; x < sizeY; x++) {
         for (let y = keyInt; y < keyInt+sizeX; y++) {
           const pos = y + x * cols;
@@ -72,110 +71,137 @@
   }
 
   // TODO: Debounce
+  // Maybe use this to "Update preview"
   const dragOver = (e:any) => {
     e.preventDefault();
     console.log('dragover');
   }
 
-  const dragEnter = (e:any) => {
-    e.preventDefault;
-    hovered = true;
-    console.log('dragenter');
+  const dragEnter = (e:any, i:number) => {
+    e.preventDefault();
+    // const oldCell = get(cellDragStore);
+    // const { sizeX, sizeY } = oldCell;
+    cells[i].hovered = true;
+    cells = cells;
   }
 
-  const dragLeave = () => {
-    console.log('dragLeave');
-    hovered = false;
+  const dragLeave = (i:number) => {
+    // const oldCell = get(cellDragStore);
+    // const { sizeX, sizeY } = oldCell;
+    cells[i].hovered = false;
+    cells = cells;
   }
 
+  // Messes up when "dragged inside itself"
   const dragDrop = (e:any, i:number) => {
-    console.log('dragDrop');
-    hovered = false;
-    const oldCell = cells[parseInt(e.dataTransfer.getData('text/plain'))];
+    cells[i].draggable = false;
+    cells[i].hovered = false;
+    cells[i].invisible = false;
+    const oldCell = get(cellDragStore);
+    const oldPos = parseInt(oldCell?.pos);
+
+    if (oldPos === i) { return; }
+
     const { sizeX, sizeY, block } = oldCell
-    const keyInt = parseInt(oldCell?.pos);
+    const checkRowOverLapX = Math.floor((i) / cols) != Math.floor((i + (sizeX - 1)) / cols);
+    const checkRowOverLapY = Math.ceil((i + (rows)) / rows) > rows - 1;
+    let blockOverlap = false;
+    let newPos = checkRowOverLapX ? i - ((i + (sizeX)) % cols) : i;
+    newPos = checkRowOverLapY ? newPos - cols : newPos;
 
-    cells[i] = {...cells[i], ...{ sizeX, sizeY, block}};
-    cells[keyInt].block = null;
-
-    console.log(cells[i])
-
+    // TODO: Refactor to not check the all spaces.
     for (let x = 0; x < sizeY; x++) {
-      for (let y = keyInt; y < keyInt+sizeX; y++) {
+      for (let y = newPos; y < newPos + sizeX; y++) {
         const pos = y + x * cols;
-        cells[pos].sizeY = cells[pos].sizeX = 1;
+        if (cells[pos].sizeX === 0) {
+          blockOverlap = true;
+          break;
+        }
       }
     } 
 
+    if (blockOverlap) { return; }
+
     for (let x = 0; x < sizeY; x++) {
-      for (let y = i; y < i + sizeX; y++) {
+      for (let y = newPos; y < newPos + sizeX; y++) {
         const pos = y + x * cols;
-        if (pos === i) {
+        if (pos === newPos) {
           continue;
         }
         cells[pos].sizeY = cells[pos].sizeX = 0;
       }
     } 
 
+    for (let x = 0; x < sizeY; x++) {
+      for (let y = oldPos; y < oldPos + sizeX; y++) {
+        const pos = y + x * cols;
+        cells[pos].sizeY = cells[pos].sizeX = 1;
+      }
+    } 
+
+    cells[newPos] = {...cells[newPos], ...{ sizeX, sizeY, block}};
+    cells[oldPos].block = null;
     cells = cells
   }
 
   const dragStart = (e:any, i:number) => {
-    e.dataTransfer.setData('text/plain', i);
-    // console.log('dragstart', e);
-    // hold = true;
+    const { sizeX, sizeY } = cells[i]
+    cellDragStore.set(cells[i]);
+
+    for (let x = 0; x < sizeY; x++) {
+      for (let y = i; y < i + sizeX; y++) {
+        const pos = y + x * cols;
+        if (i == pos) { continue };
+        cells[pos].sizeY = cells[pos].sizeX = 1;
+      }
+    } 
+
     setTimeout(() => {
-      // invisible = true;
+      cells[i].invisible = true;
+      cells = cells
     }, 0)
   }
 
   const dragEnd = (e:any, i:number) => {
-    // hold = false;
-    // invisible = false;
     cells[i].draggable = false;
+    cells[i].invisible = false;
+    cells = cells
   }
 
   const dragToggle = (i:number) => {
     cells[i].draggable = true;
+    cells = cells
   }
 </script>
 
 <div class="grid">
-  {#each cells as {x, y, sizeX, sizeY, block, draggable}, i}
-    <div
-      bind:this={cells[i].cell}
-      data-sizeX={sizeX}
-      data-sizeY={sizeY}
-      data-col={y}
-      data-row={x}
+  {#each cells as {x, y, sizeX, sizeY, block, draggable, hovered, invisible}, i}
+    <div class="box"
       class:hovered 
+      bind:this={cells[i].cell} 
+      data-sizeX={sizeX} 
+      data-sizeY={sizeY}
+      ata-col={y} 
+      data-row={x} 
       on:dragover={(e) => dragOver(e)} 
-      on:dragenter={(e) => dragEnter(e)} 
-      on:dragleave={dragLeave} 
+      on:dragenter={(e) => dragEnter(e, i)} 
+      on:dragleave={() => dragLeave(i)}
       on:drop={(e) => dragDrop(e, i)} 
-      class="box">
+      >
       {#if block}
-        <div on:dragstart={(e) => dragStart(e,i)} on:dragend={(e) => dragEnd(e,i)} class="block-wrapper" data-pos={i} draggable={draggable}>
-          <svelte:component on:dragtoggle={() => dragToggle(i)} this={block} />
+        <div class="block-wrapper"  
+          class:invisible
+          data-pos={i} 
+          draggable={draggable} 
+          on:dragstart={(e) => dragStart(e,i)} 
+          on:dragend={(e) => dragEnd(e,i)} >
+            <svelte:component on:dragtoggle={() => dragToggle(i)} this={block} />
         </div>
       {:else} 
         {i}
       {/if}
     </div>
   {/each}
-
-  <!-- <div class="box empty">
-    <div bind:this={fill} on:dragstart={dragStart} on:dragend={dragEnd} class="fill" class:hold class:invisible draggable="true"></div>
-  </div>
-  <div bind:this={empty} class:hovered on:dragover={(e) => dragOver(e)} on:dragenter={(e) => dragEnter(e)} on:dragleave={dragLeave} on:drop={dragDrop} class="box empty"></div>
-  <div class="box empty"></div> -->
-  <!-- <div class="grid-box span">
-    <TwitterGetTweets />
-  </div> -->
-  
-  <!-- {#each blocks as block}
-    <svelte:component this={block}/>
-  {/each} -->
 </div>
 <button on:click={addBlock}>add</button>
 
@@ -184,7 +210,7 @@
   .grid {
     margin: 0 auto;
     width: 1024px;
-    background-color: $off-black;
+    background-color: slateblue;
     display: grid;
     grid-template-columns: repeat(11, minmax(0, 90px));
     grid-template-rows: repeat(12, minmax(0, 58px));
@@ -194,28 +220,20 @@
 
   .box {
     background-color: #fff;
-    display:flex; 
-    align-items: center;
-    justify-content: center;
     &[data-sizeX="0"],
     &[data-sizeY="0"] {
-      display: none;
+      opacity: 0;
+      visibility: hidden;
     }
+  }
 
-    @for $i from 1 through 12 {
-      &[data-sizeX="#{$i}"] {
-        grid-column: span $i;
-      }
-      &[data-sizeY="#{$i}"] {
-        grid-row: span $i;
-      }
-    }
+  .block-wrapper {
+    position: relative;
+    z-index: 1;
   }
 
   .grid-box {
     background-color: #fff;
-    // width: 375px;
-    // height: 240px;
   }
 
   .fill {

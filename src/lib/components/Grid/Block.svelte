@@ -33,13 +33,13 @@
 <style lang="scss">
   section {
     &[data-size = '2'] {
-      height: 116px;
-      width: 360px;
+      height: 120px;
+      width: 368px;
     }
 
     &[data-size = '4'] {
-      height: 232px;
-      width: 360px;
+      height: 244px;
+      width: 368px;
     }
     display: flex;
     flex-direction: column;

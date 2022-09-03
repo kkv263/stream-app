@@ -238,7 +238,7 @@
 	.recent-tweets__container {
 		background-color: #243447;
 		padding: 16px;
-		max-height: 160px;
+		max-height: 172px;
 		overflow: auto;
 	}
 
