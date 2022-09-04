@@ -3,6 +3,7 @@
   import CheckCircle from "$lib/components/icons/CheckCircle.svelte";
   import { twitchUser } from "$lib/stores/twitchSessionStore";
   import Block from "$lib/components/Grid/Block.svelte";
+  import AuthorizeTwitch from "$lib/components/Twitch/AuthorizeTwitch.svelte";
 
   let disabled = false;
   let username:string;
@@ -17,6 +18,7 @@
   let currentTitle = '';
 
   onMount(async () => {
+    if (Object.keys($twitchUser).length < 1) { return;}
     getChannelInfo();
   });
 
@@ -81,27 +83,31 @@
   <!-- TODO: make fields non editable until edit button clicked. Then update all at once -->
   <Block type="twitch" on:dragtoggle>
     <div class="channel-info">
-      <div class="header">
-        <h3>Channel Information<div hidden={!updated}><CheckCircle width="16px" height="16px"/></div></h3>
-        <button type="button" on:click={toggleEdit} disabled={loading}>{!isEdit && !loading ? 'Edit' : (!loading ? 'Update' : 'Updating')}</button>
-        <!-- <Button type="button" color="primary" on:click={toggleEdit} disabled={loading}>{!isEdit && !loading ? 'Edit' : (!loading ? 'Update' : 'Updating')}</Button> -->
-      </div>
-      <div class="input-wrapper">
-        <label for="twitch_game">Game</label>
-        <input id="twitch_game" hidden={!isEdit} bind:value={game}/>
-        <div hidden={isEdit}>{game}</div>
-      </div>
-      <div class="input-wrapper">
-        <label for="twitch_title">Stream Title</label>
-        <input id="twitch_title" hidden={!isEdit} bind:value={streamTitle}/>
-        <div hidden={isEdit}>{streamTitle}</div>
-      </div>
-      <!-- TODO: Implementation for Partner -->
-      {#if $twitchUser.broadcaster_type === 'partner'}
-      <div class="input-wrapper">
-        <label for="twitch_delay">Delay</label>
-        <div id="twitch_delay" hidden={isEdit}>{delay}</div>
-      </div>
+      {#if Object.keys($twitchUser).length > 0}
+        <div class="header">
+          <h3>Channel Information<div hidden={!updated}><CheckCircle width="16px" height="16px"/></div></h3>
+          <button type="button" on:click={toggleEdit} disabled={loading}>{!isEdit && !loading ? 'Edit' : (!loading ? 'Update' : 'Updating')}</button>
+          <!-- <Button type="button" color="primary" on:click={toggleEdit} disabled={loading}>{!isEdit && !loading ? 'Edit' : (!loading ? 'Update' : 'Updating')}</Button> -->
+        </div>
+        <div class="input-wrapper">
+          <label for="twitch_game">Game</label>
+          <input id="twitch_game" hidden={!isEdit} bind:value={game}/>
+          <div hidden={isEdit}>{game}</div>
+        </div>
+        <div class="input-wrapper">
+          <label for="twitch_title">Stream Title</label>
+          <input id="twitch_title" hidden={!isEdit} bind:value={streamTitle}/>
+          <div hidden={isEdit}>{streamTitle}</div>
+        </div>
+        <!-- TODO: Implementation for Partner -->
+        {#if $twitchUser.broadcaster_type === 'partner'}
+          <div class="input-wrapper">
+            <label for="twitch_delay">Delay</label>
+            <div id="twitch_delay" hidden={isEdit}>{delay}</div>
+          </div>
+        {/if}
+      {:else}
+        <AuthorizeTwitch />
       {/if}
     </div>
 

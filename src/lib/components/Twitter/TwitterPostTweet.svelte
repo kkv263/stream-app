@@ -2,15 +2,19 @@
 	import { onMount } from 'svelte';
 	import { createPicker } from 'picmo';
 	import { clickOutside } from '$lib/_includes/generalHelpers';
+	import { twitterUser } from '$lib/stores/twitterSessionStore'
 	import Smile from "$lib/components/icons/Smile.svelte";
 	import Button from "$lib/components/_global/Button.svelte";
 	import Block from "$lib/components/Grid/Block.svelte";
+	import AuthorizeTwitter from '$lib/components/Twitter/AuthorizeTwitter.svelte'
 
 	let tweet:string = '';
   let rootElement:any;
 	let emojihidden:boolean = true
 
 	onMount(() => {
+		if (Object.keys($twitterUser).length < 1) { return; }
+
 		const emojiPicker = createPicker({ 
 			autoFocus: 'auto',
 			rootElement,
@@ -49,14 +53,18 @@
 
 <Block type="twitter" on:dragtoggle>
 	<div class="post-tweets__container">
-		<textarea type="text" bind:value={tweet} placeholder="Post a tweet!"/>
-		<div class="buttons">
-			<button class="emoji-btn" on:click={pickEmoji}><Smile width="20px" height="20px"/></button>
-			<div use:clickOutside={clickOutsideEmoji} bind:this={rootElement} class="emoji" hidden={emojihidden}></div>
-		</div>
-		<div class="btn-wrapper">
-			<Button type="button" color="primary" full on:click={handleClick}>Tweet</Button>
-		</div>
+		{#if Object.keys($twitterUser).length > 0}
+			<textarea type="text" bind:value={tweet} placeholder="Post a tweet!"/>
+			<div class="buttons">
+				<button class="emoji-btn" on:click={pickEmoji}><Smile width="20px" height="20px"/></button>
+				<div use:clickOutside={clickOutsideEmoji} bind:this={rootElement} class="emoji" hidden={emojihidden}></div>
+			</div>
+			<div class="btn-wrapper">
+				<Button type="button" color="primary" full on:click={handleClick}>Tweet</Button>
+			</div>
+		{:else}
+			<AuthorizeTwitter />
+		{/if}
 	</div>
 </Block>
 

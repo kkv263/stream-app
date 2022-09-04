@@ -8,12 +8,14 @@
   <div class="top">
     <a href={`https://twitch.tv/${$twitchUser.login}`} target="_blank" rel="noopener noreferrer"><TwitchLogo width="24px" height="24px" /></a>  
 
-    <div class="profile-wrapper">
-      <img src="{$twitchUser.profile_image_url}" alt="{$twitchUser.login} profile image" loading="lazy">
-      <div class="name-wrapper">
-        <h3>{$twitchUser.display_name}</h3>
+    {#if Object.keys($twitchUser).length > 0}
+      <div class="profile-wrapper">
+        <img src="{$twitchUser.profile_image_url}" alt="{$twitchUser.login} profile image" loading="lazy">
+        <div class="name-wrapper">
+          <h3>{$twitchUser.display_name}</h3>
+        </div>
       </div>
-    </div>
+    {/if}
 
     <button type="button"><Cog width="16px" height="16px"/></button>
   </div>
@@ -26,6 +28,9 @@
     color: #fff;
     padding: 4px 16px;
     background-color: #6441A5;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
   }
 
   button {
@@ -39,6 +44,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 
     a {
       display: inline-flex;
