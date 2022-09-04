@@ -1,40 +1,28 @@
 <script lang="ts">
-  import TwitterGetTweets from "$lib/components/Twitter/TwitterGetTweets.svelte";
-  import Clock from "$lib/components/BrowserSource/Clock.svelte";
   import { cellDragStore } from "$lib/stores/cellDragStore";
   import { get } from "svelte/store";
   import { onMount } from "svelte";
-  import type { CellBlock } from '$lib/types/general';
+  import type { CellBlock, SaveBlock } from '$lib/types/general';
+  import { updateSaveState, checkExistingRow, blockCodes } from "$lib/_includes/gridHelpers";
   
   const cols = Math.floor(1024 / 90); // 11
   const rows = Math.floor(768 / 60); // 12
-  let blocks:any = []
+  let blockOption:string;
   let cells:CellBlock[] = [];
+  let saveState:SaveBlock = {}
 
-  onMount(() => {
+  onMount(async() => {
+    saveState = await checkExistingRow();
     cells = renderCells();
   })
 
   const renderCells = () => {
-    // TODO: Get "saved" grid from DB
-    const temp = {
-      48: {
-        block: TwitterGetTweets,
-        sizeX: 4,
-        sizeY: 4
-      },
-      12: {
-        block: Clock,
-        sizeX: 4,
-        sizeY: 2
-      }
-    }
-
-    const init:CellBlock[string] = [];
+    const init:CellBlock[] = [];
     for (let x = 0; x < rows; x++) {
       for (let y = 0; y < cols; y++) {
         init.push({
           block: null,
+          val: '',
           sizeX: 1,
           sizeY: 1,
           pos: (x * cols + y).toString(),
@@ -47,10 +35,10 @@
       }
     }
 
-    Object.entries(temp).forEach(([key, value]) => {
-      const { sizeX, sizeY } = value;
-      const keyInt = parseInt(key);
-      init[key] = {...init[key], ...value}
+    Object.entries(saveState).forEach(([key, value]) => {
+      const { sizeX, sizeY, pos } = value;
+      const keyInt = pos;
+      init[pos] = {...init[pos], sizeX, sizeY, block: blockCodes[key].block, val: key}
 
       // TODO: Refactor to reuse this function
       for (let x = 0; x < sizeY; x++) {
@@ -66,8 +54,53 @@
   }
 
   const addBlock = () => {
-    blocks.push(TwitterGetTweets);
-    blocks = blocks;
+    if (saveState[blockOption]) {
+      alert('There is already one of this block')
+      return;
+    }
+
+    const { block, sizeX, sizeY } = blockCodes[blockOption];
+    let blockInserted = false;
+
+    for (let i = 0; i < cells.length; i ++) {
+      // If block will bleed into edge, move to next spot.
+      if (cols - (i % cols) < sizeX || i + (cols * (sizeY - 1)) >= cells.length) {
+        continue;
+      } 
+
+      // Check if block overlaps with another block
+      let overlap = false;
+      for (let x = 0; x < sizeY; x++) {
+        for (let y = i; y < i + sizeX; y++) {
+          const pos = y + x * cols;
+          if (cells[pos].sizeX === 0) {
+            overlap = true;
+            break;
+          }
+        }
+      } 
+
+      if (overlap) {continue;}
+
+      if (cells[i].block === null) {
+        cells[i].block = block
+        for (let x = 0; x < sizeY; x++) {
+          for (let y = i; y < i + sizeX; y++) {
+            const pos = y + x * cols;
+            if (pos === i) {continue;}
+            cells[pos].sizeY = cells[pos].sizeX = 0;
+          }
+        }
+        blockInserted = true;
+        saveState[blockOption] = { pos: i, sizeX, sizeY, val: blockOption }
+        updateSaveState(saveState);
+        break;
+      } 
+    }
+
+    // TODO Error modal.
+    if (!blockInserted) { alert('Not able to insert anymore of this block!')}
+    cells = cells;
   }
 
   // TODO: Debounce
@@ -92,11 +125,10 @@
     cells = cells;
   }
 
-  // Messes up sometimes when dragged to edge?
   const dragDrop = (e:any, i:number) => {
     const oldCell = get(cellDragStore);
     const oldPos = parseInt(oldCell?.pos);
-    const { sizeX, sizeY, block } = oldCell
+    const { sizeX, sizeY, block, val } = oldCell
     const checkRowOverLapX = Math.floor((i) / cols) != Math.floor((i + (sizeX - 1)) / cols);
     const checkRowOverLapY = Math.ceil((i + (rows)) / rows) > rows - 1;
     let blockOverlap = false;
@@ -143,7 +175,9 @@
       }
     } 
 
-    cells[newPos] = {...cells[newPos], ...{ sizeX, sizeY, block }};
+    cells[newPos] = {...cells[newPos], ...{ sizeX, sizeY, block, val }};
+    saveState[val] = { pos: newPos, sizeX, sizeY, val };
+    updateSaveState(saveState);
     cells[oldPos].block = null
     cells = cells
   }
@@ -207,10 +241,28 @@
     </div>
   {/each}
 </div>
-<button on:click={addBlock}>add</button>
+
+<div class="select-wrapper">
+  <select name="block-add" id="block-add" bind:value={blockOption}>
+    {#each Object.entries(blockCodes) as [val, attr]}
+      <option value={val}>{attr.name}</option>
+    {/each}
+  </select>
+  <button on:click={addBlock}>add</button>
+</div>
 
 <style lang="scss">
   @import '../../../styles/vars.scss';
+
+  .select-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  select {
+    min-width: 120px;
+  }
+
   .grid {
     margin: 0 auto;
     width: 1024px;
