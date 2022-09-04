@@ -1,10 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { convertMsToTime } from "$lib/_includes/generalHelpers";
+  import { twitchUser } from "$lib/stores/twitchSessionStore";
   import UserOutline from "$lib/components/icons/UserOutline.svelte";
   import Button from "$lib/components/_global/Button.svelte";
   import Block from "$lib/components/Grid/Block.svelte";
   import Question from "$lib/components/icons/Question.svelte";
+  import AuthorizeTwitch from "$lib/components/Twitch/AuthorizeTwitch.svelte";
 
   let streams:any[];
   let randomIndex:number;
@@ -12,6 +14,7 @@
   let lang:string;
 
   onMount(async () => {
+    if (Object.keys($twitchUser).length < 1) { return;}
     getChannelInfo();
     getUserInfo();
   });
@@ -123,6 +126,7 @@
 <!-- TODO scroll on left side -->
 <Block type="twitch" on:dragtoggle>
   <div class="twitch-raid__wrapper">
+    {#if Object.keys($twitchUser).length > 0}
       <div class="streamers">
         {#if streams}
           {#each streams as {display_name, profile_image_url}, i}
@@ -155,6 +159,9 @@
           </div>
         {/if}
       </div>
+    {:else}
+      <AuthorizeTwitch />
+    {/if}
   </div>
 
 </Block>
@@ -162,11 +169,12 @@
   <style lang="scss">
     @import '../../../styles/vars.scss';
     .twitch-raid__wrapper {
-      padding: 16px 16px 0;
+      justify-content: center;
+      padding: 16px;
       background-color: $off-black;
       color: #fff;
       display: flex;
-      max-height: 160px;
+      max-height: 172px;
     }
 
     h3 {

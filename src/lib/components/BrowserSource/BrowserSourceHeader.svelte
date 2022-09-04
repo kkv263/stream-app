@@ -22,6 +22,7 @@
     color: #fff;
     padding: 4px 16px;
     background-color: #222;
+    min-height: 32px;
   }
 
   .logo {

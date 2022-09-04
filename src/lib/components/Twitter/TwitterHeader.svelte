@@ -8,14 +8,15 @@
   <div class="top">
     <a href={`https://twitter.com/${$twitterUser.username}`} target="_blank" rel="noopener noreferrer"><TwitterLogo width="24px" height="24px" /></a>  
 
-    <div class="profile-wrapper">
-      <img src="{$twitterUser.profile_image_url}" alt="{$twitterUser.name} profile image" loading="lazy">
-      <div class="name-wrapper">
-        <h3>{$twitterUser.name}</h3>
-        <span>@{$twitterUser.username}</span>
+    {#if Object.keys($twitterUser).length > 0}
+      <div class="profile-wrapper">
+        <img src="{$twitterUser.profile_image_url}" alt="{$twitterUser.name} profile image" loading="lazy">
+        <div class="name-wrapper">
+          <h3>{$twitterUser.name}</h3>
+          <span>@{$twitterUser.username}</span>
+        </div>
       </div>
-    </div>
-
+    {/if}
     <button type="button"><Cog width="16px" height="16px"/></button>
   </div>
 </div>
@@ -27,6 +28,9 @@
     color: #fff;
     padding: 4px 16px;
     background-color: #1DA1F2;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
   }
 
   button {
@@ -40,6 +44,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 
     a {
       display: inline-flex;
