@@ -11,8 +11,8 @@
   let localhost:string;
   let password:string;
   let existingOBSParams:any;
-  const obs:OBSWebSocket = new OBSWebSocket();
-  setContext('obs', obs);
+  // const obs:OBSWebSocket = new OBSWebSocket();
+  // setContext('obs', obs);
 
   //TODO: add automatic reconnect to supabase
   let automaticReconnect = false;
@@ -24,7 +24,7 @@
     password = $obsSession.password
 
     if (existingOBSParams && automaticReconnect) {
-      obsConnect($obsSession.localhost, $obsSession.password, obs)
+      obsConnect($obsSession.localhost, $obsSession.password)
     }
 	});
 </script>
@@ -37,12 +37,12 @@
   {#if !$obsConnected}
     <input placeholder='127.0.0.1:PORT' type="text" bind:value={localhost} />
     <input placeholder="password" type="password" bind:value={password} />
-    <button on:click={() => obsConnect(localhost, password, obs)}>connect to obs</button>
+    <button on:click={() => obsConnect(localhost, password)}>connect to obs</button>
   {:else}
-    <button on:click={() => obsDisconnect(obs)}>disconnect from obs</button>
-    <ObsScene />
-    <ObsInput />
-    <ObsControl />
+    <button on:click={() => obsDisconnect()}>disconnect from obs</button>
+    <!-- <ObsScene /> -->
+    <!-- <ObsInput /> -->
+    <!-- <ObsControl /> -->
   {/if}
 
 </Section>

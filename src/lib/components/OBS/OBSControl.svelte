@@ -1,32 +1,40 @@
 <script lang="ts">
-  import { getContext, onDestroy, onMount } from 'svelte';
+  import { onDestroy } from 'svelte';
   import { convertMsToTime } from '$lib/_includes/generalHelpers';
   import Block from '$lib/components/Grid/Block.svelte'
   import Play from '$lib/components/icons/Play.svelte';
   import Signal from '$lib/components/icons/Signal.svelte';
   import Stop from '$lib/components/icons/Stop.svelte';
   import Pause from '$lib/components/icons/Pause.svelte';
-  import type OBSWebSocket from 'obs-websocket-js';
+  import { obsSession, obsConnected } from "$lib/stores/obsSessionStore";
+  import ConnectObs from '$lib/components/OBS/ConnectObs.svelte';
 
-  let obs:OBSWebSocket = getContext('obs');
   let streaming:boolean = false;
   let recording:boolean = false;
   let recordingPaused:boolean = false;
   let stopping:boolean = false;
   let recordTime:number = 0;
   let streamingTime:number = 0;
+  let controlPromise:any = Promise.resolve([]);
   
   // TODO: types?
   let recordInterval:any = null
   let streamInterval:any = null
 
-  onMount(async () => {
-    const obsStatus = await loadStatus();
-    recording = obsStatus.recordStatus.outputActive;
-    recordingPaused = obsStatus.recordStatus.outputPaused;
-    streaming = obsStatus.streamStatus.outputActive;
-    recordTime = obsStatus.recordStatus.outputDuration;
-    streamingTime = obsStatus.streamStatus.outputDuration;
+  onDestroy(() => {
+    $obsSession.obs.off('RecordStateChanged', () => {});
+    $obsSession.obs.off('StreamStateChanged', () => {});
+	});
+
+  const loadStatus = async() => {
+    const recordStatus = await $obsSession.obs.call('GetRecordStatus');
+    const streamStatus = await $obsSession.obs.call('GetStreamStatus');
+
+    recording = recordStatus.outputActive;
+    recordingPaused = recordStatus.outputPaused;
+    streaming = streamStatus.outputActive;
+    recordTime = recordStatus.outputDuration;
+    streamingTime = streamStatus.outputDuration;
 
     const startRecordTimer = () => {
       setTimeout(() => {
@@ -48,7 +56,7 @@
       }, 1000);
     }
 
-    obs.on('RecordStateChanged', (e) => {
+    $obsSession.obs.on('RecordStateChanged', (e) => {
       switch(e.outputState) {
         case 'OBS_WEBSOCKET_OUTPUT_STARTED' :
           recording = true;
@@ -76,7 +84,7 @@
         }
     });
 
-    obs.on('StreamStateChanged', (e) => {
+    $obsSession.obs.on('StreamStateChanged', (e) => {
       streaming = e.outputActive
       if (e.outputActive) {
         startStreamTimer();
@@ -87,34 +95,24 @@
         streamingTime = 0;
       }
     });
-	});
+  }
 
-  onDestroy(() => {
-    obs.off('RecordStateChanged', () => {});
-    obs.off('StreamStateChanged', () => {});
-	});
-
-  const loadStatus = async() => {
-    const recordStatus= await obs.call('GetRecordStatus');
-    const streamStatus = await obs.call('GetStreamStatus');
-    return { 
-      recordStatus,
-      streamStatus
-    };
+  const renderStatus = (node:HTMLDivElement) => {
+    controlPromise = loadStatus();
   }
 
   const OBSStream = async() => {
-    await obs.call('ToggleStream');
+    await $obsSession.obs.call('ToggleStream');
     streaming = !streaming;
   }
 
   const OBSRecord = async() => {
-    await obs.call('ToggleRecord');
+    await $obsSession.obs.call('ToggleRecord');
     recording = !recording;
   }
 
   const OBSRecordPause = async() => {
-    await obs.call('ToggleRecordPause');
+    await $obsSession.obs.call('ToggleRecordPause');
     recordingPaused = !recordingPaused;
   }
 
@@ -124,35 +122,46 @@
 
 <Block type="obs" on:dragtoggle>
   <div class="obs-control">
-    <div class="wrapper">
-      <div class="control">
-        <div class="time">
-          <span><Signal width="16px" height="16px"/></span>
-          <span>LIVE: {convertedStreamingTime}</span>  
+    {#if $obsConnected}
+      <div class="connect-wrapper" use:renderStatus> </div>
+      {#await controlPromise}
+        <!-- TODO: Style waiting -->
+        <span>waiting</span>
+      {:then} 
+        <div class="wrapper">
+          <div class="control">
+            <div class="time">
+              <span><Signal width="16px" height="16px"/></span>
+              <span>LIVE: {convertedStreamingTime}</span>  
+            </div>
+            <div class="buttons">
+              <button type="button" on:click={OBSStream}>
+                <svelte:component width="20px" height="20px" this={streaming ? Stop : Play}/>
+              </button>
+            </div>
+          </div>
+          <div class="control">
+            <div data-active={recording} data-paused={recordingPaused} class="time">
+              <span class='circle'></span>
+              <span>REC: {convertedRecordingTime}</span>  
+            </div>
+            <div class="buttons">
+              <button type="button" on:click={OBSRecord}>
+                <svelte:component width="20px" height="20px" this={recording ? Stop : Play}/>
+              </button>
+              {#if recording} 
+                <button type="button" on:click={OBSRecordPause}>
+                  <Pause width="20px" height="20px"/>
+                </button>
+              {/if}
+            </div>
+          </div>
         </div>
-        <div class="buttons">
-          <button type="button" on:click={OBSStream}>
-            <svelte:component width="20px" height="20px" this={streaming ? Stop : Play}/>
-          </button>
-        </div>
-      </div>
-      <div class="control">
-        <div data-active={recording} data-paused={recordingPaused} class="time">
-          <span class='circle'></span>
-          <span>REC: {convertedRecordingTime}</span>  
-        </div>
-        <div class="buttons">
-          <button type="button" on:click={OBSRecord}>
-            <svelte:component width="20px" height="20px" this={recording ? Stop : Play}/>
-          </button>
-          {#if recording} 
-            <button type="button" on:click={OBSRecordPause}>
-              <Pause width="20px" height="20px"/>
-            </button>
-          {/if}
-        </div>
-      </div>
-    </div>
+      {/await}
+
+    {:else}
+      <ConnectObs />
+    {/if}
   </div>
 
 </Block>
@@ -164,6 +173,7 @@
     color: #fff;
     overflow: auto;
     padding: 8px 16px;
+    min-height: 64px
   }
 
   .time {

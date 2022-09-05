@@ -1,7 +1,7 @@
 <script lang="ts">
-  import Cog from '$lib/components/icons/Cog.svelte';
   import OBSLogo from '$lib/components/icons/OBSLogo.svelte';
-  import { obsSession } from "$lib/stores/obsSessionStore";
+  import { obsSession, obsConnected } from "$lib/stores/obsSessionStore";
+  import CogMenu from '$lib/components/Grid/CogMenu.svelte';
 </script>
 
 <header>
@@ -9,11 +9,15 @@
     <div><OBSLogo width="28px" height="28px" /></div>  
 
     <div class="name-wrapper">
-      <h3>Connected:</h3>
-      <span>{$obsSession.localhost.replace('ws://', '')}</span>
+      {#if $obsConnected}
+        <h3>Connected:</h3>
+        <span>{$obsSession.localhost.replace('ws://', '')}</span>
+      {:else} 
+        <h3>Not Connected</h3>
+      {/if}
     </div>
 
-    <button type="button"><Cog width="16px" height="16px"/></button>
+    <CogMenu />
   </div>
 </header>
 
@@ -26,22 +30,10 @@
     background-color: #222;
   }
 
-  button {
-    background-color: transparent;
-    border: 0;
-    color: currentColor;
-    cursor: pointer;
-  }
-
   .top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    button {
-      display: inline-flex;
-      align-items: center;
-    }
   }
 
   .name-wrapper {

@@ -1,37 +1,19 @@
 <script lang="ts">
-  import { getContext, onDestroy, onMount } from 'svelte';
+  import { onDestroy } from 'svelte';
   import Block from '$lib/components/Grid/Block.svelte'
   import PlusCircle from '$lib/components/icons/PlusCircle.svelte';
-  import type OBSWebSocket from 'obs-websocket-js';
+  import { obsSession, obsConnected } from "$lib/stores/obsSessionStore";
+  import ConnectObs from '$lib/components/OBS/ConnectObs.svelte';
   import type { ObsScenes } from '$lib/types/obs';
 
-  let obs:OBSWebSocket = getContext('obs');
   let obsScenes:ObsScenes[] = [];
   let obsRefs:any = {};
   let activeSceneName:string;
+  let previewSceneName:string;
   let createSceneName:string;
   let addActive:boolean = false;
   let inputError:any;
-
-  onMount(async () => {
-    const obsSceneParams = await loadScenes();
-    obsScenes = obsSceneParams.scenes;
-    activeSceneName = obsSceneParams.activeSceneName;
-
-    obs.on('CurrentProgramSceneChanged', (e) => activeSceneName = e.sceneName);
-    obs.on('SceneCreated', (e) => {
-      obsScenes = [...obsScenes, { name: e.sceneName }];
-     });
-    obs.on('SceneRemoved', (e) => {
-      for (let i = 0; i < obsScenes.length; i++) {
-        if (obsScenes[i].name === e.sceneName) {
-          obsScenes.splice(i, 1);
-          obsScenes = obsScenes;
-          return;
-        }
-      }
-    });
-	});
+  let scenesPromise:any = Promise.resolve([]);
 
   onDestroy(() => {
     obs.off('CurrentProgramSceneChanged', () => {});
@@ -40,7 +22,7 @@
 	});
 
   const loadScenes = async() => {
-    const { currentProgramSceneName, scenes, currentPreviewSceneName } = await obs.call('GetSceneList');
+    const { currentProgramSceneName, scenes, currentPreviewSceneName } = await $obsSession.obs.call('GetSceneList');
     const loadScenes = [];
 
     for (const input of Object.values(scenes).reverse()) {
@@ -48,11 +30,27 @@
       loadScenes.push({ name: <string>input.sceneName?.toString() });
     }
 
-    return { 
-      'activeScenePreviewName': currentPreviewSceneName ?? '',
-      'activeSceneName': currentProgramSceneName ?? '',
-      'scenes': loadScenes  
-    };
+    obsScenes = loadScenes;
+    activeSceneName = currentProgramSceneName ?? '';
+    previewSceneName =  currentPreviewSceneName ?? '';
+
+    $obsSession.obs.on('CurrentProgramSceneChanged', (e) => activeSceneName = e.sceneName);
+    $obsSession.obs.on('SceneCreated', (e) => {
+      obsScenes = [...obsScenes, { name: e.sceneName }];
+     });
+     $obsSession.obs.on('SceneRemoved', (e) => {
+      for (let i = 0; i < obsScenes.length; i++) {
+        if (obsScenes[i].name === e.sceneName) {
+          obsScenes.splice(i, 1);
+          obsScenes = obsScenes;
+          return;
+        }
+      }
+    });
+  }
+
+  const renderScenes = (node:HTMLDivElement) => {
+    scenesPromise = loadScenes();
   }
 
   const toggleAdd = () => {
@@ -85,33 +83,43 @@
 
 <Block type="obs" on:dragtoggle>
   <div class="obs-scenes">
-    <div class="top">
-      <div class="title">
-        <h3>Scenes</h3>
-        <div>Active: {activeSceneName}</div>
+    {#if $obsConnected}
+      <div use:renderScenes></div>
+      {#await scenesPromise}
+        <!-- TODO: Style waiting -->
+        <span>waiting</span>
+      {:then} 
+      <div class="top">
+        <div class="title">
+          <h3>Scenes</h3>
+          <div>Active: {activeSceneName}</div>
+        </div>
+        <div class="add-wrapper">
+          {addActive ? 'Cancel' : 'Add'}
+          <button data-active={addActive} class="add" type="button" on:click={toggleAdd}>
+            <PlusCircle width="24px" height="24px"/>
+          </button>
+        </div>
+
       </div>
-      <div class="add-wrapper">
-        {addActive ? 'Cancel' : 'Add'}
-        <button data-active={addActive} class="add" type="button" on:click={toggleAdd}>
-          <PlusCircle width="24px" height="24px"/>
-        </button>
+      <div data-active={addActive} class="input-container">
+        <div data-error={!!inputError} class="input-wrapper">
+          <input placeholder="Scene Name" type="text" bind:value={createSceneName} />
+          <span class="error-span">{inputError ?? ''}</span>
+          <button type="button" on:click={OBSCreateScene} >Create Scene</button>
+        </div>
       </div>
 
-    </div>
-    <div data-active={addActive} class="input-container">
-      <div data-error={!!inputError} class="input-wrapper">
-        <input placeholder="Scene Name" type="text" bind:value={createSceneName} />
-        <span class="error-span">{inputError ?? ''}</span>
-        <button type="button" on:click={OBSCreateScene} >Create Scene</button>
+      {#each obsScenes as {name}, i}
+      <div bind:this={obsRefs[name]} data-active={name === activeSceneName} on:click={() => OBSChangeScene(name)} class="scene">
+        <div>{name}</div>
+        <button class="remove" on:click={() => OBSRemoveScene(name, i)} type="button">Remove</button>
       </div>
-    </div>
-
-    {#each obsScenes as {name}, i}
-    <div bind:this={obsRefs[name]} data-active={name === activeSceneName} on:click={() => OBSChangeScene(name)} class="scene">
-      <div>{name}</div>
-      <button class="remove" on:click={() => OBSRemoveScene(name, i)} type="button">Remove</button>
-    </div>
-    {/each}
+      {/each}
+      {/await}
+    {:else}
+      <ConnectObs />
+    {/if}
   </div>
 </Block>
 
@@ -121,7 +129,8 @@
     background-color: $off-black;
     color: #fff;
     overflow: auto;
-    max-height: 192px;
+    max-height: 204px;
+    height: 100%;
   }
 
   .top {

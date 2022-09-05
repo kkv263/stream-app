@@ -5,7 +5,6 @@
   import Block from '$lib/components/Grid/Block.svelte'
   import Copy from '$lib/components/icons/Copy.svelte';
 
-	export let pos:number | null = null;
   const user = supabase.auth.user();
   let url:string;
   

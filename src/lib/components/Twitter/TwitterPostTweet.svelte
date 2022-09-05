@@ -14,7 +14,6 @@
 
 	onMount(() => {
 		if (Object.keys($twitterUser).length < 1) { return; }
-
 		const emojiPicker = createPicker({ 
 			autoFocus: 'auto',
 			rootElement,
