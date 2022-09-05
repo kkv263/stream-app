@@ -1,6 +1,9 @@
 import { supabase } from "$lib/_includes/supabaseClient";
-import TwitterGetTweets from "$lib/components/Twitter/TwitterGetTweets.svelte";
 import Clock from "$lib/components/BrowserSource/Clock.svelte";
+import ObsControl from '$lib/components/OBS/OBSControl.svelte';
+import ObsInput from "$lib/components/OBS/OBSInput.svelte";
+import ObsScene from '$lib/components/OBS/OBSScene.svelte';
+import TwitterGetTweets from "$lib/components/Twitter/TwitterGetTweets.svelte";
 import type { CellBlock, SaveBlock, Block } from '$lib/types/general';
 
 export const blockCodes:Block = {
@@ -10,12 +13,30 @@ export const blockCodes:Block = {
     sizeX: 4,
     sizeY: 2
   },
+  'OBS-CTRL': {
+    name: 'OBS: Stream / Record',
+    block: ObsControl,
+    sizeX: 4,
+    sizeY: 2
+  },
+  'OBS-INPT' : {
+    name: 'OBS: Input Control',
+    block: ObsInput,
+    sizeX: 4,
+    sizeY: 4
+  },
+  'OBS-SCNE' : {
+    name: 'OBS: Scenes Control',
+    block: ObsScene,
+    sizeX: 4,
+    sizeY: 4
+  },
   'TWTR-GET' : {
-    name: 'Twitter Get Tweets',
+    name: 'Twitter: Get Tweets',
     block: TwitterGetTweets,
     sizeX: 4,
     sizeY: 4
-  }
+  },
 };
 
 export const checkExistingRow = async() => {

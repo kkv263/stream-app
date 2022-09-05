@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { twitterUser } from '$lib/stores/twitterSessionStore'
-  import Cog from '$lib/components/icons/Cog.svelte';
   import TwitterLogo from '$lib/components/icons/TwitterLogo.svelte';
+  import CogMenu from '$lib/components/Grid/CogMenu.svelte';
 </script>
 
 <div class="bar">
@@ -17,7 +17,7 @@
         </div>
       </div>
     {/if}
-    <button type="button"><Cog width="16px" height="16px"/></button>
+    <CogMenu />
   </div>
 </div>
 
@@ -31,13 +31,6 @@
     min-height: 32px;
     display: flex;
     align-items: center;
-  }
-
-  button {
-    background-color: transparent;
-    border: 0;
-    color: currentColor;
-    cursor: pointer;
   }
 
   .top {
@@ -58,11 +51,6 @@
         opacity: .5;
         box-shadow: none;
       }
-    }
-
-    button {
-      display: inline-flex;
-      align-items: center;
     }
   }
 

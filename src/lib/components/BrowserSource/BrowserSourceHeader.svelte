@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Cog from '$lib/components/icons/Cog.svelte';
+  import CogMenu from '$lib/components/Grid/CogMenu.svelte';
 </script>
 
 <header>
@@ -11,7 +11,7 @@
       <span>Clock</span>
     </div>
 
-    <button type="button"><Cog width="16px" height="16px"/></button>
+    <CogMenu />
   </div>
 </header>
 
@@ -19,9 +19,9 @@
 	@import '../../../styles/vars.scss';
 
   header {
-    color: #fff;
+    color: $text-color;
     padding: 4px 16px;
-    background-color: #222;
+    background-color: $off-white;
     min-height: 32px;
   }
 
@@ -29,22 +29,10 @@
     font-size: 14px;
   }
 
-  button {
-    background-color: transparent;
-    border: 0;
-    color: currentColor;
-    cursor: pointer;
-  }
-
   .top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    button {
-      display: inline-flex;
-      align-items: center;
-    }
   }
 
   .name-wrapper {
@@ -55,7 +43,7 @@
 
     h3 {
       padding-bottom: 0;
-      color: #fff;
+      color: $text-color;
       font-size: 14px;
     }
 

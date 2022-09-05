@@ -1,6 +1,5 @@
 <script lang="ts">
   import { cellDragStore } from "$lib/stores/cellDragStore";
-  import { get } from "svelte/store";
   import { onMount } from "svelte";
   import type { CellBlock, SaveBlock } from '$lib/types/general';
   import { updateSaveState, checkExistingRow, blockCodes } from "$lib/_includes/gridHelpers";
@@ -126,7 +125,7 @@
   }
 
   const dragDrop = (e:any, i:number) => {
-    const oldCell = get(cellDragStore);
+    const oldCell = $cellDragStore;
     const oldPos = parseInt(oldCell?.pos);
     const { sizeX, sizeY, block, val } = oldCell
     const checkRowOverLapX = Math.floor((i) / cols) != Math.floor((i + (sizeX - 1)) / cols);

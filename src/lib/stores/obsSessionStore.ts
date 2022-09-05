@@ -3,7 +3,8 @@ import { supabase } from "$lib/_includes/supabaseClient";
 import { validateWebsocketUrl } from "$lib/_includes/generalHelpers";
 import OBSWebSocket, { EventSubscription } from 'obs-websocket-js';
 
-export const obsSession = writable({localhost: '', password:''});
+const obs:OBSWebSocket = new OBSWebSocket();
+export const obsSession = writable({localhost: '', password:'', obs: obs});
 export const obsConnected = writable(false);
 
 //TODO: add automatic reconnect to supabase
@@ -24,7 +25,7 @@ export const checkExistingSession = async() => {
       const password = data.password ?? '';
 
       if (localhost !== '' && password !== '') {
-        obsSession.set({localhost: localhost, password:password});
+        obsSession.set({localhost: localhost, password:password, obs:obs});
         return true;
       }
     }
@@ -42,7 +43,7 @@ export const checkExistingSession = async() => {
   }
 };
 
-export const obsConnect = async(localhost:string, password:string, obs:OBSWebSocket) => {
+export const obsConnect = async(localhost:string, password:string) => {
   try {
     // Localhost: 127.0.0.1:4455
     const { url, match } = validateWebsocketUrl(localhost.trim());
@@ -67,7 +68,7 @@ export const obsConnect = async(localhost:string, password:string, obs:OBSWebSoc
       websocket_url: url,
       password: password 
     }, { returning: "minimal" });
-
+    obsSession.set({localhost: localhost, password:password, obs:obs});
     obsConnected.set(true);
   } catch (error: any) {
     console.error('Failed to connect', error.code, error.message);
@@ -75,8 +76,7 @@ export const obsConnect = async(localhost:string, password:string, obs:OBSWebSoc
   }
 }
 
-export const obsDisconnect = async(obs:OBSWebSocket) => {
-  await obs.disconnect();
+export const obsDisconnect = async() => {
   try {
     await obs.disconnect();
     const user = supabase.auth.user();
@@ -86,7 +86,7 @@ export const obsDisconnect = async(obs:OBSWebSocket) => {
         password: null 
       }, { returning: "minimal" });
     alert('disconnected from obs');
-    obsSession.set({localhost: '', password:''});
+    obsSession.set({localhost: '', password:'', obs:obs});
     obsConnected.set(false);
   } catch (error: any) {
     console.error(error)
