@@ -1,7 +1,13 @@
 <script lang="ts">
   import Cog from '$lib/components/icons/Cog.svelte';
+  import { createEventDispatcher } from 'svelte';
 
   let active:boolean = false;
+  const dispatchBlockDelete = createEventDispatcher();
+
+  const deleteBlock = () => {
+    dispatchBlockDelete('deleteblock');
+  }
 
   const toggleSettings = () => {
     active = !active;
@@ -14,8 +20,12 @@
   </button>
   <aside class="menu" class:active>
     <ul>
-      <li>Delete</li>
-      <li>Lock</li>
+      <li on:click={deleteBlock}>
+        <button type="button">Delete</button>
+      </li>
+      <li>
+        <button type="button">Lock</button>
+      </li>
     </ul>
   </aside>
 </div>
@@ -43,6 +53,7 @@
     border: 0;
     color: currentColor;
     cursor: pointer;
+    transition: $transition;
 
     &:hover {
       color: #CCC;
@@ -86,7 +97,6 @@
       &:last-child {
         border-bottom: 0;
       }
-
       &:hover,
       &:focus {
         background-color: salmon;

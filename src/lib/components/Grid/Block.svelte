@@ -25,7 +25,7 @@
 
 <section data-size={size} data-type={type} draggable={draggable}>
   <header on:mousedown={toggleDrag}>
-    <svelte:component this={header[type]}/>
+    <svelte:component this={header[type]} on:deleteblock />
   </header>
   <slot></slot>
 </section>

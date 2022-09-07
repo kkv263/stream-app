@@ -44,7 +44,7 @@
     url = `${$page?.url.host}/browser-source/clock/${user?.id}`;
 </script>
 
-<Block type="bs" on:dragtoggle size={2}>
+<Block type="bs" on:dragtoggle size={2} on:deleteblock>
   <div class="clock">
     <div class="title">Copy this url into OBS as a browser source</div>
     <div class="bs-link__wrapper">

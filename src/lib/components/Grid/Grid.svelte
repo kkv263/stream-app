@@ -175,8 +175,8 @@
     } 
 
     cells[newPos] = {...cells[newPos], ...{ sizeX, sizeY, block, val }};
-    saveState[val] = { pos: newPos, sizeX, sizeY, val };
     updateSaveState(saveState);
+    cells[oldPos].val = '';
     cells[oldPos].block = null
     cells = cells
   }
@@ -209,6 +209,25 @@
     cells[i].draggable = true;
     cells = cells
   }
+
+  const deleteBlock = (i:number) => {
+    const { sizeX, sizeY, val } = cells[i];
+
+    cells[i].draggable = false;
+    cells[i].invisible = false;
+
+    for (let x = 0; x < sizeY; x++) {
+      for (let y = i; y < i + sizeX; y++) {
+        const pos = y + x * cols;
+        cells[pos].sizeY = cells[pos].sizeX = 1;
+      }
+    }
+    cells[i].block = null;
+    cells[i].val = '';
+    saveState[val] = null;
+    updateSaveState(saveState);
+    cells = cells;
+  }
 </script>
 
 <div class="grid">
@@ -232,7 +251,7 @@
           draggable={draggable} 
           on:dragstart={(e) => dragStart(e,i)} 
           on:dragend={(e) => dragEnd(e,i)} >
-            <svelte:component on:dragtoggle={() => dragToggle(i)} this={block} />
+            <svelte:component on:deleteblock={() => deleteBlock(i)} on:dragtoggle={() => dragToggle(i)} this={block} />
         </div>
       {:else} 
         {i}

@@ -35,5 +35,5 @@ export interface SaveBlock {
     pos: number;
     sizeX: number;
     sizeY: number;
-  }
+  } | null
 }
