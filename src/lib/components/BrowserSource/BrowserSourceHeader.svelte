@@ -11,7 +11,7 @@
       <span>Clock</span>
     </div>
 
-    <CogMenu />
+    <CogMenu on:deleteblock />
   </div>
 </header>
 

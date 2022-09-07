@@ -3,8 +3,9 @@ import Clock from "$lib/components/BrowserSource/Clock.svelte";
 import ObsControl from '$lib/components/OBS/OBSControl.svelte';
 import ObsInput from "$lib/components/OBS/OBSInput.svelte";
 import ObsScene from '$lib/components/OBS/OBSScene.svelte';
+import TwitchChannelInfo from "$lib/components/Twitch/TwitchChannelInfo.svelte";
 import TwitterGetTweets from "$lib/components/Twitter/TwitterGetTweets.svelte";
-import type { CellBlock, SaveBlock, Block } from '$lib/types/general';
+import type { SaveState, Block } from '$lib/types/general';
 
 export const blockCodes:Block = {
   'CLCK': {
@@ -31,6 +32,12 @@ export const blockCodes:Block = {
     sizeX: 4,
     sizeY: 4
   },
+  'TWCH-CHNL' : {
+    name: 'Twitch: Channel Info',
+    block: TwitchChannelInfo,
+    sizeX: 4,
+    sizeY: 4
+  },
   'TWTR-GET' : {
     name: 'Twitter: Get Tweets',
     block: TwitterGetTweets,
@@ -40,7 +47,7 @@ export const blockCodes:Block = {
 };
 
 export const checkExistingRow = async() => {
-  let saveState:SaveBlock = {}
+  let saveState:SaveState = {}
 
   try {
     const user = supabase.auth.user();
@@ -74,7 +81,7 @@ export const checkExistingRow = async() => {
   return saveState;
 }
 
-export const updateSaveState = async(saveState:SaveBlock) => {
+export const updateSaveState = async(saveState:SaveState) => {
   try {
     const user = supabase.auth.user();
     const updates = {

@@ -124,7 +124,7 @@
 
 <!-- TODO disable raid when not streaming. -->
 <!-- TODO scroll on left side -->
-<Block type="twitch" on:dragtoggle>
+<Block type="twitch" on:dragtoggle on:deleteblock>
   <div class="twitch-raid__wrapper">
     {#if Object.keys($twitchUser).length > 0}
       <div class="streamers">

@@ -50,7 +50,7 @@
 	const clickOutsideEmoji = () => emojihidden = true;
 </script>
 
-<Block type="twitter" on:dragtoggle>
+<Block type="twitter" on:dragtoggle on:deleteblock>
 	<div class="post-tweets__container">
 		{#if Object.keys($twitterUser).length > 0}
 			<textarea type="text" bind:value={tweet} placeholder="Post a tweet!"/>
