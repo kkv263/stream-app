@@ -1,20 +1,20 @@
 <script lang="ts">
   import { cellDragStore } from "$lib/stores/cellDragStore";
   import { onMount } from "svelte";
-  import type { CellBlock, SaveBlock } from '$lib/types/general';
+  import type { CellBlock, SaveState, SaveBlock } from '$lib/types/general';
   import { updateSaveState, checkExistingRow, blockCodes } from "$lib/_includes/gridHelpers";
   
   const cols = Math.floor(1024 / 90); // 11
   const rows = Math.floor(768 / 60); // 12
   let blockOption:string;
   let cells:CellBlock[] = [];
-  let saveState:SaveBlock = {}
+  let saveState:SaveState = {}
 
   onMount(async() => {
     saveState = await checkExistingRow();
     cells = renderCells();
   })
-
+  
   const renderCells = () => {
     const init:CellBlock[] = [];
     for (let x = 0; x < rows; x++) {
@@ -35,7 +35,7 @@
     }
 
     Object.entries(saveState).forEach(([key, value]) => {
-      const { sizeX, sizeY, pos } = value;
+      const { sizeX, sizeY, pos } = value as SaveBlock;
       const keyInt = pos;
       init[pos] = {...init[pos], sizeX, sizeY, block: blockCodes[key].block, val: key}
 
@@ -83,6 +83,9 @@
 
       if (cells[i].block === null) {
         cells[i].block = block
+        cells[i].val = blockOption 
+        cells[i].sizeX = sizeX;
+        cells[i].sizeY = sizeY;
         for (let x = 0; x < sizeY; x++) {
           for (let y = i; y < i + sizeX; y++) {
             const pos = y + x * cols;
@@ -220,6 +223,7 @@
       for (let y = i; y < i + sizeX; y++) {
         const pos = y + x * cols;
         cells[pos].sizeY = cells[pos].sizeX = 1;
+        console.log(pos);
       }
     }
     cells[i].block = null;

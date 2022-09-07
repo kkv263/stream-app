@@ -29,11 +29,14 @@ export interface Block {
   }
 }
 
+
 export interface SaveBlock {
-  [val: string]: { 
-    val: string,
-    pos: number;
-    sizeX: number;
-    sizeY: number;
-  } | null
+  val: string,
+  pos: number;
+  sizeX: number;
+  sizeY: number;
+}
+
+export interface SaveState {
+  [val?: string]: SaveBlock | null | undefined
 }

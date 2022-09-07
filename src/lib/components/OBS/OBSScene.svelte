@@ -16,9 +16,9 @@
   let scenesPromise:any = Promise.resolve([]);
 
   onDestroy(() => {
-    obs.off('CurrentProgramSceneChanged', () => {});
-    obs.off('SceneCreated', () => {});
-    obs.off('SceneRemoved', () => {});
+    $obsSession.obs.off('CurrentProgramSceneChanged', () => {});
+    $obsSession.obs.off('SceneCreated', () => {});
+    $obsSession.obs.off('SceneRemoved', () => {});
 	});
 
   const loadScenes = async() => {
@@ -81,7 +81,7 @@
   }
 </script>
 
-<Block type="obs" on:dragtoggle>
+<Block type="obs" on:dragtoggle on:deleteblock>
   <div class="obs-scenes">
     {#if $obsConnected}
       <div use:renderScenes></div>

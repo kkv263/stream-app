@@ -81,7 +81,7 @@
 </script>
   <!-- TODO: for delay use broadcaster type from store to get if partner or not -->
   <!-- TODO: make fields non editable until edit button clicked. Then update all at once -->
-  <Block type="twitch" on:dragtoggle>
+  <Block type="twitch" on:dragtoggle on:deleteblock>
     <div class="channel-info">
       {#if Object.keys($twitchUser).length > 0}
         <div class="header">
