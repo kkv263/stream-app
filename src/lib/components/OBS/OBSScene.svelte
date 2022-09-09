@@ -81,7 +81,7 @@
   }
 </script>
 
-<Block type="obs" on:dragtoggle on:deleteblock>
+<Block type="obs" on:dragtoggle on:deleteblock on:lockblock>
   <div class="obs-scenes">
     {#if $obsConnected}
       <div use:renderScenes></div>

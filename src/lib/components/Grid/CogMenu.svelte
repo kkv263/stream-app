@@ -1,12 +1,20 @@
 <script lang="ts">
   import Cog from '$lib/components/icons/Cog.svelte';
+  import Lock from '$lib/components/icons/Lock.svelte';
   import { createEventDispatcher } from 'svelte';
 
   let active:boolean = false;
+  let locked:boolean = false;
   const dispatchBlockDelete = createEventDispatcher();
+  const dispatchBlockLock = createEventDispatcher();
 
   const deleteBlock = () => {
     dispatchBlockDelete('deleteblock');
+  }
+
+  const lockBlock = () => {
+    locked = !locked;
+    dispatchBlockLock('lockblock', { locked: locked });
   }
 
   const toggleSettings = () => {
@@ -15,9 +23,14 @@
 </script>
 
 <div class="cog-wrapper">
-  <button type="button" on:click={toggleSettings} class:active>
-    <Cog width="16px" height="16px"/>
-  </button>
+  <div class="button-wrapper">
+    <button type="button" on:click={lockBlock}>
+      <Lock locked={locked} width="16px" height="16px"/>
+    </button>
+    <button type="button" on:click={toggleSettings} class:active>
+      <Cog width="16px" height="16px"/>
+    </button>
+  </div>
   <aside class="menu" class:active>
     <ul>
       <li on:click={deleteBlock}>
@@ -36,15 +49,11 @@
   .cog-wrapper {
     position: relative;
   }
+  .button-wrapper {
+    display: flex;
+    gap: 8px;
+  }
 
-  @keyframes spin-animation {
-		0% {
-			transform: rotate(0deg);
-		}
-		100% {
-			transform: rotate(-180deg);
-		}
-	}
   button {
     padding:0;
     display: flex;
@@ -57,9 +66,6 @@
 
     &:hover {
       color: #CCC;
-    }
-    &.active {
-      animation: spin-animation .4s ease;
     }
   }
 

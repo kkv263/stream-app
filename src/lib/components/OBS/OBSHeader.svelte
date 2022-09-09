@@ -17,7 +17,7 @@
       {/if}
     </div>
 
-    <CogMenu on:deleteblock/>
+    <CogMenu on:deleteblock on:lockblock/>
   </div>
 </header>
 

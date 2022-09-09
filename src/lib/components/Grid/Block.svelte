@@ -10,7 +10,6 @@
   export let type:string;
 
   const dispatchDrag = createEventDispatcher();
-  let draggable:boolean = false;
 
   const header: Record<string, any> = {
     twitter: TwitterHeader,
@@ -24,9 +23,9 @@
   }
 </script>
 
-<section data-sizeX={sizeX} data-sizeY={sizeY} data-type={type} draggable={draggable}>
-  <header on:mousedown={toggleDrag}>
-    <svelte:component this={header[type]} on:deleteblock />
+<section data-sizeX={sizeX} data-sizeY={sizeY} data-type={type}>
+  <header class="block-header" on:mousedown={toggleDrag}>
+    <svelte:component this={header[type]} on:deleteblock on:lockblock/>
   </header>
   <slot></slot>
 </section>
@@ -47,8 +46,8 @@
     display: flex;
     flex-direction: column;
 
-    header {
-      cursor: grab;
+    .block-header {
+      // Some styles in Grid.svelte under :global
       max-height: 40px;
     }
   }

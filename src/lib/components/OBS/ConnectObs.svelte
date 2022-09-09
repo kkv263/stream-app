@@ -56,7 +56,16 @@
     background-color: $pink;
     border: 0;
     border-radius: 4px;
-    padding: 4px 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 600;
+    transition: $transition;
+
+    &:hover,
+    &:focus {
+      background-color: darken($primary, 10%);
+    }
   }
 
   input {

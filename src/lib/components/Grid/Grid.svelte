@@ -28,6 +28,7 @@
           draggable: false,
           hovered: false,
           invisible: false,
+          locked: false,
           x,
           y,
         });
@@ -94,7 +95,7 @@
           }
         }
         blockInserted = true;
-        saveState[blockOption] = { pos: i, sizeX, sizeY, val: blockOption }
+        saveState[blockOption] = { pos: i, sizeX, sizeY, val: blockOption}
         updateSaveState(saveState);
         break;
       } 
@@ -130,7 +131,7 @@
   const dragDrop = (e:any, i:number) => {
     const oldCell = $cellDragStore;
     const oldPos = parseInt(oldCell?.pos);
-    const { sizeX, sizeY, block, val } = oldCell
+    const { sizeX, sizeY, block, val, locked } = oldCell
     const checkRowOverLapX = Math.floor((i) / cols) != Math.floor((i + (sizeX - 1)) / cols);
     const checkRowOverLapY = Math.ceil((i + (rows)) / rows) > rows - 1;
     let blockOverlap = false;
@@ -177,7 +178,7 @@
       }
     } 
 
-    cells[newPos] = {...cells[newPos], ...{ sizeX, sizeY, block, val }};
+    cells[newPos] = {...cells[newPos], ...{ sizeX, sizeY, block, val, locked }};
     saveState[val] = { pos: newPos, sizeX, sizeY, val }
     updateSaveState(saveState);
     cells[oldPos].val = '';
@@ -210,7 +211,8 @@
   }
 
   const dragToggle = (i:number) => {
-    cells[i].draggable = true;
+    const { locked } = cells[i]
+    cells[i].draggable = !locked;
     cells = cells
   }
 
@@ -219,6 +221,7 @@
 
     cells[i].draggable = false;
     cells[i].invisible = false;
+    cells[i].locked = false;
 
     for (let x = 0; x < sizeY; x++) {
       for (let y = i; y < i + sizeX; y++) {
@@ -232,10 +235,16 @@
     updateSaveState(saveState);
     cells = cells;
   }
+
+  const lockBlock = (e: CustomEvent, i:number) => {
+    cells[i].locked = e.detail.locked;
+    cells = cells;
+  }
+
 </script>
 
 <div class="grid">
-  {#each cells as {x, y, sizeX, sizeY, block, draggable, hovered, invisible}, i}
+  {#each cells as {x, y, sizeX, sizeY, block, draggable, hovered, invisible, locked}, i}
     <div class="box"
       class:hovered 
       bind:this={cells[i].cell} 
@@ -253,9 +262,14 @@
           class:invisible
           data-pos={i} 
           draggable={draggable} 
+          data-locked={locked}
           on:dragstart={(e) => dragStart(e,i)} 
           on:dragend={(e) => dragEnd(e,i)} >
-            <svelte:component on:deleteblock={() => deleteBlock(i)} on:dragtoggle={() => dragToggle(i)} this={block} />
+            <svelte:component 
+            on:deleteblock={() => deleteBlock(i)} 
+            on:lockblock={(e) => lockBlock(e,i)} 
+            on:dragtoggle={() => dragToggle(i)} 
+            this={block} />
         </div>
       {:else} 
         {i}
@@ -308,6 +322,15 @@
   .block-wrapper {
     position: relative;
     z-index: 1;
+
+    &[data-locked=false] {
+      :global {
+        .block-header {
+          cursor: grab;
+          user-select: none;
+        }
+      }
+    }
   }
 
   .hovered {

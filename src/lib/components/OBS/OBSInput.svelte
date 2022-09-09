@@ -57,7 +57,7 @@
 
 <!-- Definite inpplement settings for % on input -->
 
-<Block type="obs" on:dragtoggle on:deleteblock>
+<Block type="obs" on:dragtoggle on:deleteblock on:lockblock>
   <div class="obs-inputs">
     {#if $obsConnected}
     <div class="connect-wrapper" use:renderInputs> </div>
