@@ -5,7 +5,8 @@
   import BrowserSourceHeader from '$lib/components/BrowserSource/BrowserSourceHeader.svelte';
   import { createEventDispatcher } from 'svelte';
 
-  export let size:number = 4;
+  export let sizeX:number = 4;
+  export let sizeY:number = 4;
   export let type:string;
 
   const dispatchDrag = createEventDispatcher();
@@ -23,7 +24,7 @@
   }
 </script>
 
-<section data-size={size} data-type={type} draggable={draggable}>
+<section data-sizeX={sizeX} data-sizeY={sizeY} data-type={type} draggable={draggable}>
   <header on:mousedown={toggleDrag}>
     <svelte:component this={header[type]} on:deleteblock />
   </header>
@@ -32,15 +33,17 @@
 
 <style lang="scss">
   section {
-    &[data-size = '2'] {
-      height: 120px;
-      width: 368px;
+    @for $i from 1 through 12 {
+      &[data-sizeX = '#{$i}'] {
+        width: calc(#{$i} * 80px + (4px * #{$i - 1}));
+
+      }
+
+      &[data-sizeY = '#{$i}'] {
+        height: calc(#{$i} * 58px + (4px * #{$i - 1}));
+      }
     }
 
-    &[data-size = '4'] {
-      height: 244px;
-      width: 368px;
-    }
     display: flex;
     flex-direction: column;
 

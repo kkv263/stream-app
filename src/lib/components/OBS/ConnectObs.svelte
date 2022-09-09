@@ -29,12 +29,11 @@
     <input placeholder="password" type="password" bind:value={password} />
   </div>
 
-  <button on:click={() => obsConnect(localhost, password)}>
-    <Button type="button" color="primary">Connect</Button>
-  </button>
+  <button on:click={() => obsConnect(localhost, password)}>Connect</button>
 </div>
 
 <style lang="scss">
+    @import '../../../styles/vars.scss';
   .login-header {
     display: flex;
     align-items: center;
@@ -53,9 +52,11 @@
   }
 
   button {
-    padding: 0;
-    background: transparent;
+    color: #fff;
+    background-color: $pink;
     border: 0;
+    border-radius: 4px;
+    padding: 4px 8px;
   }
 
   input {

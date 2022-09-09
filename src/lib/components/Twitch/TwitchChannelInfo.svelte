@@ -156,7 +156,7 @@
       background-color: $primary;
       color: #fff;
       border: 0;
-      border-radius: 100px;
+      border-radius: 4px;
       padding: 4px;
     }
 

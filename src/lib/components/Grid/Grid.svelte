@@ -4,7 +4,7 @@
   import type { CellBlock, SaveState, SaveBlock } from '$lib/types/general';
   import { updateSaveState, checkExistingRow, blockCodes } from "$lib/_includes/gridHelpers";
   
-  const cols = Math.floor(1024 / 90); // 11
+  const cols = Math.floor(1024 / 80); // 11
   const rows = Math.floor(768 / 60); // 12
   let blockOption:string;
   let cells:CellBlock[] = [];
@@ -178,6 +178,7 @@
     } 
 
     cells[newPos] = {...cells[newPos], ...{ sizeX, sizeY, block, val }};
+    saveState[val] = { pos: newPos, sizeX, sizeY, val }
     updateSaveState(saveState);
     cells[oldPos].val = '';
     cells[oldPos].block = null
@@ -223,7 +224,6 @@
       for (let y = i; y < i + sizeX; y++) {
         const pos = y + x * cols;
         cells[pos].sizeY = cells[pos].sizeX = 1;
-        console.log(pos);
       }
     }
     cells[i].block = null;
@@ -287,10 +287,10 @@
 
   .grid {
     margin: 0 auto;
-    width: 1024px;
+    width: 1004px;
     background-color: slateblue;
     display: grid;
-    grid-template-columns: repeat(11, minmax(0, 90px));
+    grid-template-columns: repeat(12, minmax(0, 80px));
     grid-template-rows: repeat(12, minmax(0, 58px));
     gap: 4px;
     padding: 4px;

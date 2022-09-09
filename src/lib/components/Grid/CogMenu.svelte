@@ -21,10 +21,10 @@
   <aside class="menu" class:active>
     <ul>
       <li on:click={deleteBlock}>
-        <button type="button">Delete</button>
+        <button type="button">Remove</button>
       </li>
       <li>
-        <button type="button">Lock</button>
+        <button type="button">Settings</button>
       </li>
     </ul>
   </aside>
