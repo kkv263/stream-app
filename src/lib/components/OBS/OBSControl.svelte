@@ -120,7 +120,7 @@
   $: convertedRecordingTime  = convertMsToTime(recordTime);
 </script>
 
-<Block type="obs" sizeX={4} sizeY={2} on:dragtoggle on:deleteblock>
+<Block type="obs" sizeX={4} sizeY={2} on:dragtoggle on:deleteblock on:lockblock>
   <div class="obs-control">
     {#if $obsConnected}
       <div class="connect-wrapper" use:renderStatus> </div>

@@ -16,6 +16,7 @@ export type CellBlock = {
   draggable: boolean,
   hovered: boolean,
   invisible: boolean,
+  locked: boolean,
   x: number,
   y: number
 }

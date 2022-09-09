@@ -146,7 +146,7 @@
 </script>
 
 
-<Block on:dragtoggle type="twitter" on:deleteblock>
+<Block on:dragtoggle type="twitter" on:deleteblock on:lockblock>
 	<div class="recent-tweets__container">
 		{#if Object.keys($twitterUser).length > 0}
 			<div class="header">
