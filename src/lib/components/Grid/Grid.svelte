@@ -108,22 +108,40 @@
 
   // TODO: Debounce
   // Maybe use this to "Update preview"
-  const dragOver = (e:any) => {
+  const dragOver = (e:any, i:number) => {
     e.preventDefault();
     console.log('dragover');
-  }
+    const oldCell = $cellDragStore;
+    const { sizeX, sizeY } = oldCell;
 
-  const dragEnter = (e:any, i:number) => {
-    e.preventDefault();
-    // const oldCell = get(cellDragStore);
-    // const { sizeX, sizeY } = oldCell;
+    for (let x = 0; x < sizeY; x++) {
+      for (let y = i; y < i + sizeX; y++) {
+        const pos = y + x * cols;
+        cells[pos].hovered = true;
+      }
+    }
+
+    // console.log('enter');
     cells[i].hovered = true;
     cells = cells;
   }
 
+  const dragEnter = (e:any, i:number) => {
+    e.preventDefault();
+  }
+
   const dragLeave = (i:number) => {
-    // const oldCell = get(cellDragStore);
-    // const { sizeX, sizeY } = oldCell;
+    const oldCell = $cellDragStore;
+    const { sizeX, sizeY } = oldCell;
+
+    for (let x = 0; x < sizeY; x++) {
+      for (let y = i; y < i + sizeX; y++) {
+        const pos = y + x * cols;
+        cells[pos].hovered = false;
+      }
+    }
+
+    console.log('leave');
     cells[i].hovered = false;
     cells = cells;
   }
@@ -151,9 +169,10 @@
     for (let x = 0; x < sizeY; x++) {
       for (let y = newPos; y < newPos + sizeX; y++) {
         const pos = y + x * cols;
-        if (cells[pos].sizeX === 0) {
+        const bottomRight = (newPos + sizeX-1) + (sizeY - 1) * cols;
+        cells[pos].hovered = false;
+        if (cells[pos].sizeX === 0 || (cells[pos].val != '' && pos === bottomRight)) {
           blockOverlap = true;
-          break;
         }
       }
     } 
@@ -252,7 +271,7 @@
       data-sizeY={sizeY}
       ata-col={y} 
       data-row={x} 
-      on:dragover={(e) => dragOver(e)} 
+      on:dragover={(e) => dragOver(e, i)} 
       on:dragenter={(e) => dragEnter(e, i)} 
       on:dragleave={() => dragLeave(i)}
       on:drop={(e) => dragDrop(e, i)} 
@@ -334,7 +353,7 @@
   }
 
   .hovered {
-    background: salmon;
+    background: mediumseagreen;
     border-style: dashed;
   }
   .invisible {
