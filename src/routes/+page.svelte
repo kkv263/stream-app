@@ -1,5 +1,6 @@
 <script lang="ts">
   import { user } from "$lib/stores/sessionStore";
+  import { discordUser } from "$lib/stores/discordSessionStore";
   import { twitterUser } from "$lib/stores/twitterSessionStore";
   import { twitchUser } from "$lib/stores/twitchSessionStore";
   import { supabase } from "$lib/_includes/supabaseClient";
@@ -13,6 +14,7 @@
   import type { Session } from "@supabase/supabase-js";
   import { page } from "$app/stores";
   import Grid from "$lib/components/Grid/Grid.svelte";
+  import Discord from "$lib/components/Discord/Discord.svelte";
 
   user.set(supabase.auth.user());
 
@@ -20,8 +22,9 @@
     if (session) user.set(session.user);
   });
 
-  const { twitteruser, twitchuser } = $page.data;
+  const { discorduser, twitteruser, twitchuser } = $page.data;
 
+  if (discorduser) { discordUser.set(discorduser) };
   if (twitteruser) { twitterUser.set(twitteruser) };
   if (twitchuser) { twitchUser.set(twitchuser) };
 
@@ -34,6 +37,7 @@
 <Section>
   {#if $user}
     <Profile />
+    <Discord discordUser={discorduser?.username}/>
     <a href='auth/logout/twitter'>logout tweeter</a>
     <a href='auth/logout/twitch'>logout twitch</a>
     <!-- <a href="/settings">This is settings page</a> -->

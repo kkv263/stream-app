@@ -11,12 +11,20 @@ export const GET:RequestHandler = async (event) => {
   const challenge = base64URLEncode(sha256(verifier));
   const state = cryptoRandomString({length: 15, type: 'distinguishable'});
 
-  let endpoint = '/oauth2/authorize'
-  switch(event.params.platform) {
-    case 'twitter': 
-      endpoint = 'https://twitter.com/i' + endpoint; break;
-    case 'twitch':
-      endpoint = 'https://id.twitch.tv' + endpoint; break;
+  const endpoints: {[platform: string]: string}  = {
+    'discord' :  'https://discord.com/api/oauth2/authorize',
+    'twitter': 'https://api.twitter.com/2/oauth2/authorize',
+    'twitch': 'https://id.twitch.tv/oauth2/authorize'
+  };
+
+  const platform = event.params.platform;
+  const endpoint = endpoints[platform];
+
+  const discordParams = {
+    'client_id': import.meta.env.DEV ? import.meta.env.VITE_DISCORD_CLIENT_ID as string : process.env.DISCORD_CLIENT_ID!,
+    'scope': 'identify%20messages.read',
+    'redirect_uri' :`http://127.0.0.1:5173/auth/callback/discord`,
+    'prompt': 'consent'
   }
 
   const twitterParams = {
@@ -38,6 +46,7 @@ export const GET:RequestHandler = async (event) => {
   const params: RedirectOptions = {
     'state': state,
     'response_type': 'code',
+    ...(event.params.platform === 'discord') && discordParams,
     ...(event.params.platform === 'twitter') && twitterParams,
     ...(event.params.platform === 'twitch') && twitchParams
   }

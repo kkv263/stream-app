@@ -5,13 +5,20 @@ import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async(event) => {
   const verifyObject = get(oauth_verifiers);
-  let endpoint = 'oauth2/token';
+
+  const endpoints: {[platform: string]: string}  = {
+    'discord' :  'https://discord.com/api/oauth2/token',
+    'twitter': 'https://api.twitter.com/2/oauth2/token',
+    'twitch': 'https://id.twitch.tv/oauth2/token'
+  };
+
   const platform = event.params.platform;
-  switch(platform) {
-    case 'twitter': 
-      endpoint = 'https://api.twitter.com/2/' + endpoint; break;
-    case 'twitch':
-      endpoint = 'https://id.twitch.tv/' + endpoint; break;
+  const endpoint = endpoints[platform];
+
+  const discordParams = {
+    'client_id': import.meta.env.DEV ? import.meta.env.VITE_DISCORD_CLIENT_ID as string : process.env.DISCORD_CLIENT_ID!,
+    'client_secret': import.meta.env.DEV ? import.meta.env.VITE_DISCORD_CLIENT_SECRET as string : process.env.DISCORD_CLIENT_SECRET!,
+    'redirect_uri' :`http://127.0.0.1:5173/auth/callback/discord`,
   }
 
   const twitterParams = {
@@ -30,6 +37,7 @@ export const GET: RequestHandler = async(event) => {
     'grant_type': 'authorization_code',
     'state': verifyObject.state,
     'code': event.url.searchParams.get('code')!,
+    ...(platform === 'discord') && discordParams,
     ...(platform === 'twitter') && twitterParams,
     ...(platform === 'twitch') && twitchParams
   }

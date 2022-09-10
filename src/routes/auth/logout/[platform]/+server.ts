@@ -3,13 +3,19 @@ import type { LogoutOptions } from "$lib/types/auth";
 import type { RequestHandler } from "@sveltejs/kit";
 
 export const GET:RequestHandler = async (event) => {
-  let endpoint = 'oauth2/revoke';
+
+  const endpoints: {[platform: string]: string}  = {
+    'discord' :  'https://discord.com/api/oauth2/token/revoke',
+    'twitter': 'https://api.twitter.com/2/oauth2/revoke',
+    'twitch': 'https://id.twitch.tv/oauth2/revoke'
+  };
+
   const platform = event.params.platform;
-  switch(platform) {
-    case 'twitter': 
-      endpoint = 'https://api.twitter.com/2/' + endpoint; break;
-    case 'twitch':
-      endpoint = 'https://id.twitch.tv/' + endpoint; break;
+  const endpoint = endpoints[platform];
+
+  const discordParams = {
+    'client_id': import.meta.env.DEV ? import.meta.env.VITE_DISCORD_CLIENT_ID as string : process.env.DISCORD_CLIENT_ID!,
+    'client_secret': import.meta.env.DEV ? import.meta.env.VITE_DISCORD_CLIENT_SECRET as string : process.env.DISCORD_CLIENT_SECRET!,
   }
 
   const twitterParams = {
@@ -23,6 +29,7 @@ export const GET:RequestHandler = async (event) => {
 
   const params: LogoutOptions = {
     'token':  (<Record<string,any>>cookie.parse(event.request.headers.get('cookie') || ''))[`${platform}token`],
+    ...(platform === 'discord') && discordParams,
     ...(platform === 'twitter') && twitterParams,
     ...(platform === 'twitch') && twitchParams
   }
@@ -46,7 +53,7 @@ export const GET:RequestHandler = async (event) => {
   await revokeToken();
 
   const headers = new Headers();
-  const platforms = ['twitter', 'twitch']
+  const platforms = ['discord', 'twitter', 'twitch']
   headers.append('location', '/');
   
   platforms.forEach(item => {
