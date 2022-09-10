@@ -18,13 +18,18 @@
     bs: BrowserSourceHeader
   }
 
-  const toggleDrag = () => {
-    dispatchDrag('dragtoggle');
+  const toggleDrag = (e:any) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left; //x position within the element.
+    const y = e.clientY - rect.top;  //y position within the element.
+    const xOffset = rect.width / sizeX;
+    const xGroupOffset = Math.floor(x / xOffset)
+    dispatchDrag('dragtoggle', { offset: xGroupOffset });
   }
 </script>
 
 <section data-sizeX={sizeX} data-sizeY={sizeY} data-type={type}>
-  <header class="block-header" on:mousedown={toggleDrag}>
+  <header class="block-header" on:mousedown={(e) => toggleDrag(e)}>
     <svelte:component this={header[type]} on:deleteblock on:lockblock/>
   </header>
   <slot></slot>

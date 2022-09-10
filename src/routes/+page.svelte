@@ -33,10 +33,7 @@
 <Grid/>
 <Section>
   {#if $user}
-    <Twitter twtUser={twitteruser?.name}/>
-    <OBS />
-    <Twitch twitchUser={twitchuser?.display_name} />
-    <!-- <Profile /> -->
+    <Profile />
     <!-- <a href="/settings">This is settings page</a> -->
   {:else}
     <a href="/welcome">Weclome page</a>

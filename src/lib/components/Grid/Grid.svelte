@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { cellDragStore } from "$lib/stores/cellDragStore";
+  import { cellDragStore, cellDragOffset } from "$lib/stores/cellDragStore";
   import { onMount } from "svelte";
   import type { CellBlock, SaveState, SaveBlock } from '$lib/types/general';
   import { updateSaveState, checkExistingRow, blockCodes } from "$lib/_includes/gridHelpers";
@@ -9,6 +9,8 @@
   let blockOption:string;
   let cells:CellBlock[] = [];
   let saveState:SaveState = {}
+  let isDraggingState:boolean = false;
+  let isOutOfBounds:boolean = false;
 
   onMount(async() => {
     saveState = await checkExistingRow();
@@ -107,22 +109,33 @@
   }
 
   // TODO: Debounce
-  // Maybe use this to "Update preview"
   const dragOver = (e:any, i:number) => {
     e.preventDefault();
-    console.log('dragover');
     const oldCell = $cellDragStore;
-    const { sizeX, sizeY } = oldCell;
+    const { sizeX, sizeY, pos} = oldCell;
+    const offsetIndex = i - $cellDragOffset;
+    const checkRowOverLapX = Math.floor((offsetIndex) / cols) != Math.floor((offsetIndex + (sizeX - 1)) / cols);
+    const checkRowOverLapY = Math.ceil((offsetIndex + (rows)) / rows) > rows;
+    const edgeOfGrid = i % cols < sizeX - 1 || i % cols > (cols - sizeX - 1)
+    if (offsetIndex < 0 || (checkRowOverLapX && edgeOfGrid) || checkRowOverLapY) { 
+      isOutOfBounds = true;
+      return; 
+    }
+
+    isOutOfBounds = false;
 
     for (let x = 0; x < sizeY; x++) {
-      for (let y = i; y < i + sizeX; y++) {
-        const pos = y + x * cols;
-        cells[pos].hovered = true;
+      for (let y = offsetIndex; y < offsetIndex + sizeX; y++) {
+        const posIndex = y + x * cols;
+        if (cells[posIndex].sizeX === 0 || cells[posIndex].val != '' && posIndex != parseInt(pos)) { 
+          isOutOfBounds = true;
+          return; 
+        }
+        cells[posIndex].hovered = true;
       }
     }
 
-    // console.log('enter');
-    cells[i].hovered = true;
+    cells[offsetIndex].hovered = cells[offsetIndex].block &&  offsetIndex != parseInt(pos) ?  false : true;
     cells = cells;
   }
 
@@ -131,36 +144,38 @@
   }
 
   const dragLeave = (i:number) => {
+    const offsetIndex = i - $cellDragOffset;
     const oldCell = $cellDragStore;
     const { sizeX, sizeY } = oldCell;
 
     for (let x = 0; x < sizeY; x++) {
-      for (let y = i; y < i + sizeX; y++) {
+      for (let y = offsetIndex; y < offsetIndex + sizeX; y++) {
         const pos = y + x * cols;
+        if (pos > rows * cols - 1) {return;}
         cells[pos].hovered = false;
       }
     }
 
-    console.log('leave');
-    cells[i].hovered = false;
+    if (offsetIndex < 0) { return; }
+    cells[offsetIndex].hovered = false;
     cells = cells;
   }
 
   const dragDrop = (e:any, i:number) => {
+    const offsetIndex = i - $cellDragOffset;
     const oldCell = $cellDragStore;
     const oldPos = parseInt(oldCell?.pos);
     const { sizeX, sizeY, block, val, locked } = oldCell
-    const checkRowOverLapX = Math.floor((i) / cols) != Math.floor((i + (sizeX - 1)) / cols);
-    const checkRowOverLapY = Math.ceil((i + (rows)) / rows) > rows - 1;
+    const checkRowOverLapX = Math.floor((offsetIndex) / cols) != Math.floor((offsetIndex + (sizeX - 1)) / cols);
+    const checkRowOverLapY = Math.ceil((offsetIndex + (rows)) / rows) > rows;
     let blockOverlap = false;
-    let newPos = checkRowOverLapX ? i - ((i + (sizeX)) % cols) : i;
-    newPos = checkRowOverLapY ? newPos - cols : newPos;
+    let newPos = checkRowOverLapY ? offsetIndex - cols : offsetIndex;
 
-    cells[i].hovered = false;
     cells[oldPos].draggable = false;
     cells[oldPos].invisible = false;
+    cells[offsetIndex].hovered = false;
 
-    if (oldPos === newPos) { 
+    if (oldPos === newPos || checkRowOverLapX) { 
       cells = cells;
       return; 
     }
@@ -203,6 +218,8 @@
     cells[oldPos].val = '';
     cells[oldPos].block = null
     cells = cells
+    cellDragStore.set({} as CellBlock);
+    isDraggingState = false;
   }
 
   const dragStart = (e:any, i:number) => {
@@ -217,6 +234,7 @@
       }
     } 
 
+    isDraggingState = true;
     setTimeout(() => {
       cells[i].invisible = true;
       cells = cells
@@ -226,11 +244,14 @@
   const dragEnd = (e:any, i:number) => {
     cells[i].draggable = false;
     cells[i].invisible = false;
+    isDraggingState = false;
+    isOutOfBounds = false;
     cells = cells
   }
 
-  const dragToggle = (i:number) => {
+  const dragToggle = (e:CustomEvent, i:number) => {
     const { locked } = cells[i]
+    cellDragOffset.set(e.detail.offset);
     cells[i].draggable = !locked;
     cells = cells
   }
@@ -262,14 +283,12 @@
 
 </script>
 
-<div class="grid">
-  {#each cells as {x, y, sizeX, sizeY, block, draggable, hovered, invisible, locked}, i}
+<div class="grid" data-drag={isDraggingState} data-oob={isOutOfBounds}>
+  {#each cells as {x, y, block, draggable, hovered, invisible, locked}, i}
     <div class="box"
       class:hovered 
       bind:this={cells[i].cell} 
-      data-sizeX={sizeX} 
-      data-sizeY={sizeY}
-      ata-col={y} 
+      data-col={y} 
       data-row={x} 
       on:dragover={(e) => dragOver(e, i)} 
       on:dragenter={(e) => dragEnter(e, i)} 
@@ -287,7 +306,7 @@
             <svelte:component 
             on:deleteblock={() => deleteBlock(i)} 
             on:lockblock={(e) => lockBlock(e,i)} 
-            on:dragtoggle={() => dragToggle(i)} 
+            on:dragtoggle={(e) => dragToggle(e,i)} 
             this={block} />
         </div>
       {:else} 
@@ -327,15 +346,22 @@
     grid-template-rows: repeat(12, minmax(0, 58px));
     gap: 4px;
     padding: 4px;
+
+    &[data-drag=true] {
+      .block-wrapper[draggable=false] {
+        pointer-events: none;
+      }
+    }
+
+    &[data-oob=true] {
+      .box {
+        background-color: salmon;
+      }
+    }
   }
 
   .box {
     background-color: #fff;
-    &[data-sizeX="0"],
-    &[data-sizeY="0"] {
-      opacity: 0;
-      visibility: hidden;
-    }
   }
 
   .block-wrapper {
@@ -354,7 +380,6 @@
 
   .hovered {
     background: mediumseagreen;
-    border-style: dashed;
   }
   .invisible {
     display: none;
