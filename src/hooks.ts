@@ -7,7 +7,7 @@ export const handle:Handle = async({event, resolve}) => {
   const preparsedCookies = event.request.headers.get('cookie');
   const cookies = cookie.parse(filterNullCookieString(preparsedCookies) || '');
 
-  const platforms = ['twitter', 'twitch'];
+  const platforms = ['discord', 'twitter', 'twitch'];
 
   platforms.forEach(platform => {
     if (cookies[`${platform}token`]) {

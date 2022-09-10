@@ -7,12 +7,17 @@ import type { RefreshTokenOptions } from "$lib/types/auth";
  * @returns a response with a new access token and refresh token. 
  */
 export const getRefreshToken = async(refresh_token:string, platform:string) => {
-  let endpoint = '/oauth2/token';
-  switch(platform) {
-    case 'twitter': 
-      endpoint = 'https://api.twitter.com/2' + endpoint; break;
-    case 'twitch':
-      endpoint = 'https://id.twitch.tv' + endpoint; break;
+  const endpoints: {[platform: string]: string}  = {
+    'discord' :  'https://discord.com/api/oauth2/token',
+    'twitter': 'https://api.twitter.com/2/oauth2/token',
+    'twitch': 'https://id.twitch.tv/oauth2/token'
+  };
+
+  const endpoint = endpoints[platform];
+
+  const discordParams = {
+    'client_id': import.meta.env.DEV ? import.meta.env.VITE_DISCORD_CLIENT_ID as string : process.env.DISCORD_CLIENT_ID!,
+    'client_secret': import.meta.env.DEV ? import.meta.env.VITE_DISCORD_CLIENT_SECRET as string : process.env.DISCORD_CLIENT_SECRET!,
   }
 
   const twitterParams = {
@@ -27,6 +32,7 @@ export const getRefreshToken = async(refresh_token:string, platform:string) => {
   const params: RefreshTokenOptions = {
     'refresh_token': refresh_token,
     'grant_type': 'refresh_token',
+    ...(platform === 'discord') && discordParams,
     ...(platform === 'twitter') && twitterParams,
     ...(platform === 'twitch') && twitchParams
   }
@@ -49,13 +55,13 @@ export const getRefreshToken = async(refresh_token:string, platform:string) => {
  * @returns user data from API
  */
 const callUserAPI = async(token:string, platform:string, params:string) => {
-  let endpoint = '';
-  switch(platform) {
-    case 'twitter': 
-      endpoint = `https://api.twitter.com/2/users/me?${params}`; break;
-    case 'twitch':
-      endpoint = 'https://api.twitch.tv/helix/users'; break;
-  }
+  const endpoints: {[platform: string]: string}  = {
+    'discord' :  'https://discord.com/api/users/@me',
+    'twitter': `https://api.twitter.com/2/users/me?${params}`,
+    'twitch': 'https://api.twitch.tv/helix/users'
+  };
+
+  const endpoint = endpoints[platform];
 
   return fetch(endpoint, {
     method: 'GET',
@@ -100,15 +106,15 @@ export const getUser = async(token:string, refresh_token:string, platform: strin
  */
 export const filterNullCookieString = (cookieString:string|null) => cookieString?.split(';').filter(name => !name.includes('undefined') &&  !name.includes('null') ).join(';')
 
-// TODO: Twitter platform
+// TODO: Twitter platform / Discord
 export const validateToken = (token: string, platform: string = "twitch") => {
-  let endpoint = '';
-  switch(platform) {
-    case 'twitter': 
-      endpoint = ``; break; //TODO
-    case 'twitch':
-      endpoint = 'https://id.twitch.tv/oauth2/validate'; break;
-  }
+  const endpoints: {[platform: string]: string}  = {
+    'discord' :  'https://discord.com/api/oauth2/@me',
+    'twitter': ``,
+    'twitch': 'https://id.twitch.tv/oauth2/validate'
+  };
+
+  const endpoint = endpoints[platform];
 
   return fetch(endpoint, {
     method: 'GET',

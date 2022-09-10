@@ -6,6 +6,7 @@
 declare namespace App {
 	interface Locals {
 		[locals:string],
+		discordtokens?:any,
 		twittertokens?: any,
 		twitchtokens?: any,
 		platform: string | null
