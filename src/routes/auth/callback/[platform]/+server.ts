@@ -16,14 +16,14 @@ export const GET: RequestHandler = async(event) => {
 
   const twitterParams = {
     'client_id': import.meta.env.DEV ? import.meta.env.VITE_TWITTER_OAUTH_CLIENT_ID as string : process.env.TWITTER_OAUTH_CLIENT_ID!,
-    'redirect_uri' :'http://127.0.0.1:5173/callback/twitter',
+    'redirect_uri' :'http://127.0.0.1:5173/auth/callback/twitter',
     'code_verifier': verifyObject.code_verifier,
   }
 
   const twitchParams = {
     'client_id': import.meta.env.DEV ? import.meta.env.VITE_TWITCH_CLIENT_ID as string : process.env.TWITCH_CLIENT_ID!,
     'client_secret': import.meta.env.DEV ? import.meta.env.VITE_TWITCH_CLIENT_SECRET as string : process.env.TWITCH_CLIENT_SECRET!,
-    'redirect_uri' :`http://localhost:5173/callback/twitch`,
+    'redirect_uri' :`http://localhost:5173/auth/callback/twitch`,
   }
 
   const params: CallBackOptions = {

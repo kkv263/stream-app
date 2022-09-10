@@ -25,14 +25,14 @@ export const GET:RequestHandler = async (event) => {
     'code_challenge': challenge,
     'code_challenge_method': 'S256',
     'code_verifier': verifier,
-    'redirect_uri' :`http://127.0.0.1:5173/callback/twitter`,
+    'redirect_uri' :`http://127.0.0.1:5173/auth/callback/twitter`,
   }
 
   const twitchParams = {
     'client_id': import.meta.env.DEV ? import.meta.env.VITE_TWITCH_CLIENT_ID as string : process.env.TWITCH_CLIENT_ID!,
     'scope': ['channel:manage:broadcast'].map(scope => encodeURIComponent(scope)).join(''),
     'force_verify': true, //Default is false, set true if need to reauthorize
-    'redirect_uri' :`http://localhost:5173/callback/twitch`,
+    'redirect_uri' :`http://localhost:5173/auth/callback/twitch`,
   }
 
   const params: RedirectOptions = {

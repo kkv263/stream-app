@@ -12,12 +12,12 @@
 	<h1>Hello world!</h1>
   {#if twitchUser}
     <h2>Welcome {twitchUser}</h2>
-    <a href='logout/twitch'>revoke twitch</a>
+    <a href='auth/logout/twitch'>revoke twitch</a>
 		<TwitchChannelInfo />
 		<TwitchRaid />
   {:else}
     <h2>You are not logged in to twitch</h2>
-    <a href='login/twitch' rel="external">authorize twitch</a>
+    <a href='auth/login/twitch' rel="external">authorize twitch</a>
   {/if}
 </Section>
 

@@ -34,6 +34,8 @@
 <Section>
   {#if $user}
     <Profile />
+    <a href='auth/logout/twitter'>logout tweeter</a>
+    <a href='auth/logout/twitch'>logout twitch</a>
     <!-- <a href="/settings">This is settings page</a> -->
   {:else}
     <a href="/welcome">Weclome page</a>

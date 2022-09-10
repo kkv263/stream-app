@@ -4,7 +4,7 @@
 
 <div class="login-header">
   <h2>Login to Twitter</h2>
-  <a href='login/twitter' rel="external">
+  <a href='auth/login/twitter' rel="external">
     <Button type="button" color="primary">Authorize</Button>
   </a>
 </div>

@@ -20,7 +20,7 @@
   {#if twtUser}
   	<h2>Welcome @{twtUser}</h2>
 		<div class="twitter-header">
-    	<a href='logout/twitter'>logout tweeter</a>
+    	<a href='auth/logout/twitter'>logout tweeter</a>
 		</div>
 		<div class="twitter-wrapper">
 			{#each components as component, i}
@@ -29,7 +29,7 @@
 		</div>
   {:else}
 		<h2>You are not logged in to twitter</h2>
-    <a href='login/twitter' rel="external">authorize tweeter</a>
+    <a href='auth/login/twitter' rel="external">authorize tweeter</a>
   {/if}
 </Section>
 

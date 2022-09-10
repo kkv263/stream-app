@@ -4,7 +4,7 @@
 
 <div class="login-header">
   <h2>Login to Twitch</h2>
-  <a href='login/twitch' rel="external">
+  <a href='auth/login/twitch' rel="external">
     <Button type="button" color="primary">Authorize</Button>
   </a>
 </div>

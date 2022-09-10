@@ -40,10 +40,6 @@
     justify-content: center;
     height: 100%;
     gap: 16px;
-    h2 {
-      padding-bottom: 16px;
-      color: #fff;
-    }
   }
 
   .input-wrapper {
