@@ -338,7 +338,7 @@
   }
 
   .grid {
-    margin: 0 auto;
+    margin-left: auto;
     width: 1004px;
     background-color: slateblue;
     display: grid;

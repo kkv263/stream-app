@@ -217,7 +217,7 @@
 
   button {
     flex: 1 0 auto;
-    border-radius: 4px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;

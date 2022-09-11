@@ -51,7 +51,7 @@
     color: #fff;
     background-color: $pink;
     border: 0;
-    border-radius: 4px;
+    border-radius: 8px;
     padding: 8px 12px;
     cursor: pointer;
     font-family: 'Roboto Condensed', sans-serif;

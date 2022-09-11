@@ -134,7 +134,7 @@ h3 {
 
 .vol {
   display: flex;
-  border-radius: 4px;
+  border-radius: 8px;
   gap: 4px;
 }
 .input {
