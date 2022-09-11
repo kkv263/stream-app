@@ -22,7 +22,7 @@ export const GET:RequestHandler = async (event) => {
 
   const discordParams = {
     'client_id': import.meta.env.DEV ? import.meta.env.VITE_DISCORD_CLIENT_ID as string : process.env.DISCORD_CLIENT_ID!,
-    'scope': 'identify%20messages.read',
+    'scope': 'identify%20guilds',
     'redirect_uri' :`http://127.0.0.1:5173/auth/callback/discord`,
     'prompt': 'consent'
   }
