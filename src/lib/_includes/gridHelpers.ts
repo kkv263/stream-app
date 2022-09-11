@@ -1,5 +1,6 @@
 import { supabase } from "$lib/_includes/supabaseClient";
 import Clock from "$lib/components/BrowserSource/Clock.svelte";
+import DiscordRead from '$lib/components/Discord/DiscordRead.svelte';
 import ObsControl from '$lib/components/OBS/OBSControl.svelte';
 import ObsInput from "$lib/components/OBS/OBSInput.svelte";
 import ObsScene from '$lib/components/OBS/OBSScene.svelte';
@@ -13,6 +14,12 @@ export const blockCodes:Block = {
     block: Clock,
     sizeX: 4,
     sizeY: 2
+  },
+  'DISC-CHNL': {
+    name: 'Discord Read',
+    block: DiscordRead,
+    sizeX: 4,
+    sizeY: 4
   },
   'OBS-CTRL': {
     name: 'OBS: Stream / Record',

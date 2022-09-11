@@ -1,4 +1,5 @@
 <script lang="ts">
+  import DiscordHeader from "$lib/components/Discord/DiscordHeader.svelte";
   import TwitterHeader from "$lib/components/Twitter/TwitterHeader.svelte";
   import TwitchHeader from "$lib/components/Twitch/TwitchHeader.svelte";
   import OBSHeader from '$lib/components/OBS/OBSHeader.svelte';
@@ -12,6 +13,7 @@
   const dispatchDrag = createEventDispatcher();
 
   const header: Record<string, any> = {
+    discord: DiscordHeader,
     twitter: TwitterHeader,
     twitch: TwitchHeader,
     obs: OBSHeader,
