@@ -1,5 +1,6 @@
 import { supabase } from "$lib/_includes/supabaseClient";
 import Clock from "$lib/components/BrowserSource/Clock.svelte";
+import DiscordUserInfo from '$lib/components/Discord/DiscordUserInfo.svelte';
 import ObsControl from '$lib/components/OBS/OBSControl.svelte';
 import ObsInput from "$lib/components/OBS/OBSInput.svelte";
 import ObsScene from '$lib/components/OBS/OBSScene.svelte';
@@ -11,6 +12,12 @@ export const blockCodes:Block = {
   'CLCK': {
     name: 'Clock',
     block: Clock,
+    sizeX: 4,
+    sizeY: 2
+  },
+  'DISC-USER': {
+    name: 'Discord User',
+    block: DiscordUserInfo,
     sizeX: 4,
     sizeY: 2
   },
