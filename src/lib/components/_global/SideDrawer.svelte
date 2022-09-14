@@ -3,6 +3,8 @@
   import { supabase } from "$lib/_includes/supabaseClient";
   import { onMount } from "svelte";
   import { user } from "$lib/stores/sessionStore";
+  import { actionModalState } from "$lib/stores/actionModalStore";
+  import ActionModal from "$lib/components/Grid/ActionModal.svelte";
   import PlusCircle from "$lib/components/icons/PlusCircle.svelte";
   import Cog from "$lib/components/icons/Cog.svelte";
   import CircleArrowRight from "$lib/components/icons/CircleArrowRight.svelte";
@@ -15,17 +17,20 @@
   const drawerItems = [
     {
       icon: PlusCircle,
-      text: 'Add New Block'
+      text: 'Add New Block',
+      modalstate: 'addblock'
     },
     {
       icon: Cog,
-      text: 'Settings'
+      text: 'Settings',
+      modalstate: 'gridsettings'
     },
   ]
 
   onMount(() => {
     getProfile();
   })
+
 
   const getProfile = async () => {
     try {
@@ -53,8 +58,13 @@
     collapsed = !collapsed
   }
 
+  const toggleActionModal = (modalstate:string) => {
+    $actionModalState = modalstate;
+  }
+
 
 </script>
+<ActionModal />
 
 <aside class="sidedrawer" tabindex="-1" role="dialog" aria-labelledby="sidedrawer-label" aria-modal="true" in:fade={{duration: 250}} out:fade={{duration:400}}>
   <section class="sidedrawer__inner" class:collapsed>
@@ -69,8 +79,8 @@
         </div>
       </header>
       <ul>
-        {#each drawerItems as {icon, text} }
-          <li data-label={text}>
+        {#each drawerItems as {icon, text, modalstate} }
+          <li data-label={text} on:click={() => toggleActionModal(modalstate)}>
             <button type="button">
               <div class="icon-wrapper">
                 <svelte:component this={icon} width="24px" height="24px"/>

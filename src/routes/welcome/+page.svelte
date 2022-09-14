@@ -8,7 +8,7 @@
 
 <Nav />
 {#if $authModalState}
-  <Modal type="auth">
+  <Modal modalType="auth">
     <AuthModal />
   </Modal>
 {/if}
