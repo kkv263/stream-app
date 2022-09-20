@@ -4,7 +4,6 @@
   import { onMount } from "svelte";
   import { user } from "$lib/stores/sessionStore";
   import { actionModalState } from "$lib/stores/actionModalStore";
-  import ActionModal from "$lib/components/Grid/ActionModal.svelte";
   import PlusCircle from "$lib/components/icons/PlusCircle.svelte";
   import Cog from "$lib/components/icons/Cog.svelte";
   import CircleArrowRight from "$lib/components/icons/CircleArrowRight.svelte";
@@ -64,8 +63,6 @@
 
 
 </script>
-<ActionModal />
-
 <aside class="sidedrawer" tabindex="-1" role="dialog" aria-labelledby="sidedrawer-label" aria-modal="true" in:fade={{duration: 250}} out:fade={{duration:400}}>
   <section class="sidedrawer__inner" class:collapsed>
     <div class="sidedrawer__content">
