@@ -3,10 +3,10 @@
   import { onMount } from "svelte";
   import type { CellBlock, SaveState, SaveBlock } from '$lib/types/general';
   import { updateSaveState, checkExistingRow, blockCodes } from "$lib/_includes/gridHelpers";
+  import ActionModal from "$lib/components/Grid/ActionModal.svelte";
   
   const cols = Math.floor(1024 / 80); // 11
   const rows = Math.floor(768 / 60); // 12
-  let blockOption:string;
   let cells:CellBlock[] = [];
   let saveState:SaveState = {}
   let isDraggingState:boolean = false;
@@ -55,7 +55,9 @@
     return init;
   }
 
-  const addBlock = () => {
+  const addBlock = (e:CustomEvent) => {
+    const blockOption = e.detail.blockOption;
+    
     if (saveState[blockOption]) {
       alert('There is already one of this block')
       return;
@@ -283,6 +285,8 @@
 
 </script>
 
+<ActionModal on:addblock={addBlock}/>
+
 <div class="grid" data-drag={isDraggingState} data-oob={isOutOfBounds}>
   {#each cells as {x, y, block, draggable, hovered, invisible, locked}, i}
     <div class="box"
@@ -316,29 +320,11 @@
   {/each}
 </div>
 
-<div class="select-wrapper">
-  <select name="block-add" id="block-add" bind:value={blockOption}>
-    {#each Object.entries(blockCodes) as [val, attr]}
-      <option value={val}>{attr.name}</option>
-    {/each}
-  </select>
-  <button on:click={addBlock}>add</button>
-</div>
-
 <style lang="scss">
   @import '../../../styles/vars.scss';
 
-  .select-wrapper {
-    display: flex;
-    justify-content: center;
-  }
-
-  select {
-    min-width: 120px;
-  }
-
   .grid {
-    margin: 0 auto;
+    margin-left: auto;
     width: 1004px;
     background-color: slateblue;
     display: grid;

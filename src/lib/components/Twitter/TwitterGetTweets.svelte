@@ -384,7 +384,7 @@
 		&:global {
 			img {
 				width: 100%;
-				border-radius: 4px;
+				border-radius: 8px;
 				height: 100%;
 				object-fit: cover;
 			}
@@ -396,12 +396,12 @@
 				width: 100%;
 				height: 100%;
 				display: block;
-				border-radius: 4px;
+				border-radius: 8px;
 				max-height: 208px;
 
 
 				&:after {
-					border-radius: 4px;
+					border-radius: 8px;
 					transition: $transition;
 					opacity: 0;
 					visibility: hidden;
@@ -440,7 +440,7 @@
 		grid-template-columns: min-content auto;
 		border: 1px solid #fff;
 		padding-bottom: 0;
-		border-radius: 4px;
+		border-radius: 8px;
 		margin-bottom: 12px;
 		div {
 			border: 1px solid #fff;

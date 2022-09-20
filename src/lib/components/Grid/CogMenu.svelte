@@ -77,7 +77,7 @@
     right: 0;
     top: calc(100% + 8px);
     cursor:default;
-    border-radius: 4px;
+    border-radius: 8px;
     min-width: 80px;
     padding: 0;
     transition: $transition;

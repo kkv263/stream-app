@@ -89,7 +89,7 @@
     background-color: $off-white;
     color: $text-color;
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 14px;
     &::-webkit-scrollbar {
       display: none;

@@ -30,9 +30,9 @@
 
 </script>
 
-{#if $sideDrawerState}
+<!-- {#if $sideDrawerState} -->
   <SideDrawer />
-{/if}
+<!-- {/if} -->
 <Grid/>
 <Section>
   {#if $user}
@@ -47,3 +47,5 @@
     <h2>should redirect to welcome page</h2>
   {/if}
 </Section>
+
+<style lang="scss"></style>

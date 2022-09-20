@@ -224,7 +224,7 @@
     
     input {
       padding: 4px 8px;
-      border-radius: 4px;
+      border-radius: 8px;
       border: 2px solid transparent;
     }
 
@@ -264,7 +264,7 @@
         font-size: 12px;
         border: 1px solid #fff;
         padding: 2px 4px;
-        border-radius: 4px;
+        border-radius: 8px;
       }
     }
 

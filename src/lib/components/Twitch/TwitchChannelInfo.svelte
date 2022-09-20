@@ -138,7 +138,7 @@
       div {
         color: $blue;
         padding: 0 4px;
-        border-radius: 4px;
+        border-radius: 8px;
         display: flex;
         align-items: center;
         gap: 4px;
@@ -156,7 +156,7 @@
       background-color: $primary;
       color: #fff;
       border: 0;
-      border-radius: 4px;
+      border-radius: 8px;
       padding: 4px;
     }
 
@@ -186,7 +186,7 @@
 
       input {
         background-color: #4C4C6B;
-        border-radius: 4px;
+        border-radius: 8px;
         border: 1px solid $twitch-purple;
         color: #fff;
         padding: 4px 8px;
